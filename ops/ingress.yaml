@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dreambau-bildungshaus
+  namespace: matrix
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls: 'true'
+    traefik.ingress.kubernetes.io/router.priority: '100'
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts: [dreambau.com]
+      secretName: dreambau-com-tls
+  rules:
+    - host: dreambau.com
+      http:
+        paths:
+          - path: /bildungshaus
+            pathType: Prefix
+            backend:
+              service:
+                name: dreambau-homepage
+                port: {number: 8080}

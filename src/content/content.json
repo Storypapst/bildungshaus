@@ -1,0 +1,383 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-09-07",
+  "title": "Das Bildungshaus",
+  "subtitle": "Ein guter Alltag. Raum zum Wachsen.",
+  "origin": {
+    "name": "Jan",
+    "role": "Initiator und primärer Treiber",
+    "description": "Jans Konzept eines ganzheitlichen, Reggio-inspirierten Bildungshauses ist der Ausgangspunkt. Frank entwickelt Strategie, Organisation und unterstützende Werkzeuge mit."
+  },
+  "thesis": {
+    "title": "Gute Bildung braucht verlässliche Beziehungen — und einen Alltag, der sie möglich macht.",
+    "body": "Das Bildungshaus verbindet pädagogische Praxis, tragfähige Organisation und gemeinsames Lernen. Wir beginnen in der Kita. Was Kindern, Familien und Teams im Alltag hilft, kann schrittweise zu übertragbaren Modulen werden."
+  },
+  "nodes": [
+    {
+      "id": "personal",
+      "title": "Verlässlicher Alltag",
+      "metric": "≈ 30 Tage",
+      "metricLabel": "ärztlich bescheinigte AU-Tage je Versicherungsjahr (2023)",
+      "summary": "Die DAK-Auswertung zeigt eine höhere Krankheitsbelastung als im Vergleich aller Berufe.",
+      "detail": "Für 2023 berichtet die Auswertung 29,6 ärztlich bescheinigte Arbeitsunfähigkeitstage je Versicherungsjahr im Berufsfeld Kinderbetreuung und -erziehung gegenüber 20,1 über alle Berufe. Die DAK-Berufskategorie umfasst überwiegend, aber nicht ausschließlich Kita-Personal. Die Werte beschreiben keinen vermeidbaren Anteil und sind nicht direkt in ausfallende Betreuungsstunden umzurechnen.\n\nFür das Bildungshaus folgt daraus eine Gestaltungsfrage: Welche Abläufe helfen einem Team, auch bei Ausfällen verlässlich zu arbeiten? Eine bessere Organisation kann erprobt werden. Eine Senkung des Krankenstands ist damit noch nicht nachgewiesen.",
+      "evidenceStatus": "Befund mit begrenzter Übertragbarkeit",
+      "sources": [
+        {
+          "title": "DAK-Daten, ausgewertet von Akko/Bertelsmann Stiftung (2024; Berichtsjahr 2023)",
+          "url": "https://www.bertelsmann-stiftung.de/de/publikationen/publikation/did/krankenstand-in-berufen-der-kindertagesbetreuung-und-erziehung"
+        }
+      ],
+      "relatedPaper": "P01"
+    },
+    {
+      "id": "partizipation",
+      "title": "Mitbestimmung im Alltag",
+      "metric": "46,5 %",
+      "metricLabel": "der beobachteten Situationen: Menge vollständig selbst entscheiden",
+      "summary": "Beteiligung wird am Mittagstisch sichtbar, lange bevor ein Kinderparlament tagt.",
+      "detail": "In der BiKA-Studie konnten Kinder in 46,5 Prozent der auswertbaren beobachteten Essenssituationen vollständig selbst bestimmen, wie viel sie essen oder trinken. Der Wert bezieht sich auf 86 Situationen, nicht auf einen repräsentativen Anteil aller Kinder.\n\nDas Bildungshaus will Entscheidungsspielräume konkret machen: erkennen Erwachsene ein Nein, kann ein Kind nachnehmen, und erfährt es, was aus seinem Vorschlag geworden ist? Formale Gremien ergänzen diese Praxis.",
+      "evidenceStatus": "Beobachtungsbefund",
+      "sources": [
+        {
+          "title": "BiKA-Abschlussbericht (2018–2020), Tabelle 12",
+          "url": "https://www.fruehe-chancen.de/fileadmin/user_upload/PDF-Dateien/Bika_Abschlussbericht-web.pdf"
+        }
+      ],
+      "relatedPaper": "P04"
+    },
+    {
+      "id": "organisation",
+      "title": "Gut im Team ankommen",
+      "metric": "Ansprechbar sein",
+      "metricLabel": "Unterstützung und Rollenklarheit als Ansatzpunkte",
+      "summary": "Gute Einarbeitung verbindet praktische Orientierung mit Zugehörigkeit.",
+      "detail": "Das WiFF-Panel untersucht Berufseinsteigerinnen und Berufseinsteiger. Unterstützung, Wertschätzung und strukturierende Einarbeitung stehen mit Rollenklarheit und sozialer Integration in Zusammenhang. Die Befragung beweist keine durch eine bestimmte Maßnahme verursachte Verringerung von Kündigungen oder Krankheit.\n\nUnser Ansatz: feste Begleitung, klare Zuständigkeiten und kurze gemeinsame Reflexion. Im Pilot wird geprüft, ob dadurch weniger unnötige Rückfragen und mehr Handlungssicherheit entstehen.",
+      "evidenceStatus": "Zusammenhang; eigene Wirkung offen",
+      "sources": [
+        {
+          "title": "WiFF-Panel, Studie kompakt 6 (2026), Daten 2025",
+          "url": "https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf"
+        }
+      ],
+      "relatedPaper": "P03"
+    },
+    {
+      "id": "passung",
+      "title": "Der passende Ort",
+      "metric": "−2,7 %",
+      "metricLabel": "Kinder in Berliner Einrichtungen gegenüber 2025, ohne Hort",
+      "summary": "Sinkende Kinderzahlen verändern die Planung; Bedarfe bleiben örtlich verschieden.",
+      "detail": "Zum 1. März 2026 wurden in Berliner Einrichtungen fast 162.000 Kinder betreut, ohne Hortkinder. Das waren 2,7 Prozent weniger als im Vorjahr. Die Gesamtzahl einschließlich öffentlich geförderter Kindertagespflege sank um 3,0 Prozent.\n\nDiese Entwicklung beweist weder eine allgemeine Elternflucht noch freie passende Plätze in jeder Nachbarschaft. Für einen Standort zählen Altersgruppen, Wege, Zeiten, Familienbedarfe und tatsächlich nutzbare Kapazität.",
+      "evidenceStatus": "Amtlicher Befund, Stichtag 1. März 2026",
+      "sources": [
+        {
+          "title": "Amt für Statistik Berlin-Brandenburg, Kindertagesbetreuung zum 1. März 2026",
+          "url": "https://www.statistik-berlin-brandenburg.de/presse/2026/113-kindertagesbetreuung-2026/"
+        }
+      ],
+      "relatedPaper": "P07"
+    },
+    {
+      "id": "beziehung",
+      "title": "Beziehung trägt Bildung",
+      "metric": "Vertraute Erwachsene",
+      "metricLabel": "Feinfühligkeit in der Gruppe zählt",
+      "summary": "Kinder sollen sich sicher genug fühlen, um selbst tätig zu werden.",
+      "detail": "Eine Metaanalyse von 40 Untersuchungen mit 2.867 Kindern findet Zusammenhänge zwischen feinfühliger Betreuung und Beziehungssicherheit. In Einrichtungen war insbesondere der sensible Umgang mit der Gruppe bedeutsam. Daraus folgt keine universelle Eingewöhnungsfrist.\n\nFür das Bildungshaus heißt das: vertraute Ansprechpersonen, eine individuell abgestimmte Eingewöhnung und ein Team, das Kinder auch in Gruppensituationen wahrnimmt. Beziehungen zu Eltern und zu anderen Kindern gehören dazu.",
+      "evidenceStatus": "Forschungsbefund; Gestaltung als Ableitung",
+      "sources": [
+        {
+          "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/"
+        }
+      ],
+      "relatedPaper": "P05"
+    },
+    {
+      "id": "spielraum",
+      "title": "Zeit und Mittel wirksam einsetzen",
+      "metric": "4.269,94 €",
+      "metricLabel": "Sachkosten je Kind und Jahr, Berliner Ganztag/Teilzeit ab August 2026",
+      "summary": "Auch ein kleiner Anteil eines Budgets kann relevant sein. Ob er verfügbar wird, muss sich zeigen.",
+      "detail": "Das Berliner Kostenblatt setzt für Ganztags- und Teilzeitbetreuung Sachkosten von 4.269,94 Euro pro Kind und Jahr an. Das ist eine Finanzierungsgröße einschließlich Verpflegung, keine frei verfügbare Softwarekasse.\n\nBei acht Einrichtungen mit jeweils 80 entsprechend finanzierten Kindern ergeben sich rechnerisch rund 2,73 Millionen Euro pro Jahr. Fünf Prozent davon wären rund 136.638 Euro. Diese fünf Prozent sind ein frei gewähltes Szenario, keine gemessene Ersparnis. Einführung, Betrieb und Qualitätsfolgen müssen mitgerechnet werden.",
+      "evidenceStatus": "Amtlicher Satz plus ausdrücklich hypothetisches Szenario",
+      "sources": [
+        {
+          "title": "Senatsverwaltung Berlin: RV-Tag-Kostenblatt ab 1. August 2026",
+          "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386"
+        }
+      ],
+      "relatedPaper": "P08"
+    }
+  ],
+  "relations": [
+    {
+      "source": "personal",
+      "target": "beziehung",
+      "label": "Verlässliche Abläufe können Beziehungskontinuität unterstützen",
+      "kind": "Gestaltungshypothese"
+    },
+    {
+      "source": "organisation",
+      "target": "personal",
+      "label": "Klarheit und Unterstützung können den Alltag entlasten",
+      "kind": "Gestaltungshypothese"
+    },
+    {
+      "source": "beziehung",
+      "target": "partizipation",
+      "label": "Sicherheit kann eigene Entscheidungen erleichtern",
+      "kind": "Gestaltungshypothese"
+    },
+    {
+      "source": "spielraum",
+      "target": "organisation",
+      "label": "Geprüfter Spielraum kann Teamarbeit ermöglichen",
+      "kind": "Gestaltungshypothese"
+    },
+    {
+      "source": "partizipation",
+      "target": "organisation",
+      "label": "Rückmeldungen können Abläufe verbessern",
+      "kind": "Gestaltungshypothese"
+    },
+    {
+      "source": "passung",
+      "target": "beziehung",
+      "label": "Angebot und Familienalltag müssen zusammenpassen",
+      "kind": "Gestaltungshypothese"
+    }
+  ],
+  "approach": [
+    {
+      "title": "Vom Alltag ausgehen",
+      "body": "Mit Kindern, Familien, Fachkräften und Leitungen verstehen, wo ein konkreter Ablauf gelingt und wo er unnötig schwer wird."
+    },
+    {
+      "title": "Gemeinsam erproben",
+      "body": "Ein begrenztes Modul im wirklichen Betrieb testen, mit klarer Verantwortung und vertretbarem Aufwand."
+    },
+    {
+      "title": "Wirkung sorgfältig prüfen",
+      "body": "Entlastung, Kosten und pädagogische Folgen zusammen betrachten. Erfahrungen dokumentieren und widersprüchliche Ergebnisse ernst nehmen."
+    },
+    {
+      "title": "Weitergeben, was trägt",
+      "body": "Erprobte Routinen, Begleitung und passende Werkzeuge für andere Einrichtungen nutzbar machen."
+    }
+  ],
+  "modules": [
+    {
+      "id": "beziehungen",
+      "title": "Beziehung & Eingewöhnung",
+      "body": "Vertraute Erwachsene und ein guter Übergang zwischen Familie und Kita."
+    },
+    {
+      "id": "team",
+      "title": "Team & Entwicklung",
+      "body": "Einarbeitung, gemeinsame Orientierung und geschützte Reflexion."
+    },
+    {
+      "id": "beteiligung",
+      "title": "Beteiligung",
+      "body": "Echte Entscheidungsspielräume und verständliche Rückmeldungen."
+    },
+    {
+      "id": "raeume",
+      "title": "Räume & Entdecken",
+      "body": "Reggio-inspirierte Ateliers und anregende, übersichtliche Funktionsräume."
+    },
+    {
+      "id": "sprache",
+      "title": "Sprache & Begegnung",
+      "body": "Geplante bilinguale Immersion; Mehrsprachigkeit der Familien wertschätzen."
+    },
+    {
+      "id": "essen",
+      "title": "Ernährung & Alltag",
+      "body": "Gutes Essen, Beteiligung und verlässliche Abläufe zusammendenken."
+    },
+    {
+      "id": "werkzeuge",
+      "title": "Organisation & Werkzeuge",
+      "body": "Doppelte Arbeit prüfen, Wissen zugänglich machen und Entscheidungen nachvollziehbar unterstützen."
+    }
+  ],
+  "pilot": {
+    "title": "Mit einer Kita beginnen",
+    "steps": [
+      {
+        "title": "Bedarf klären",
+        "body": "Vorgeschlagen sind zehn Gespräche mit Leitungen oder Trägerverantwortlichen. Die Gespräche sind noch nicht als durchgeführt belegt."
+      },
+      {
+        "title": "Ein Modul auswählen",
+        "body": "Mit einer Einrichtung einen häufigen, begrenzten Ablauf auswählen; etwa Einarbeitung oder das Zusammenspiel rund ums Essen."
+      },
+      {
+        "title": "Ausgangslage erfassen",
+        "body": "Zeit, Kosten, Qualitätserwartungen und Rückmeldungen vor Beginn festhalten."
+      },
+      {
+        "title": "Im Alltag testen",
+        "body": "Eine überschaubare Erprobung mit vereinbarten Ausstiegsmöglichkeiten durchführen."
+      },
+      {
+        "title": "Gemeinsam entscheiden",
+        "body": "Nur bei nachvollziehbarem Nutzen verstetigen und eine weitere Einrichtung einbeziehen."
+      }
+    ],
+    "successCriteria": [
+      "Der Ablauf wird im Alltag tatsächlich genutzt.",
+      "Zeitgewinn wird gemessen und seine Verwendung nachvollzogen.",
+      "Einführung und laufende Kosten stehen in einem vertretbaren Verhältnis zum Nutzen.",
+      "Kinderrechte, pädagogische Qualität und Arbeitsbedingungen werden gewahrt.",
+      "Die Einrichtung will auf Grundlage ihrer Erfahrung weiterarbeiten."
+    ]
+  },
+  "economics": {
+    "title": "Ein Geschäftsmodell, das seinen Nutzen erst belegt",
+    "body": "Mögliche Erlöse entstehen aus Begleitung, Qualifizierung und erprobten Modulen. Umfang und Preise werden mit Pilotpartnern entwickelt. Für wiederkehrende Erlöse, Einsparungen und Investorenerträge liegen bislang keine belastbaren eigenen Nachweise vor.",
+    "scenario": {
+      "label": "Rechenbeispiel, keine Einsparprognose",
+      "sites": 8,
+      "childrenPerSite": 80,
+      "annualNonPersonnelFundingPerChild": 4269.94,
+      "totalAnnualFunding": 2732761.6,
+      "hypotheticalSharePercent": 5,
+      "hypotheticalAnnualAmount": 136638.08,
+      "currency": "EUR",
+      "sourceUrl": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386"
+    }
+  },
+  "team": [
+    {
+      "name": "Jan",
+      "role": "Konzept und operative Entwicklung",
+      "status": "Initiator und primärer Treiber laut Projektauftrag"
+    },
+    {
+      "name": "Frank",
+      "role": "Strategische Mitentwicklung, Organisation und unterstützende Technologie",
+      "status": "Mitentwicklung; gesellschaftsrechtliche Rollen noch nicht festgelegt"
+    }
+  ],
+  "ask": {
+    "title": "Gesucht: ein Ort für die gemeinsame Erprobung",
+    "body": "Wir suchen das Gespräch mit einer passenden Einrichtung und Menschen, die die Entwicklung eines nachvollziehbaren Piloten unterstützen möchten. Der nächste gemeinsame Schritt ist ein konkret abgegrenzter Versuch mit klarer Verantwortung, Aufwand und Auswertung."
+  },
+  "papers": [
+    {
+      "id": "P01",
+      "title": "Wenn der Alltag Beziehung möglich macht",
+      "slug": "alltag-und-qualitaet",
+      "summary": "Wie Personal, Organisation und pädagogische Qualität zusammenhängen.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P01 - Wenn der Alltag Beziehung möglich macht.md"
+    },
+    {
+      "id": "P02",
+      "title": "Damit gute Vorsätze im Alltag ankommen",
+      "slug": "veraenderung",
+      "summary": "Wie Teams Veränderungen erproben können, ohne ihre Erfahrung zu übergehen.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P02 - Damit gute Vorsätze im Alltag ankommen.md"
+    },
+    {
+      "id": "P03",
+      "title": "Qualität, die mitwachsen kann",
+      "slug": "qualitaet-und-wachstum",
+      "summary": "Gemeinsame Orientierung, sorgfältige Einarbeitung und Lernen zwischen Standorten.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P03 - Qualität, die mitwachsen kann.md"
+    },
+    {
+      "id": "P04",
+      "title": "Demokratie beginnt vor dem Kinderparlament",
+      "slug": "partizipation",
+      "summary": "Beteiligung zeigt sich in den kleinen Entscheidungen des Tages.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P04 - Demokratie beginnt vor dem Kinderparlament.md"
+    },
+    {
+      "id": "P05",
+      "title": "Verlässliche Erwachsene, offene Welt",
+      "slug": "beziehung-und-bindung",
+      "summary": "Was Bindungsforschung für Eingewöhnung und den Kita-Alltag nahelegt.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P05 - Verlässliche Erwachsene, offene Welt.md"
+    },
+    {
+      "id": "P06",
+      "title": "Reggio als lebendige Orientierung",
+      "slug": "reggio",
+      "summary": "Jans pädagogischer Ausgangspunkt und seine Übersetzung in konkrete Praxis.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P06 - Reggio als lebendige Orientierung.md"
+    },
+    {
+      "id": "P07",
+      "title": "Ein passender Ort im veränderten Kita-Markt",
+      "slug": "markt-und-passung",
+      "summary": "Warum regionale Bedarfe genauer sind als die Erzählung vom vollen oder leeren Berlin.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P07 - Ein passender Ort im veränderten Kita-Markt.md"
+    },
+    {
+      "id": "P08",
+      "title": "Spielraum braucht eine saubere Rechnung",
+      "slug": "finanzierung",
+      "summary": "Betrieb, Entwicklung und Investition getrennt betrachten.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P08 - Spielraum braucht eine saubere Rechnung.md"
+    },
+    {
+      "id": "P09",
+      "title": "Werkzeuge, die den pädagogischen Alltag verstehen",
+      "slug": "technologie",
+      "summary": "Ein klarer Anwendungsfall, überprüfbare Regeln und möglichst wenig zusätzliche Arbeit.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P09 - Werkzeuge, die den pädagogischen Alltag verstehen.md"
+    },
+    {
+      "id": "P10",
+      "title": "Am Mittagstisch wird das Konzept konkret",
+      "slug": "ernaehrung",
+      "summary": "Wie Ernährung, Beteiligung und Organisation zusammenfinden.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P10 - Am Mittagstisch wird das Konzept konkret.md"
+    },
+    {
+      "id": "P11",
+      "title": "Zuhören, bevor aus einer Vermutung ein Angebot wird",
+      "slug": "bedarf-verstehen",
+      "summary": "Gespräche und Befragungen als Ausgangspunkt eines überprüfbaren Piloten.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P11 - Zuhören, bevor aus einer Vermutung ein Angebot wird.md"
+    },
+    {
+      "id": "P13",
+      "title": "Was eine Kita-Adresse erzählt – und was offenbleibt",
+      "slug": "standortrecherche",
+      "summary": "Öffentliche Profile sind ein Anfang; Auslastung und Passung brauchen örtliche Klärung.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P13 - Was eine Kita-Adresse erzählt – und was offenbleibt.md"
+    },
+    {
+      "id": "P14",
+      "title": "Das Beziehungsdorf",
+      "slug": "beziehungsdorf",
+      "summary": "Vertraute Erwachsene, zugehörige Eltern und die Freiheit, sich zu entwickeln.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P14 - Das Beziehungsdorf.md"
+    },
+    {
+      "id": "P15",
+      "title": "Kleine Werkzeuge, ernsthaftes Lernen",
+      "slug": "iterative-werkzeuge",
+      "summary": "KI kann die Erprobung erleichtern. Ob das hilft, zeigt der Betrieb.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P15 - Kleine Werkzeuge, ernsthaftes Lernen.md"
+    },
+    {
+      "id": "P16",
+      "title": "Eine Rechtsform, die dem Vorhaben dient",
+      "slug": "organisation-und-recht",
+      "summary": "Gemeinnütziger Bildungsauftrag und wirtschaftliche Entwicklung verantwortlich verbinden.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P16 - Eine Rechtsform, die dem Vorhaben dient.md"
+    },
+    {
+      "id": "P17",
+      "title": "Ein Name, der ein Versprechen trägt",
+      "slug": "name-und-marke",
+      "summary": "Eine verständliche Identität entwickeln und vor verbindlicher Nutzung prüfen.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P17 - Ein Name, der ein Versprechen trägt.md"
+    }
+  ]
+}
