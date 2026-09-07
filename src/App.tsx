@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { ArrowRight, ArrowUpRight, BookOpen, Download, Moon, Sun, X } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
@@ -38,7 +38,10 @@ export default function App(){
  const isReader=hash.startsWith('#lesen/')
  useEffect(()=>{const change=()=>{const next=location.hash;if(next.startsWith('#lesen/')&&!previousHash.current.startsWith('#lesen/')){const graph=document.getElementById('problem');readerOrigin.current={hash:previousHash.current||'#idee',y:window.scrollY,fromGraph:!!graph&&graph.getBoundingClientRect().top<200&&graph.getBoundingClientRect().bottom>100};setReaderContext({hash:readerOrigin.current.hash,fromGraph:readerOrigin.current.fromGraph})}if(!next.startsWith('#lesen/')&&previousHash.current.startsWith('#lesen/'))restore.current=next===readerOrigin.current.hash;previousHash.current=next;setHash(next);if(next.startsWith('#lesen/'))window.scrollTo(0,0)};addEventListener('hashchange',change);return()=>removeEventListener('hashchange',change)},[])
  useEffect(()=>{document.documentElement.classList.toggle('dark',dark)},[dark])
- useEffect(()=>{if(isReader)return;const frame=requestAnimationFrame(()=>{if(restore.current&&readerOrigin.current.y!==null){restore.current=false;window.scrollTo({top:readerOrigin.current.y,behavior:'instant'})}else document.getElementById(hash.slice(1))?.scrollIntoView({behavior:'instant'})});return()=>cancelAnimationFrame(frame)},[hash,isReader])
+ // Restore after the presentation becomes measurable, before the browser paints it.
+ // Deferring this to rAF briefly exposes the top of the page and lets a second
+ // interaction race the pending restoration (including a direct-reader return).
+ useLayoutEffect(()=>{if(isReader)return;if(restore.current&&readerOrigin.current.y!==null){restore.current=false;window.scrollTo({top:readerOrigin.current.y,behavior:'instant'})}else document.getElementById(hash.slice(1))?.scrollIntoView({behavior:'instant'})},[hash,isReader])
  useEffect(()=>{if(!root.current||mounted.current)return;mounted.current=true;const script=document.createElement('script');script.src=`${import.meta.env.BASE_URL}engine/scrollcraft.js`;script.onload=()=>{if(root.current)window.ScrollCraft.mount(root.current)};document.body.append(script)},[])
  useEffect(()=>{if(isReader)return;const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)setActive(e.target.id)}),{rootMargin:'-15% 0px -55% 0px'});root.current?.querySelectorAll('section[id]').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[isReader])
  const save=(id:string)=>{const next=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];setSaved(next);try{localStorage.setItem('bildungshaus-notizen',JSON.stringify(next))}catch{/* Storage is optional. */}}
