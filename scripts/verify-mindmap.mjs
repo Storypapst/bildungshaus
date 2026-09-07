@@ -3,7 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const base=process.env.VERIFY_URL??'http://127.0.0.1:4188/bildungshaus/',out=process.env.VERIFY_OUT??'output/qa/mindmap';await fs.mkdir(out,{recursive:true});
-const content=JSON.parse(await fs.readFile('src/content/content.json','utf8'));
+const content=JSON.parse(await fs.readFile('src/content/content.json','utf8')),network=JSON.parse(await fs.readFile('src/content/network-findings.json','utf8'));
+assert.equal(new Set(network.map(n=>n.id)).size,network.length);for(const field of ['title','metric','detail'])assert.equal(new Set(network.map(n=>n[field])).size,network.length,`Network ${field} must be independent`);
 const browser=await chromium.launch({channel:'chrome',headless:true});const results=[];
 for(const mobile of [false,true])for(const dark of [false,true]){
  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},isMobile:mobile,hasTouch:mobile,colorScheme:dark?'dark':'light',reducedMotion:'reduce'});
@@ -14,9 +15,12 @@ for(const mobile of [false,true])for(const dark of [false,true]){
  await page.getByRole('button',{name:'Alle Themen',exact:true}).click();let paths=0;
  for(const node of content.nodes){await page.locator(`.graph-topic-list [data-node="${node.id}"]`).click();const pane=page.locator(mobile?'.graph-mobile-dialog':'.graph-detail-pane');await pane.waitFor();assert.equal(await pane.getByRole('tab').count(),2);assert.equal(await pane.getByRole('tab',{name:'Überblick',exact:true}).getAttribute('aria-selected'),'true');const paras=await pane.locator('.graph-complete-detail').innerText();assert.equal(paras.replace(/\s+/g,' ').trim(),node.detail.replace(/\s+/g,' ').trim(),'Complete detail is shown without another click');assert.equal(await page.getByRole('button',{name:'Befund vertiefen'}).count(),0);await pane.getByRole('tab',{name:/Quellen/}).click();await pane.getByRole('link',{name:'Befund vertiefen',exact:true}).click();await page.locator('.longform h1').first().waitFor();assert.equal(new URL(page.url()).hash,'#lesen/'+node.documentId);await page.locator('.reader-nav a').first().click();await page.locator(`.graph-topic-list [data-node="${node.id}"][aria-pressed=true]`).waitFor();paths++;}
  await page.getByRole('button',{name:'Mindmap',exact:true}).click();await page.getByRole('button',{name:'Alles zeigen',exact:true}).click();const frame=page.locator('.mindmap-frame');await frame.scrollIntoViewIfNeeded();await page.waitForTimeout(100);
- const maps=[];
+ const maps=[];let networkPaths=0;
  for(const scene of ['Alltag in einem Haus','Mehrere Häuser & Träger']){
   await page.getByRole('tab',{name:scene,exact:true}).click();await frame.scrollIntoViewIfNeeded();await page.getByRole('button',{name:'Alles zeigen',exact:true}).click();await page.waitForTimeout(80);
+  if(scene.startsWith('Mehrere'))for(const finding of network){
+   await page.locator(`[data-map-node="${finding.mapKey}"]`).click();const pane=page.locator(mobile?'.graph-mobile-dialog':'.graph-detail-pane');await pane.waitFor();assert.equal(await pane.locator('[data-finding-id]').getAttribute('data-finding-id'),finding.id);assert.equal(await pane.locator('.finding-metric').innerText(),finding.metric);assert.equal((await pane.locator('.graph-complete-detail').innerText()).replace(/\s+/g,' ').trim(),finding.detail.replace(/\s+/g,' ').trim());assert.equal(await page.locator('.mindmap-node[aria-pressed=true]').count(),1,'One distinct layer node selected');await pane.getByRole('tab',{name:/Quellen/}).click();assert.equal(await pane.locator('.source-list li').count(),finding.sources.length);await pane.getByRole('link',{name:'Befund vertiefen',exact:true}).click();await page.locator('.longform h1').first().waitFor();assert.equal(new URL(page.url()).hash,'#lesen/'+finding.documentId);await page.locator('.reader-nav a').first().click();await page.locator(`[data-map-node="${finding.mapKey}"][aria-pressed=true]`).waitFor();assert.equal(await page.getByRole('tab',{name:scene,exact:true}).getAttribute('aria-selected'),'true','Reader return retains perspective');networkPaths++;
+  }
   const labels=await page.locator('.mindmap-node').evaluateAll(nodes=>nodes.map(n=>({id:n.dataset.mapNode,client:n.clientWidth,scroll:n.scrollWidth,text:n.querySelector('span').textContent,height:n.clientHeight,sh:n.scrollHeight})));
   assert.ok(labels.every(n=>n.scroll<=n.client&&n.sh<=n.height),JSON.stringify(labels));
   const bounds=await frame.boundingBox(),buttons=await page.locator('.mindmap-node').all();for(const button of buttons){const r=await button.boundingBox();assert.ok(r.x>=bounds.x&&r.y>=bounds.y&&r.x+r.width<=bounds.x+bounds.width&&r.y+r.height<=bounds.y+bounds.height,'Fit includes complete node '+await button.innerText())}
@@ -39,6 +43,6 @@ for(const mobile of [false,true])for(const dark of [false,true]){
  }
  assert.ok((await page.evaluate(()=>window.__capture.got))>=8,'Tests used native pointer capture '+JSON.stringify(await page.evaluate(()=>window.__capture)));assert.equal(await page.evaluate(()=>window.__capture.got),await page.evaluate(()=>window.__capture.lost),'Capture always released');
  await page.getByRole('button',{name:'Alles zeigen',exact:true}).click();if(mobile){await page.getByRole('button',{name:'Erklärung öffnen',exact:true}).click();await page.getByRole('tab',{name:'Überblick',exact:true}).click();}const axe=await new AxeBuilder({page}).include(mobile?'.graph-mobile-dialog':'#problem').withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();assert.deepEqual(axe.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})),[]);assert.deepEqual(errors,[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
- results.push({mobile,dark,paths,maps,nativeCapture:await page.evaluate(()=>window.__capture),errors});await context.close();
+ results.push({mobile,dark,paths,networkPaths,maps,nativeCapture:await page.evaluate(()=>window.__capture),errors});await context.close();
 }
 await browser.close();await fs.writeFile(`${out}/report.json`,JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));

@@ -1,0 +1,207 @@
+[
+  {
+    "id": "network-a-team",
+    "mapKey": "a-team",
+    "baseNodeId": "organisation",
+    "title": "Erfahrung weitergeben",
+    "metric": "Wissen bleibt oft bei Einzelnen",
+    "metricLabel": "Was das nächste Haus außer einer Anleitung braucht",
+    "summary": "Ein Team hat einen guten Ablauf gefunden. Im nächsten Haus muss trotzdem jemand erklären, warum er funktioniert und was vor Ort anders ist.",
+    "detail": "Bei mehreren Häusern wird aus einer persönlichen Übergabe eine Organisationsaufgabe. Wenn Wissen nur an einer erfahrenen Person hängt, verliert ein Wechsel mehr als eine besetzte Stelle: Andere müssen sich Absprachen und Ausnahmefälle erneut erschließen.\nDie BeKi-Auswertung beschreibt Personalprobleme und Fluktuation als Hindernisse kontinuierlicher Qualitätsarbeit. Sie belegt nicht, dass größere Träger zwangsläufig schlechter sind. Gemeinsame Fachberatung und Lernangebote können gerade ihre Stärke sein.\nUnser Ansatz: Das erste Team gibt Zweck, erprobte Schritte, Stolperstellen und eine erreichbare Ansprechperson weiter. Das zweite Haus ergänzt seine Besonderheiten. Ein Übergabegespräch und geschützte Begleitung gehören dazu.\nWir prüfen, ob benötigtes Wissen auch bei Abwesenheit der erfahrenen Person auffindbar ist und ob ungeplante Rückfragen abnehmen. Viele hochgeladene Dateien wären dafür kein ausreichender Erfolg.",
+    "documentId": "P03",
+    "sources": [
+      {
+        "title": "BeKi: Zwölf Jahre Qualitätsentwicklung in Berliner Kitas",
+        "url": "https://beki-qualitaet.de/media/pages/materialien-und-forschungsberichte-uebersicht/materialien-und-forschungsberichte/b34aaaa5d2-1683526766/abschlussbericht_12-jahre-qe-trends-und-entwicklungen_an-senbjf.pdf",
+        "year": 2022,
+        "population": "Berliner Kita-Leitungen; berichtete Umsetzung interner Evaluation",
+        "location": "S. 17 sowie Kapitel zu Personalbedingungen; kein Vergleich von Austrittsquoten nach Trägergröße"
+      },
+      {
+        "title": "Wagner u. a.: Change Leadership, Kapitel 8",
+        "url": "https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=5",
+        "location": "S. 134–136: Informationen, Verantwortlichkeit und Beziehungen; Übertragung auf Kitas ist unser Konzept"
+      }
+    ],
+    "evidenceStatus": "Gestaltungsansatz; Wirkung noch zu prüfen",
+    "mapTitle": "Erfahrung weitergeben"
+  },
+  {
+    "id": "network-b-team",
+    "mapKey": "b-team",
+    "baseNodeId": "organisation",
+    "title": "Einarbeitung einplanen",
+    "metric": "5 × 12 = 60 Stunden",
+    "metricLabel": "Fiktives Rechenbeispiel: Begleitzeit erfahrener Mitarbeitender",
+    "summary": "Neue Menschen brauchen Begleitung. Wer sie einarbeitet, steht in dieser Zeit nicht vollständig für den bisherigen Alltag zur Verfügung.",
+    "detail": "Angenommen, fünf Personen beginnen und jede erhält zwölf Stunden Begleitung durch eine erfahrene Kraft. Das bindet zusammen 60 Stunden der Begleitenden. Die Lernzeit der neuen Personen kommt dazu. Die Zahlen sind frei gewählte Annahmen, keine gemessenen Kita-Werte.\nÜber mehrere Häuser muss diese Zeit eingeplant werden: Wer kann begleiten, wer übernimmt die Gruppe, welche Aufgaben lassen sich gemeinsam erklären und welche müssen im eigenen Haus geübt werden? Ein gemeinsamer Einführungstermin ersetzt keine örtliche Eingewöhnung ins Team.\nEin übertragbarer Einstieg kann Doppelarbeit bei Materialien und Grundwissen verringern. Die frei werdende Zeit sollte gerade für gemeinsames Üben verfügbar sein. Ob tatsächlich weniger Begleitaufwand entsteht, messen wir statt ihn vorauszusetzen.\nIm Pilot zählen geplante und ungeplante Begleitstunden, sichere selbstständige Übernahme und Rückfragen nach der Einarbeitung. Erst diese Beobachtung trägt eine bessere Personalplanung.",
+    "documentId": "P03",
+    "sources": [
+      {
+        "title": "Wagner u. a.: Change Leadership, Kapitel 8",
+        "url": "https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=5",
+        "location": "S. 134–136: Informationen, Verantwortlichkeit und Beziehungen; Übertragung auf Kitas ist unser Konzept"
+      }
+    ],
+    "evidenceStatus": "Fiktives Rechenbeispiel; keine Forschungskennzahl",
+    "mapTitle": "Einarbeitung planen"
+  },
+  {
+    "id": "network-change",
+    "mapKey": "change",
+    "baseNodeId": "personal",
+    "title": "Mehr Wechsel in absoluten Zahlen",
+    "metric": "Gleiche Quote, mehr Übergänge",
+    "metricLabel": "Rechenbeispiel: 20 oder 100 Beschäftigte bei angenommenen 5 % Austritten",
+    "summary": "Mehr Häuser bedeuten bei gleicher Personalstruktur mehr Beschäftigte. Damit können mehr Übergänge zu organisieren sein, ohne dass die Austrittsquote steigt.",
+    "detail": "Fiktives Beispiel: Ein Haus mit durchschnittlich 20 Beschäftigten und einer jährlichen Austrittsquote von 5 % hat rechnerisch einen Austritt. Fünf solche Häuser mit zusammen 100 Beschäftigten kommen bei derselben Quote auf fünf. Das ist eine Rechenannahme, keine Prognose und kein Forschungswert.\nDer zusätzliche Aufwand verteilt sich auf Suche, Übergabe, Einarbeitung und Beziehungen. Ob die einzelnen Vorgänge leichter oder schwieriger werden, hängt von der Organisation ab. Eine gemeinsame Personalplanung kann helfen; sie verursacht selbst Abstimmungsarbeit.\nInterne Wechsel zwischen Häusern werden getrennt von Austritten aus dem Träger erfasst. Sonst erscheint dieselbe Bewegung mehrfach oder es bleibt unsichtbar, dass zwar der Träger eine Person behält, ein Kind aber eine Bezugsperson verliert.\nUnser Nutzenversprechen betrifft zunächst die Bewältigung dieser Übergänge. Eine niedrigere Austrittsquote müssten wir gesondert über längere Zeit nachweisen.",
+    "documentId": "P12",
+    "sources": [
+      {
+        "title": "Forschungsgrundlagen und Messgrenzen in P12",
+        "url": "https://dreambau.com/bildungshaus/#lesen/P12",
+        "location": "Trennung von Einrichtungswechsel, Trägeraustritt, Berufsaustritt und täglichen Bezugspersonenwechseln; das Beispiel ist eine eigene Rechnung"
+      }
+    ],
+    "evidenceStatus": "Fiktives Rechenbeispiel; keine höhere Quote behauptet",
+    "mapTitle": "Mehr Übergänge"
+  },
+  {
+    "id": "network-a-kitchen",
+    "mapKey": "a-kitchen",
+    "baseNodeId": "kueche",
+    "title": "Rezepte gemeinsam verbessern",
+    "metric": "Ein Rezept, mehrere Küchen",
+    "metricLabel": "Gemeinsamer Qualitätsrahmen, passende örtliche Varianten",
+    "summary": "Eine Küche findet eine gute Lösung für ein saisonales Gericht. Andere Küchen könnten darauf aufbauen, statt Mengen, Arbeitsschritte und Ersatzprodukte erneut zu entwickeln.",
+    "detail": "Der DGE-Standard verbindet Speiseplanung, Einkauf, Zubereitung und Rückmeldung. Er liefert fachliche Maßstäbe; er belegt keine automatische Ersparnis durch gemeinsame Rezepte.\nWir wollen freigegebene Rezeptversionen mit Portionsmengen, Allergenen, benötigten Geräten und erprobten Varianten teilen. Ein anderes Haus prüft, was zu seinem Ofen, seiner Lagerung, seinem Team und den Kindern passt. Ein Rezept wird nicht allein deshalb geeignet, weil es andernorts funktioniert hat.\nRückmeldungen aus mehreren Küchen können den gemeinsamen Bestand genauer machen: Welche saisonale Alternative klappt? Wo war die Mengenangabe missverständlich? Welche Vorbereitung verhindert Zeitdruck an der Ausgabe? Die fachliche Freigabe bleibt nachvollziehbar.\nDer erste Prüfpunkt ist reproduzierbare Qualität. Zusätzlich vergleichen wir Vorbereitungszeit und Reste nach derselben Methode. Ein besseres Essen darf mehr Aufwand brauchen; dann ist das eine bewusste Qualitätsentscheidung.",
+    "documentId": "P10",
+    "sources": [
+      {
+        "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas",
+        "url": "https://www.fitkid-aktion.de/fileadmin/user_upload/medien/DGE-QST/DGE_Qualitaetsstandard_Kita.pdf",
+        "year": 2023,
+        "population": "Fachlicher Standard für Kitaverpflegung; keine Einsparstudie",
+        "location": "Kap. 2.2, 4.1–4.3 und 5.2: Schnittstellen, Planung, Einkauf, Zubereitung und Konzept"
+      }
+    ],
+    "evidenceStatus": "Gestaltungsansatz; Wirkung noch zu prüfen",
+    "mapTitle": "Rezepte verbessern"
+  },
+  {
+    "id": "network-b-kitchen",
+    "mapKey": "b-kitchen",
+    "baseNodeId": "kueche",
+    "title": "Beschaffung abstimmen",
+    "metric": "Mengen bündeln, Fristen beachten",
+    "metricLabel": "Gemeinsame Planung ist mehr als ein Mengenrabatt",
+    "summary": "Mehrere Küchen können Bedarf, saisonale Verfügbarkeit und geprüfte Ersatzprodukte gemeinsam planen. Ob sich das lohnt, entscheidet der gesamte Lieferweg.",
+    "detail": "Ein gemeinsamer Bestellentwurf kann wiederholte Abstimmung mit Händlern bündeln. Dafür müssen Portionen, Gebinde, Bestellfristen, Lagerraum und Liefertermine je Haus bekannt sein. Die Küchen bestätigen ihren tatsächlichen Bedarf.\nEine größere Bestellung ist nicht automatisch günstiger: Mindestmengen, zusätzliche Transporte, Verderb oder fehlender Lagerplatz können einen Preisvorteil aufzehren. Auch die Abhängigkeit von einem einzigen Lieferanten gehört in die Abwägung.\nUnser Ansatz verbindet einen gemeinsamen saisonalen Plan mit örtlichen Mengen und fachlich geprüften Alternativen. Eine Lieferänderung erreicht die betroffene Küche vor der Verwendung; Rezept, Allergenangaben und Zubereitung werden dabei mitgeprüft.\nWir vergleichen Rechnungen, Lieferkosten, Reste und Planungszeit mit dem bisherigen Ablauf. Erst der Vergleich zeigt, ob weniger ausgegeben, Zeit anders eingesetzt oder Versorgung verlässlicher wird.",
+    "documentId": "P10",
+    "sources": [
+      {
+        "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas",
+        "url": "https://www.fitkid-aktion.de/fileadmin/user_upload/medien/DGE-QST/DGE_Qualitaetsstandard_Kita.pdf",
+        "year": 2023,
+        "population": "Fachlicher Standard für Kitaverpflegung; keine Einsparstudie",
+        "location": "Kap. 2.2, 4.1–4.3 und 5.2: Schnittstellen, Planung, Einkauf, Zubereitung und Konzept"
+      }
+    ],
+    "evidenceStatus": "Gestaltungsansatz; Wirkung noch zu prüfen",
+    "mapTitle": "Einkauf abstimmen"
+  },
+  {
+    "id": "network-families",
+    "mapKey": "families",
+    "baseNodeId": "familie",
+    "title": "Übergänge verlässlich machen",
+    "metric": "Ein Wechsel, viele Beteiligte",
+    "metricLabel": "Was Kinder und Familien von gemeinsamer Organisation merken sollen",
+    "summary": "Ein Personalwechsel betrifft nicht nur einen Dienstplan. Ein Kind begegnet neuen Erwachsenen; die Familie muss wissen, wer übernimmt und welche Absprachen weiter gelten.",
+    "detail": "Bei Vertretung zwischen Häusern kommen neue Wege und Zuständigkeiten hinzu. Verfügbare Kräfte können eine Lücke schließen, sind aber noch keine vertrauten Bezugspersonen. Dieser Unterschied muss in der Planung sichtbar bleiben.\nWir wollen Übergaben so organisieren, dass eine zuständige Person die neuen Beteiligten begleitet und Familien rechtzeitig eine klare Ansprechperson kennen. Notwendige Informationen werden passend zur Aufgabe weitergegeben; ein gemeinsamer Träger rechtfertigt keine beliebige Weitergabe persönlicher Daten.\nGemeinsame Verfahren können verhindern, dass jedes Haus den Übergang neu erfindet. Die konkrete Beziehung zum Kind muss trotzdem vor Ort entstehen. Das lässt sich nicht aus einer Wissensdatenbank abrufen.\nWir beobachten daher erreichbare Bezugspersonen, verständliche Übergaben und die Erfahrung der Familien. Eine besser gefüllte Schicht allein würde den Erfolg zu eng beschreiben.",
+    "documentId": "P12",
+    "sources": [
+      {
+        "title": "Wagner u. a.: Change Leadership, Kapitel 8",
+        "url": "https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=5",
+        "location": "S. 134–136: Informationen, Verantwortlichkeit und Beziehungen; Übertragung auf Kitas ist unser Konzept"
+      }
+    ],
+    "evidenceStatus": "Gestaltungsansatz; Wirkung noch zu prüfen",
+    "mapTitle": "Verlässliche Übergänge"
+  },
+  {
+    "id": "network-provider",
+    "mapKey": "provider",
+    "baseNodeId": "traeger",
+    "title": "Verständigung organisieren",
+    "metric": "2 Häuser: 1 Weg. 5 Häuser: 10.",
+    "metricLabel": "Fiktives Strukturbeispiel für mögliche direkte Abstimmungswege",
+    "summary": "Wenn jedes Haus jede gemeinsame Frage direkt mit jedem anderen klärt, wachsen die möglichen Verbindungen schneller als die Zahl der Häuser.",
+    "detail": "Für n Häuser gibt es n × (n − 1) ÷ 2 mögliche ungeordnete Hauspaare: bei zwei Häusern eines, bei fünf Häusern zehn. Das zählt nur mögliche direkte Verbindungen. Es sagt nichts über tatsächliche Besprechungen, Stunden oder Qualität aus.\nEin Träger kann gemeinsame Fragen bündeln: eine verantwortliche Stelle pflegt den Standard, die Häuser melden Erfahrungen zurück. So muss nicht jede Änderung in jedem Paar einzeln ausgehandelt werden. Fachliche Abstimmung zwischen Häusern bleibt dennoch nötig.\nDer gemeinsame Weg darf keine neue Warteschlange erzeugen. Es braucht klar benannte Entscheidungen, erreichbare Verantwortliche und ein Zeitfenster für Rückmeldung. Sonst ersetzt zentrale Bürokratie lediglich verstreute Bürokratie.\nWir prüfen Bearbeitungszeit, doppelte Rückfragen und ungeklärte Zuständigkeiten. Größere Träger können vorhandene Fachberatung nutzen; unser Ansatz soll daran anschließen.",
+    "documentId": "P03",
+    "sources": [
+      {
+        "title": "BeKi: Zwölf Jahre Qualitätsentwicklung in Berliner Kitas",
+        "url": "https://beki-qualitaet.de/media/pages/materialien-und-forschungsberichte-uebersicht/materialien-und-forschungsberichte/b34aaaa5d2-1683526766/abschlussbericht_12-jahre-qe-trends-und-entwicklungen_an-senbjf.pdf",
+        "year": 2022,
+        "population": "Berliner Kita-Leitungen; berichtete Umsetzung interner Evaluation",
+        "location": "S. 17 sowie Kapitel zu Personalbedingungen; kein Vergleich von Austrittsquoten nach Trägergröße"
+      },
+      {
+        "title": "Wagner u. a.: Change Leadership, Kapitel 8",
+        "url": "https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=5",
+        "location": "S. 134–136: Informationen, Verantwortlichkeit und Beziehungen; Übertragung auf Kitas ist unser Konzept"
+      }
+    ],
+    "evidenceStatus": "Fiktives Strukturbeispiel; keine Aufwandsschätzung",
+    "mapTitle": "Abstimmung organisieren"
+  },
+  {
+    "id": "network-lab",
+    "mapKey": "lab",
+    "baseNodeId": "technik",
+    "title": "Erfahrung gemeinsam pflegen",
+    "metric": "Erproben → anpassen → zurückgeben",
+    "metricLabel": "Der Skalierungswert liegt im wiederverwendbaren Lernen",
+    "summary": "Ein brauchbarer Ablauf wird mit jedem weiteren Haus nicht einfach kopiert. Seine Voraussetzungen, örtlichen Varianten und bekannten Grenzen werden genauer.",
+    "detail": "Das Lab sammelt nicht nur gute Ideen. Es hält fest, was erprobt wurde, unter welchen Bedingungen es funktionierte und welche Fassung fachlich freigegeben ist. Eine benannte Person verantwortet die Pflege.\nDas nächste Haus erhält einen praktischen Einstieg und meldet Abweichungen zurück. Die Küche mit anderem Gerät braucht vielleicht eine Variante; das Team mit anderen Öffnungszeiten eine andere Übergabe. Diese Erfahrung verbessert den gemeinsamen Baustein.\nTechnik kann passende freigegebene Informationen finden, Rückfragen ordnen und Mengen aus bestätigten Angaben rechnen. Sie ersetzt weder fachliche Prüfung noch die Lernzeit. Der Vorteil wäre, dass eine gelöste Frage nicht überall neu bearbeitet werden muss.\nWir messen Aufwand bis zu einer brauchbaren Lösung, erfolgreiche Übernahmen und zusätzliche Pflegearbeit. Erst wiederholter Nutzen rechtfertigt den Betrieb eines gemeinsamen Werkzeugs.",
+    "documentId": "P15",
+    "sources": [
+      {
+        "title": "Wagner u. a.: Change Leadership, Kapitel 8",
+        "url": "https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=5",
+        "location": "S. 134–136: Informationen, Verantwortlichkeit und Beziehungen; Übertragung auf Kitas ist unser Konzept"
+      }
+    ],
+    "evidenceStatus": "Gestaltungsansatz; Wirkung noch zu prüfen",
+    "mapTitle": "Wissen gemeinsam pflegen"
+  },
+  {
+    "id": "network-resources",
+    "mapKey": "resources",
+    "baseNodeId": "spielraum",
+    "title": "Den gemeinsamen Nutzen prüfen",
+    "metric": "Zeitgewinn ist noch kein Geldgewinn",
+    "metricLabel": "Was nach Einführung, Pflege und örtlicher Anpassung übrig bleibt",
+    "summary": "Gemeinsame Rezepte, Einführungsmaterialien oder Bestellungen könnten mehrfachen Aufwand verringern. Daraus entsteht erst dann ein wirtschaftlicher Vorteil, wenn die zusätzliche gemeinsame Arbeit mitgerechnet wird.",
+    "detail": "Wir vergleichen je Haus Vorbereitung, Begleitung, Bestellarbeit, Verbrauch und tatsächlich bezahlte Leistungen. Dazu kommen einmalige Einführung sowie laufende Fachpflege, Technik und Abstimmung des gemeinsamen Angebots. Dieselbe Zeit wird nicht zugleich als freie Kapazität und als eingesparte Rechnung gezählt.\nWeniger Suchzeit kann mehr Begleitung für Kinder ermöglichen, obwohl die Personalkosten gleich bleiben. Ein günstigerer Einkauf kann Ausgaben senken, aber durch Lieferkosten oder Reste wieder teurer werden. Deshalb betrachten wir den jeweiligen Vorgang vollständig.\nWir beginnen mit einem klar abgegrenzten Ablauf in zwei Häusern. Vorher werden Aufwand und Qualitätskriterien vereinbart, danach wird unter vergleichbaren Bedingungen erneut gemessen. Ein Nutzen im ersten Haus wird nicht ungeprüft auf alle weiteren hochgerechnet.\nDer Maßstab ist ein tragfähiger gemeinsamer Betrieb: bessere oder verlässlichere Betreuung und ein Aufwand, den die Häuser tatsächlich tragen können.",
+    "documentId": "P08",
+    "sources": [
+      {
+        "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas",
+        "url": "https://www.fitkid-aktion.de/fileadmin/user_upload/medien/DGE-QST/DGE_Qualitaetsstandard_Kita.pdf",
+        "year": 2023,
+        "population": "Fachlicher Standard für Kitaverpflegung; keine Einsparstudie",
+        "location": "Kap. 2.2, 4.1–4.3 und 5.2: Schnittstellen, Planung, Einkauf, Zubereitung und Konzept"
+      },
+      {
+        "title": "Wagner u. a.: Change Leadership, Kapitel 8",
+        "url": "https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=5",
+        "location": "S. 134–136: Informationen, Verantwortlichkeit und Beziehungen; Übertragung auf Kitas ist unser Konzept"
+      }
+    ],
+    "evidenceStatus": "Gestaltungsansatz; Wirkung noch zu prüfen",
+    "mapTitle": "Nutzen nach Kosten"
+  }
+]
