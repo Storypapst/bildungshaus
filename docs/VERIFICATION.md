@@ -1,3 +1,5 @@
+Current revision: [V4 visual and relationship verification](VERIFICATION-V4.md). The following records the preceding V3 revision.
+
 # Verification — revised Wurzelwald presentation
 
 Public URL: https://dreambau.com/bildungshaus/ · revision date: 2026-09-07.

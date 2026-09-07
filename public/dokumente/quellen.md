@@ -235,6 +235,36 @@ Reichweite: Plattformnachweis, keine Validierung eigener Fragen und keine Behaup
 
 Verwendung: P11. Prüfung am 7. September 2026: Technische Umsetzung durch separaten Arbeitsstrang.
 
+## S24 · Anspruch, Relevanz und respektvolle Beziehungen
+
+**[Tony Wagner: Rigor on Trial, zuerst Education Week, 11. Januar 2006](https://www.tonywagner.com/news/rigor-on-trial)**
+
+Fundstelle: Einleitung sowie Fragen 6 und 7 des Autorenartikels. Wagner benennt drei R: Rigor, Relevance und Respectful Relationships. Der erlebte Respekt durch Erwachsene und andere Lernende gehört dazu; „Person“ ist keine zusätzliche vierte Kategorie.
+
+Reichweite: Pädagogische Orientierung aus der Schulpraxis; ihre Übertragung auf unser Haus ist eine eigene Konzeptableitung. Sie verlangt nicht, dass ein Kind jeden Erwachsenen gleich gern mag, und belegt keine Kita-spezifische Wirkung.
+
+Verwendung: Whitepaper Kapitel 3; P02/P05; Website-Vertiefung. Prüfung am 7. September 2026: Autorenartikel live vollständig gelesen.
+
+## S25 · Vertrauen und gemeinsame Verantwortung
+
+**[Wagner, Kegan und Mitautorinnen/-autoren: Change Leadership, Kapitel 8](https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=7)**
+
+Fundstelle: Gedruckte S. 134–136, insbesondere S. 136 (PDF-Seite 7). Dort werden nach Bryk und Schneider vier Merkmale relationalen Vertrauens genannt: Respekt, Kompetenz, persönliche Zuwendung und Integrität. Diese Vierergruppe ist von den drei R zu unterscheiden.
+
+Zugang: Öffentlich zugänglicher Buchauszug beim Cahn Fellows Program. Die Copyrightseite nennt 2006; der E-Book-Fußtext 2010. Eine digitale Vollbuchausgabe aus dem eigenen Bestand wurde nicht gefunden. Geprüft wurden die relevanten Textpassagen des Auszugs; kein vollständiges Buchreview und keine eigene Prüfung der dort zitierten Bryk/Schneider-Studie.
+
+Verwendung: Whitepaper Kapitel 5; P03. Reichweite: Organisations- und Lernorientierung, keine empirische Bestätigung unseres Piloten.
+
+## S26 · Herkunft des Einstiegssprichworts
+
+**[Charles C. Doyle, American Dialect Society: Belege und Varianten, 3. März 2016](https://listserv.linguistlist.org/pipermail/ads-l/2016-March/141091.html)**
+
+Fundstelle: Historische Belegsammlung und abschließende Einordnung des Spruchs über schnelles Alleingehen und gemeinsames Weiterkommen.
+
+Reichweite: Die häufige Zuschreibung als afrikanisches Sprichwort ist damit nicht gesichert. Doyle dokumentiert ältere Varianten und spätere Herkunftszuschreibungen; daraus folgt keine zweifelsfreie Bestimmung des Ursprungs. Die Website bezeichnet den Einstieg deshalb schlicht als „Sprichwort“.
+
+Verwendung: Emotionaler Website-Einstieg, keine wissenschaftliche Begründung des Konzepts. Prüfung am 7. September 2026: Archivbeitrag live gelesen.
+
 ## Rechenprüfung
 
 Amtlicher Sachkostensatz × hypothetische Fallzahl:
@@ -247,7 +277,7 @@ Das Szenario setzt 640 nach dem genannten Sachkostensatz finanzierte Kinder vora
 
 ## Umgang mit offenen Nachweisen
 
-Für P12 liegt kein eigenes Papier vor. Standortbelegung, Kundenbedarf, Zahlungsbereitschaft, durchgeführte Leitungsinterviews, eigene Wirkungsgrößen und vertragliche Partnerschaften sind in dieser Publikationsfassung nicht als erwiesen ausgewiesen. Frühere Domainabfragen werden nicht als aktuell verfügbar dargestellt. Abweichende oder überzogene Aussagen aus älteren Research-Versionen sind nicht stillschweigend fortgeschrieben.
+P12 ist eine redaktionelle Synthese veröffentlichter Daten; eine eigene empirische Studie liegt nicht vor. Standortbelegung, Kundenbedarf, Zahlungsbereitschaft, durchgeführte Leitungsinterviews, eigene Wirkungsgrößen und vertragliche Partnerschaften sind in dieser Publikationsfassung nicht als erwiesen ausgewiesen. Frühere Domainabfragen werden nicht als aktuell verfügbar dargestellt. Abweichende oder überzogene Aussagen aus älteren Research-Versionen sind nicht stillschweigend fortgeschrieben.
 
 
 ## Ergänzungen der Überarbeitung vom 7. September 2026

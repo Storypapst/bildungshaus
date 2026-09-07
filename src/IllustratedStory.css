@@ -1,0 +1,30 @@
+/* Sparse drawings punctuate the argument; the text remains the navigation. */
+.hero .proverb-first{font-size:clamp(19px,2.2vw,29px);color:var(--muted-foreground);margin-bottom:16px;max-width:none}
+.hero h1{max-width:24ch;font-size:clamp(43px,6.4vw,88px)}
+.proverb-source{display:inline-block;font-size:12px;color:var(--muted-foreground);margin-top:18px}
+.hero-copy strong{display:block;font-weight:500;margin-bottom:8px}
+.hero .hero-art{overflow:visible;max-height:none}
+.hero .hero-art img{max-height:440px}
+.everyday .thesis-chain{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:38px 0 24px}
+.everyday .thesis-chain li{padding:0;border:0;background:transparent;min-width:0;font-size:16px;line-height:1.4}
+.thesis-chain img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:5px;margin-bottom:16px}
+.thesis-chain li:nth-child(2) img{transform:rotate(2deg)}
+.thesis-chain li:nth-child(3) img{transform:rotate(-2deg)}
+.relationship-bridge{border-left:2px solid #b9cce6;padding:0 0 0 26px;max-width:740px;margin:-22px 0 58px}
+.relationship-bridge p:first-child{font-size:25px;line-height:1.4;margin-bottom:16px}
+.relationship-bridge p+p{color:#e0e9f5;font-size:17px}
+.relationship-bridge a{display:inline-block;margin-top:18px;font-size:15px}
+.relationship-bridge svg{display:inline;width:16px;height:16px}
+.kitchen-illustration{margin:-20px auto 44px;width:min(780px,100%)}
+.kitchen-illustration img{width:100%;border-radius:6px;mix-blend-mode:multiply}
+.economic-intro{display:flex;gap:22px;align-items:center;max-width:450px}
+.economic-intro img{width:130px;height:130px;object-fit:contain;transform:rotate(4deg);border-radius:5px}
+.economic-intro p{font-size:17px;color:var(--muted-foreground)}
+.pilot-illustration{width:min(410px,43%);float:left;margin:0 36px 26px 0;transform:rotate(-2deg)}
+.pilot-illustration img{border-radius:6px;mix-blend-mode:multiply}
+.pilot .pilot-steps{max-width:none;overflow:hidden}
+.pilot .pilot-criteria{clear:both}
+.dark .kitchen-illustration img,.dark .pilot-illustration img{mix-blend-mode:normal}
+@media(max-width:1000px){.everyday .thesis-chain{grid-template-columns:repeat(2,minmax(0,1fr))}.thesis-chain img{max-width:210px}.economic-intro{max-width:370px}.economic-intro img{width:100px;height:100px}.pilot-illustration{float:none;width:min(440px,100%);margin:0 auto 30px}}
+@media(max-width:700px){.hero .proverb-first{font-size:19px;max-width:28ch}.hero h1{font-size:clamp(38px,10.5vw,58px)}.hero .hero-art img{max-height:300px}.hero .hero-bottom{margin-top:22px}.everyday .thesis-chain{gap:25px 18px}.everyday .thesis-chain li{font-size:16px}.relationship-bridge{padding-left:18px;margin-top:0}.relationship-bridge p:first-child{font-size:23px}.kitchen-illustration{margin:0 auto 30px}.economic-intro{max-width:none}.economic-intro img{width:90px;height:90px;flex-shrink:0}.pilot .pilot-steps li{gap:20px}.pilot .pilot-criteria{padding-left:0}}
+@media(prefers-reduced-motion:reduce){.hero-art,.thesis-chain img,.pilot-illustration{will-change:auto}}

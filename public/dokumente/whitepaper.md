@@ -1,11 +1,11 @@
 
-# Bildungshaus Wurzelwald
+# Bildungshaus
 
 ## Gute Betreuung beginnt bei ihrem Alltag.
 
 Wir wollen, dass Kinder bessere Möglichkeiten haben, ihr Leben zu gestalten. Dass sie Menschen finden, denen sie vertrauen, ihre eigenen Fragen ernst nehmen und erleben: Ich kann etwas bewirken. Entscheidend ist, was ihnen unter den tatsächlichen Bedingungen am ehesten dabei hilft. Eine pädagogische Überzeugung gibt Orientierung. Im Alltag muss sie sich daran prüfen lassen, was Kinder, Familien und Mitarbeitende wirklich erleben.
 
-Das Bildungshaus Wurzelwald verbindet eine Reggio-inspirierte Pädagogik mit einer Organisation, die diese Arbeit möglich macht. Sein langfristiger Horizont reicht von frühen Begegnungen mit Familien über Krippe und Kita bis zu Ganztag und Schule. Wir beginnen im Kita-Bereich. Dort wollen wir gemeinsam mit einer Einrichtung untersuchen, welche Bedingungen gute Betreuung tragen, gezielt verbessern und erfolgreiche Verfahren für weitere Häuser zugänglich machen.
+Das Bildungshaus verbindet eine Reggio-inspirierte Pädagogik mit einer Organisation, die diese Arbeit möglich macht. Sein langfristiger Horizont reicht von frühen Begegnungen mit Familien über Krippe und Kita bis zu Ganztag und Schule. Wir beginnen im Kita-Bereich. Dort wollen wir gemeinsam mit einer Einrichtung untersuchen, welche Bedingungen gute Betreuung tragen, gezielt verbessern und erfolgreiche Verfahren für weitere Häuser zugänglich machen.
 
 **Unsere These:** Die Gestaltung der Betreuung prägt die Qualität für Kinder und die Arbeitsbedingungen der Erwachsenen. Wo Beziehungen, Führung, Einarbeitung und tatsächliche Mitwirkung tragen, kann gute Arbeit verlässlich gelingen. Wo sie fehlen, können Überforderung, Ausfälle und Personalwechsel entstehen. Diese Folgen belasten anschließend die Beziehungen und die Wirtschaftlichkeit zusätzlich. Deshalb setzen wir an der gelebten pädagogischen und organisatorischen Praxis an.
 
@@ -45,6 +45,8 @@ Im teiloffenen Alltag können Kinder zwischen übersichtlichen Funktionsräumen,
 
 Darin liegt die Verbindung von Bindung und Eigenständigkeit. Verlässliche Beziehungen können das Erkunden unterstützen. Kinder sollen auch Freundschaften schließen, gemeinsam Regeln aushandeln und voneinander lernen. Bei Ausgrenzung oder Überforderung bleibt eine zugewandte erwachsene Person erreichbar. Die aus Neufelds Perspektive wichtige Sorge um tragfähige Erwachsenenbeziehungen wird so in Alltagspraxis übersetzt. Eine pauschale Abwertung von Gleichaltrigen oder berufstätigen Eltern ergibt sich daraus nicht.
 
+Fachlicher Anspruch, Bedeutung und Beziehung gehören zusammen. Tony Wagner beschreibt diese Verbindung als Rigor, Relevance und Respectful Relationships. Für unser Haus heißt das: Ein Vorhaben soll Kinder zum eigenen Denken anregen, an ihre Fragen anschließen und von Erwachsenen begleitet werden, bei denen sie sich respektiert fühlen. Ein sorgfältig vorbereitetes Angebot erreicht ein Kind womöglich nicht, wenn es der begleitenden Person ausweicht oder sich nicht ernst genommen fühlt. Wir fragen deshalb auch nach dieser Erfahrung. Das ist unsere Übertragung einer schulischen Orientierung auf den Bildungsalltag, keine bereits belegte Wirkung unseres Konzepts. [Tony Wagner: Rigor on Trial](https://www.tonywagner.com/news/rigor-on-trial)
+
 Aus freier Pädagogik interessieren uns begründete Wahlmöglichkeiten, eigene Projekte und Verantwortung im gemeinsamen Leben. Freiheit hat einen konkreten Gegenstand: Welches Material möchte ich benutzen? Mit wem arbeite ich? Wie lösen wir den Streit um den Raum? Erwachsene erklären Schutzgrenzen und bleiben für ihre Einhaltung verantwortlich. Ein Kind muss weder seine Sicherheit noch seine Zugehörigkeit durch Anpassung verdienen.
 
 Das Ankommen beginnt möglichst vor dem ersten langen Betreuungstag. Wiederkehrende kurze Besuche, eine Eltern-Kind-Gruppe oder eine vertraute Ansprechperson können Teil des zu entwickelnden Angebots sein. Familien sollen das Haus kennenlernen und Kontakte knüpfen können. Eine solche Brücke braucht Zeit, Personal und eine Finanzierung; sie wird im Pilot als eigener Ablauf geplant. Eingewöhnung orientiert sich an der Situation des Kindes und der Familie. Ruhiges Verhalten allein reicht als Kriterium ihres Gelingens nicht aus.
@@ -76,6 +78,8 @@ Immunity to Change liefert dafür eine mögliche Gesprächsstruktur: ein wichtig
 Im Leitungsbeispiel könnte der Versuch lauten: Eine Kollegin entscheidet eine klar abgegrenzte Woche lang selbst über einen Ablauf; Verantwortung, Unterstützung und Rückblick werden vorher vereinbart. Die Leitung beobachtet, was tatsächlich passiert, statt entweder alles abzugeben oder alles weiter zu kontrollieren. Ein anderes Problem braucht eine andere Antwort. Fehlt schlicht Zeit, muss die Organisation Zeit schaffen.
 
 Einarbeitung gehört deshalb in den Dienstplan. Eine neue Person erhält eine Begleitung, erreichbare Hilfen und Rückmeldung zu einem selbst gewählten Lernschritt. Ein Werkzeug kann Material bereitstellen oder Fragen festhalten. Dass Lernen während der Arbeit stattfinden darf, ist eine Führungsentscheidung. Der Maßstab ist, ob Menschen sicherer handeln, sich weiterentwickeln und diese Erfahrung in ihre Arbeit mit Kindern einbringen können.
+
+Vertrauen braucht eine erfahrbare Grundlage. *Change Leadership* nennt im Anschluss an Bryk und Schneider Respekt, Kompetenz, persönliche Zuwendung und Integrität. [Kapitel 8, S. 136](https://cahnfellowsprograms.org/wp-content/uploads/2021/01/WAGNER-KEGAN-Change-Leadership-Chapter-8.pdf#page=7) Für unsere Zusammenarbeit heißt das: Die Begleitung hört zu, kann fachlich helfen, nimmt die Situation des Gegenübers ernst und hält ihre Zusagen ein. Wer einen Fehler anspricht, muss sich auf diese Haltung verlassen können. So erhält anspruchsvolles gemeinsames Lernen eine tragfähige Grundlage.
 
 Vertiefung: [Vom Vorsatz zum Versuch](#lesen/P02).
 

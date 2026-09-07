@@ -1,9 +1,9 @@
 
-# Bildungshaus Wurzelwald
+# Bildungshaus
 
 ## Gute Betreuung beginnt bei ihrem Alltag.
 
-Wir wollen, dass Kinder bessere Möglichkeiten haben, ihr Leben zu gestalten: verlässliche Beziehungen, Raum für eigene Fragen und die Erfahrung, etwas bewirken zu können. Bildungshaus Wurzelwald verbindet eine Reggio-inspirierte Pädagogik mit einer Organisation, die diese Arbeit im Alltag trägt. Der Bildungsweg reicht perspektivisch von frühen Familienkontakten über Krippe und Kita bis zu Ganztag und Schule. Der erste praktische Entwicklungsschritt liegt im Kita-Bereich.
+Wir wollen, dass Kinder bessere Möglichkeiten haben, ihr Leben zu gestalten: verlässliche Beziehungen, Raum für eigene Fragen und die Erfahrung, etwas bewirken zu können. Bildungshaus verbindet eine Reggio-inspirierte Pädagogik mit einer Organisation, die diese Arbeit im Alltag trägt. Der Bildungsweg reicht perspektivisch von frühen Familienkontakten über Krippe und Kita bis zu Ganztag und Schule. Der erste praktische Entwicklungsschritt liegt im Kita-Bereich.
 
 **Unsere These:** Die pädagogische und organisatorische Gestaltung der Betreuung prägt die Qualität für Kinder und die Arbeitsbedingungen der Erwachsenen. Wo Beziehungen, Führung, Einarbeitung und Mitwirkung tragen, kann gute Arbeit verlässlich gelingen. Fehlen diese Bedingungen, können Überforderung, Ausfälle und jährliche Personalwechsel entstehen. Diese Folgen belasten Betreuung und Wirtschaftlichkeit anschließend zusätzlich. Deshalb beginnt unser Ansatz bei der gelebten Praxis.
 

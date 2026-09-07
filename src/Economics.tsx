@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './Economics.css'
 import { Slider } from '@/components/ui/slider'
 import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field'
 export function Economics(){
