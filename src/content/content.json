@@ -1,12 +1,12 @@
 {
   "version": "1.0",
   "updatedAt": "2026-09-07",
-  "title": "Das Bildungshaus",
-  "subtitle": "Ein guter Alltag. Raum zum Wachsen.",
+  "title": "Bildungshaus Wurzelwald",
+  "subtitle": "Beziehung, Mitwirkung und ein Alltag, der beides trägt.",
   "origin": {
-    "name": "Jan",
-    "role": "Initiator und primärer Treiber",
-    "description": "Jans Konzept eines ganzheitlichen, Reggio-inspirierten Bildungshauses ist der Ausgangspunkt. Frank entwickelt Strategie, Organisation und unterstützende Werkzeuge mit."
+    "name": "Bildungshaus Wurzelwald",
+    "role": "Gemeinsam entwickeln",
+    "description": "Ein durchgängiges, Reggio-inspiriertes Bildungskonzept. Wir beginnen in der Kita."
   },
   "thesis": {
     "title": "Gute Bildung braucht verlässliche Beziehungen — und einen Alltag, der sie möglich macht.",
@@ -15,19 +15,35 @@
   "nodes": [
     {
       "id": "personal",
-      "title": "Verlässlicher Alltag",
-      "metric": "≈ 30 Tage",
-      "metricLabel": "ärztlich bescheinigte AU-Tage je Versicherungsjahr (2023)",
-      "summary": "Die DAK-Auswertung zeigt eine höhere Krankheitsbelastung als im Vergleich aller Berufe.",
-      "detail": "Für 2023 berichtet die Auswertung 29,6 ärztlich bescheinigte Arbeitsunfähigkeitstage je Versicherungsjahr im Berufsfeld Kinderbetreuung und -erziehung gegenüber 20,1 über alle Berufe. Die DAK-Berufskategorie umfasst überwiegend, aber nicht ausschließlich Kita-Personal. Die Werte beschreiben keinen vermeidbaren Anteil und sind nicht direkt in ausfallende Betreuungsstunden umzurechnen.\n\nFür das Bildungshaus folgt daraus eine Gestaltungsfrage: Welche Abläufe helfen einem Team, auch bei Ausfällen verlässlich zu arbeiten? Eine bessere Organisation kann erprobt werden. Eine Senkung des Krankenstands ist damit noch nicht nachgewiesen.",
-      "evidenceStatus": "Befund mit begrenzter Übertragbarkeit",
+      "title": "Betreuung gestalten",
+      "metric": "Beim Alltag anfangen",
+      "metricLabel": "Unsere These: pädagogische und organisatorische Bedingungen gemeinsam gestalten",
+      "summary": "Wie Betreuung organisiert und gelebt wird, prägt Beziehungen, Mitwirkung und die Arbeit im Team. Ausfälle und häufige Wechsel können Folgen belastender Bedingungen sein und diese anschließend verstärken.",
+      "detail": "Unsere These beginnt bei der Betreuung: Können Erwachsene Kindern zugewandt begegnen, selbst mitgestalten und ihre Arbeit gemeinsam weiterentwickeln? Fehlende Orientierung, wenig geschützte Lernzeit und brüchige Übergaben können diese Bedingungen erschweren.\n\nKrankheitstage und jährliche Fluktuation sind mögliche Folgen und Warnsignale. Sie sind keine vollständige Erklärung. Stellenwechsel, Berufsaustritt, Abwesenheit und wechselnde Bezugspersonen innerhalb eines Tages müssen getrennt erfasst werden.\n\nIm ERiK-Bericht berichten 65 Prozent der befragten Leitungen von Fluktuation in ihrer Einrichtung innerhalb der letzten zwölf Monate (Erhebung 2022, 4.832 Leitungen). Das ist ein Anteil von Einrichtungen, keine Kündigungsquote einzelner Beschäftigter.\n\nWir wollen auch Einrichtungen vergleichen, in denen Betreuung besser gelingt: bei möglichst ähnlicher Finanzierung, Personalbesetzung, Größe und Familienbedarfen. Unterschiede helfen, konkrete Gestaltungsmöglichkeiten zu erkennen; sie widerlegen nicht die Bedeutung ausreichender Mittel.",
+      "evidenceStatus": "Gestaltungsthese mit getrennten Befunden",
       "sources": [
         {
-          "title": "DAK-Daten, ausgewertet von Akko/Bertelsmann Stiftung (2024; Berichtsjahr 2023)",
-          "url": "https://www.bertelsmann-stiftung.de/de/publikationen/publikation/did/krankenstand-in-berufen-der-kindertagesbetreuung-und-erziehung"
+          "title": "DJI: ERiK-Forschungsbericht IV, Erhebung 2022",
+          "url": "https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf",
+          "year": 2022,
+          "population": "4.832 Kita-Leitungen",
+          "denominator": "Anteil befragter Einrichtungen",
+          "location": "Kapitel Personalfluktuation"
         }
       ],
-      "relatedPaper": "P01"
+      "relatedPaper": "P01",
+      "type": "Gestaltung",
+      "claimIds": [
+        "A03",
+        "A04",
+        "A05",
+        "A36"
+      ],
+      "documentId": "P01",
+      "position": {
+        "x": 170,
+        "y": 130
+      }
     },
     {
       "id": "partizipation",
@@ -40,26 +56,55 @@
       "sources": [
         {
           "title": "BiKA-Abschlussbericht (2018–2020), Tabelle 12",
-          "url": "https://www.fruehe-chancen.de/fileadmin/user_upload/PDF-Dateien/Bika_Abschlussbericht-web.pdf"
+          "url": "https://www.fruehe-chancen.de/fileadmin/user_upload/PDF-Dateien/Bika_Abschlussbericht-web.pdf",
+          "location": "Tabelle 12",
+          "year": 2020,
+          "population": "86 auswertbare beobachtete Essenssituationen",
+          "denominator": "Anteil der beobachteten Situationen"
         }
       ],
-      "relatedPaper": "P04"
+      "relatedPaper": "P04",
+      "type": "Gestaltung",
+      "claimIds": [
+        "A14",
+        "A19"
+      ],
+      "documentId": "P04",
+      "position": {
+        "x": 400,
+        "y": 310
+      }
     },
     {
       "id": "organisation",
-      "title": "Gut im Team ankommen",
+      "title": "Pädagogisches Team",
       "metric": "Ansprechbar sein",
       "metricLabel": "Unterstützung und Rollenklarheit als Ansatzpunkte",
-      "summary": "Gute Einarbeitung verbindet praktische Orientierung mit Zugehörigkeit.",
+      "summary": "Fachkräfte brauchen verlässliche Beziehungen, klare Zuständigkeiten und Zeit, selbst zu lernen und mitzugestalten. Einarbeitung verbindet praktische Orientierung mit Zugehörigkeit.",
       "detail": "Das WiFF-Panel untersucht Berufseinsteigerinnen und Berufseinsteiger. Unterstützung, Wertschätzung und strukturierende Einarbeitung stehen mit Rollenklarheit und sozialer Integration in Zusammenhang. Die Befragung beweist keine durch eine bestimmte Maßnahme verursachte Verringerung von Kündigungen oder Krankheit.\n\nUnser Ansatz: feste Begleitung, klare Zuständigkeiten und kurze gemeinsame Reflexion. Im Pilot wird geprüft, ob dadurch weniger unnötige Rückfragen und mehr Handlungssicherheit entstehen.",
       "evidenceStatus": "Zusammenhang; eigene Wirkung offen",
       "sources": [
         {
           "title": "WiFF-Panel, Studie kompakt 6 (2026), Daten 2025",
-          "url": "https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf"
+          "url": "https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf",
+          "location": "WiFF-Studie kompakt 6, Zusammenhänge mit Rollenklarheit und Integration",
+          "year": 2025,
+          "population": "Berufseinsteigerinnen und Berufseinsteiger im WiFF-Panel",
+          "denominator": "Befragte im Berufseinstieg"
         }
       ],
-      "relatedPaper": "P03"
+      "relatedPaper": "P03",
+      "type": "Akteur",
+      "claimIds": [
+        "A15",
+        "A17",
+        "A18"
+      ],
+      "documentId": "P03",
+      "position": {
+        "x": 880,
+        "y": 120
+      }
     },
     {
       "id": "passung",
@@ -72,10 +117,21 @@
       "sources": [
         {
           "title": "Amt für Statistik Berlin-Brandenburg, Kindertagesbetreuung zum 1. März 2026",
-          "url": "https://www.statistik-berlin-brandenburg.de/presse/2026/113-kindertagesbetreuung-2026/"
+          "url": "https://www.statistik-berlin-brandenburg.de/presse/2026/113-kindertagesbetreuung-2026/",
+          "location": "Stichtag 1. März 2026",
+          "year": 2026,
+          "population": "Kinder in Berliner Kindertageseinrichtungen ohne Hort",
+          "denominator": "Veränderung zum Vorjahresstichtag"
         }
       ],
-      "relatedPaper": "P07"
+      "relatedPaper": "P07",
+      "type": "Gestaltung",
+      "claimIds": [],
+      "documentId": "P07",
+      "position": {
+        "x": 170,
+        "y": 760
+      }
     },
     {
       "id": "beziehung",
@@ -88,10 +144,21 @@
       "sources": [
         {
           "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
-          "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/"
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/",
+          "location": "Ahnert, Pinquart und Lamb: Ergebnisse zur Feinfühligkeit in Gruppen",
+          "year": 2006,
+          "population": "40 Untersuchungen mit 2.867 Kindern",
+          "denominator": "Metaanalyse, keine Prävalenzquote"
         }
       ],
-      "relatedPaper": "P05"
+      "relatedPaper": "P05",
+      "type": "Bedürfnis",
+      "claimIds": [],
+      "documentId": "P05",
+      "position": {
+        "x": 610,
+        "y": 120
+      }
     },
     {
       "id": "spielraum",
@@ -104,48 +171,366 @@
       "sources": [
         {
           "title": "Senatsverwaltung Berlin: RV-Tag-Kostenblatt ab 1. August 2026",
-          "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386"
+          "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386",
+          "location": "RV-Tag-Kostenblatt ab 1. August 2026",
+          "year": 2026,
+          "population": "Berliner Ganztags- und Teilzeitbetreuung",
+          "denominator": "Euro Sachkosten je Kind und Jahr"
         }
       ],
-      "relatedPaper": "P08"
+      "relatedPaper": "P08",
+      "type": "Ressource",
+      "claimIds": [],
+      "documentId": "P08",
+      "position": {
+        "x": 1110,
+        "y": 770
+      }
+    },
+    {
+      "id": "kind",
+      "title": "Das Kind",
+      "type": "Akteur",
+      "position": {
+        "x": 610,
+        "y": 460
+      },
+      "documentId": "P06",
+      "relatedPaper": "P06",
+      "metric": "Sicher. Neugierig. Beteiligt.",
+      "metricLabel": "Bedürfnisse als Ausgangspunkt",
+      "summary": "Ein Kind braucht Zugehörigkeit und Freiraum. Es soll seine Welt erkunden, eigene Ideen verfolgen und erfahren, dass seine Mitwirkung etwas verändert.",
+      "detail": "Reggio-inspiriert heißt für uns: Kinder ernst nehmen, unterschiedliche Ausdrucksformen ermöglichen und Räume als Einladung zum Forschen gestalten. Vertraute Erwachsene geben dabei Halt.\n\nElemente freier Pädagogik ergänzen diese Haltung: Wahlmöglichkeiten, altersübergreifendes Lernen und echte Verantwortung im passenden Rahmen. Kein Kind muss seine Bedürfnisse gegen die Gruppe durchsetzen, um gehört zu werden.\n\nDie Perspektive reicht von der Krippe über Kita und Hort bis zur Schule. Wir entwickeln und prüfen den ersten Baustein im Kita-Alltag.",
+      "evidenceStatus": "Konzept und überprüfbare Gestaltung",
+      "claimIds": [
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A14"
+      ],
+      "sources": [
+        {
+          "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/",
+          "location": "Volltext und Einordnung im verlinkten Artikel"
+        }
+      ]
+    },
+    {
+      "id": "familie",
+      "title": "Familie & Zugehörigkeit",
+      "type": "Akteur",
+      "position": {
+        "x": 170,
+        "y": 460
+      },
+      "documentId": "P14",
+      "relatedPaper": "P14",
+      "metric": "Ein Beziehungsdorf",
+      "metricLabel": "Familie und Einrichtung verbinden",
+      "summary": "Eltern gehören zum Bildungsweg. Frühe Begegnungen, erreichbare Bezugspersonen und eine verständliche Rückmeldung können Vertrauen wachsen lassen.",
+      "detail": "Eingewöhnung ist ein gemeinsamer Übergang, kein fester Trennungsfahrplan. Offene Begegnungen vor dem Start können Vertrautheit ermöglichen, wenn die Einrichtung Zeit und Raum dafür hat.\n\nFamilien unterscheiden sich in ihren Zeiten, Sprachen und Möglichkeiten. Beteiligung soll auch für Menschen funktionieren, die nicht zu jedem Elternabend kommen können. Kurze gesprochene Anliegen oder selbst gewählte Zusammenfassungen sind mögliche Zugänge, deren Nutzen wir erproben wollen.",
+      "evidenceStatus": "Konzept und überprüfbare Gestaltung",
+      "claimIds": [
+        "A08",
+        "A14",
+        "A16"
+      ],
+      "sources": [
+        {
+          "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/",
+          "location": "Volltext und Einordnung im verlinkten Artikel"
+        }
+      ]
+    },
+    {
+      "id": "kueche",
+      "title": "Küche & gemeinsames Lernen",
+      "type": "Akteur",
+      "position": {
+        "x": 880,
+        "y": 460
+      },
+      "documentId": "P10",
+      "relatedPaper": "P10",
+      "metric": "Mehr als ein Speiseplan",
+      "metricLabel": "Geschmack, Gesundheit, Lernen und Logistik",
+      "summary": "Der Koch braucht Einarbeitungszeit. Kinder brauchen Mitsprache. Gute Ernährung braucht zudem ein Budget, passende Lieferungen und sichere Abläufe.",
+      "detail": "Ein Koch erprobt mit einer Begleitung einen neuen Ablauf. Seine Lernzeit steht im Dienstplan. Kinder melden zurück, was ihnen schmeckt, und erfahren, was aus ihrem Vorschlag wird.\n\nGesundheit, Vielfalt, Allergene, verfügbare Zutaten, Budget und Geräte setzen den Rahmen. Die Wahl zwischen frisch, gekühlt und tiefgekühlt hängt auch von Lagerung, Chargen, Lieferfähigkeit und Arbeitszeit ab.\n\nTechnik kann Rückmeldungen ordnen und geprüfte Alternativen vorbereiten. Fachverantwortliche geben sie frei. So wird der ganze Ablauf lernfähig, ohne den Koch heimlich zu bewerten.",
+      "evidenceStatus": "Konzept und überprüfbare Gestaltung",
+      "claimIds": [
+        "A18",
+        "A19",
+        "A20",
+        "A21"
+      ],
+      "sources": [
+        {
+          "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas",
+          "url": "https://www.fitkid-aktion.de/fileadmin/user_upload/medien/DGE-QST/DGE_Qualitaetsstandard_Kita.pdf",
+          "population": "Kita-Verpflegung",
+          "location": "Qualitätsstandard und Prozessanforderungen"
+        }
+      ]
+    },
+    {
+      "id": "medien",
+      "title": "Medien verstehen & gestalten",
+      "type": "Gestaltung",
+      "position": {
+        "x": 610,
+        "y": 760
+      },
+      "documentId": "P18",
+      "relatedPaper": "P18",
+      "metric": "50 % mindestens wöchentlich",
+      "metricLabel": "Kostenlose Videoportale bei 2–5-Jährigen, miniKIM 2023",
+      "summary": "Digitale Medien gehören bereits zum Leben vieler Kinder. Unser Medienkonzept verbindet gemeinsames Verstehen, eigenes Gestalten und altersgerechte Grenzen.",
+      "detail": "Die miniKIM 2023 befragte 600 Haupterziehende von zwei- bis fünfjährigen Kindern in Haushalten mit Internetzugang. Die Hälfte berichtete mindestens wöchentliche Nutzung kostenloser Videoportale wie YouTube. Das ist keine YouTube-exklusive Quote.\n\nDas Kita-Konzept reagiert darauf: Kinder können mit Erwachsenen Bildergeschichten gestalten, Werbung erkennen oder darüber sprechen, warum ein Video immer weiterläuft. Solche Erfahrungen brauchen keine täglichen Bildschirme.\n\nWir unterscheiden Inhalt, Nutzungsdauer, Begleitung und einnehmende Produktgestaltung. Verbreitete Nutzung beweist keine pauschale Schädigung. Sie macht eine bewusste Auseinandersetzung nötig.",
+      "evidenceStatus": "Konzept und überprüfbare Gestaltung",
+      "claimIds": [
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "sources": [
+        {
+          "title": "miniKIM 2023, Medienpädagogischer Forschungsverbund Südwest",
+          "url": "https://mpfs.de/app/uploads/2025/01/miniKIM-2023_PDF_barrierearm.pdf",
+          "year": 2023,
+          "population": "600 Haupterziehende von 2–5-Jährigen mit Internetzugang im Haushalt",
+          "denominator": "Elternangaben zur Nutzung kostenloser Videoportale",
+          "location": "Seiten 4, 24–25"
+        }
+      ]
+    },
+    {
+      "id": "technik",
+      "title": "Werkzeuge & Rückmeldung",
+      "type": "Gestaltung",
+      "position": {
+        "x": 1110,
+        "y": 280
+      },
+      "documentId": "P15",
+      "relatedPaper": "P15",
+      "metric": "Schneller sinnvoll prüfen",
+      "metricLabel": "Alltagssprache mit verlässlichen Regeln verbinden",
+      "summary": "KI kann helfen, unklare Anliegen zu verstehen, nachzufragen und Wissen zugänglich zu machen. Ob das Menschen wirklich stärkt, prüfen wir im Alltag.",
+      "detail": "Günstigere Validierung ist die Chance: Ein Team kann eine Idee früh ausprobieren und korrigieren, bevor viel Geld gebunden wird. Sprachliche Hilfe kann Vorgänge zugänglich machen, die bisher zu aufwendig waren.\n\nFachwissen liegt in versionierten, überprüfbaren Bausteinen. Die Ausführung bleibt überschaubar: Anliegen verstehen, bei Unsicherheit nachfragen, Regeln prüfen, eine verantwortliche Person entscheiden lassen und das Ergebnis zurückmelden.\n\nTechnologie ist nicht automatisch neutral. Ziele, Daten, Rechte und Freigaben bestimmen, wem sie hilft. Erfolg heißt hier: Menschen können mehr bewirken und gemeinsam lernen. Eine schönere Oberfläche allein genügt nicht.",
+      "evidenceStatus": "Konzept und überprüfbare Gestaltung",
+      "claimIds": [
+        "A13",
+        "A15",
+        "A16",
+        "A22",
+        "A23"
+      ],
+      "sources": [
+        {
+          "title": "Anthropic: Equipping agents with Agent Skills",
+          "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+          "location": "Technisches Architekturprinzip, kein pädagogischer Wirkungsnachweis"
+        }
+      ]
+    },
+    {
+      "id": "leitung",
+      "title": "Leitung & Lernzeit",
+      "type": "Akteur",
+      "position": {
+        "x": 1110,
+        "y": 520
+      },
+      "documentId": "P02",
+      "relatedPaper": "P02",
+      "claimIds": [
+        "A15",
+        "A17",
+        "A18"
+      ],
+      "metric": "Zeit zum Mitgestalten",
+      "metricLabel": "Verantwortung, Unterstützung und Spielräume verbinden",
+      "summary": "Leitung schafft den Rahmen: geschützte Lernzeit, erreichbare Begleitung und nachvollziehbare Entscheidungen. Ein Verbesserungsvorschlag darf nicht einfach als zusätzliche Aufgabe beim Team landen.",
+      "detail": "Eine Leitung kann Beteiligung ermöglichen, indem sie Zuständigkeiten und Entscheidungsspielräume klärt und Lernzeit tatsächlich in der Planung schützt. Reale Zeitnot lässt sich nicht durch Motivation wegreden.\n\nImmunity to Change bietet eine mögliche Gesprächsstruktur: Ein gemeinsames Ziel benennen, das bisherige Verhalten verstehen, konkurrierende Verpflichtungen sichtbar machen und eine Annahme mit einem kleinen freiwilligen Versuch überprüfen. Dafür braucht es Vertrauen, keine psychologische Bewertung von Beschäftigten.\n\nEine neue Routine wird mit dem Team erprobt. Die Leitung organisiert Begleitung und sorgt dafür, dass aus einer Rückmeldung eine sichtbare Entscheidung wird. Ob dies im konkreten Haus hilft, wird gemeinsam geprüft.",
+      "evidenceStatus": "Geplante organisatorische Gestaltung",
+      "sources": [
+        {
+          "title": "Minds at Work: Immunity to Change",
+          "url": "https://www.mindsatwork.com/our-thinking",
+          "population": "Modell für individuelle und organisationale Veränderung",
+          "denominator": "Keine Kita-Wirkungsquote",
+          "location": "Darstellung des Ansatzes durch seine Entwickler"
+        }
+      ]
+    },
+    {
+      "id": "traeger",
+      "title": "Träger & Verantwortung",
+      "type": "Akteur",
+      "position": {
+        "x": 400,
+        "y": 760
+      },
+      "documentId": "P08",
+      "relatedPaper": "P08",
+      "claimIds": [
+        "A05",
+        "A06",
+        "A21"
+      ],
+      "metric": "Qualität tragfähig machen",
+      "metricLabel": "Finanzierung gehört zur Organisation",
+      "summary": "Der Träger verantwortet Ressourcen und die Bedingungen der Einrichtungen. Er muss Betreuungsqualität, Personalbindung, Belegung und wirtschaftliche Tragfähigkeit gemeinsam betrachten.",
+      "detail": "Finanzierung, verlässliche Personalplanung und Unterstützung der Leitung gehören zur Verantwortung des Trägers. Kosten sind eine Eigenschaft der Organisation, kein Merkmal des Kindes.\n\nIn unserer zu prüfenden Wirkungskette können instabile Teams das Vertrauen von Familien belasten. Sinkende Belegung kann bei weiterlaufenden Fixkosten den finanziellen Druck erhöhen. Ob und wie dies in einem Haus zusammenhängt, braucht lokale Daten.\n\nEigene Einrichtungen sollen als Reallabore dienen. Freie Träger, öffentliche Einrichtungen und Eigenbetriebe sind mögliche spätere Nutzer erprobter Module. Ein erster Partnerpilot ersetzt dieses langfristige Ziel nicht.",
+      "evidenceStatus": "Organisatorische Verantwortung und zu prüfende Zusammenhänge",
+      "sources": [
+        {
+          "title": "Senatsverwaltung Berlin: RV-Tag-Kostenblatt ab 1. August 2026",
+          "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386",
+          "location": "RV-Tag-Kostenblatt ab 1. August 2026",
+          "year": 2026,
+          "population": "Berliner Ganztags- und Teilzeitbetreuung",
+          "denominator": "Euro Sachkosten je Kind und Jahr"
+        }
+      ]
     }
   ],
   "relations": [
     {
       "source": "personal",
-      "target": "beziehung",
-      "label": "Verlässliche Abläufe können Beziehungskontinuität unterstützen",
-      "kind": "Gestaltungshypothese"
+      "target": "kind",
+      "label": "Zugewandte Betreuung ermöglichen",
+      "kind": "Geplanter Eingriff",
+      "evidence": "A03"
+    },
+    {
+      "source": "beziehung",
+      "target": "kind",
+      "label": "Sicherheit und Neugier",
+      "kind": "Beobachteter Zusammenhang",
+      "evidence": "P05"
+    },
+    {
+      "source": "familie",
+      "target": "kind",
+      "label": "Zugehörigkeit und Übergänge",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P14"
+    },
+    {
+      "source": "partizipation",
+      "target": "kind",
+      "label": "Eine eigene Stimme",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P04"
     },
     {
       "source": "organisation",
       "target": "personal",
-      "label": "Klarheit und Unterstützung können den Alltag entlasten",
-      "kind": "Gestaltungshypothese"
+      "label": "Lernzeit und Rollenklarheit",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P03"
     },
     {
-      "source": "beziehung",
-      "target": "partizipation",
-      "label": "Sicherheit kann eigene Entscheidungen erleichtern",
-      "kind": "Gestaltungshypothese"
+      "source": "personal",
+      "target": "organisation",
+      "label": "Instabilität kann Belastung verstärken",
+      "kind": "Annahme",
+      "evidence": "P01"
+    },
+    {
+      "source": "kueche",
+      "target": "kind",
+      "label": "Essen und Mitsprache",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P10"
+    },
+    {
+      "source": "technik",
+      "target": "kueche",
+      "label": "Anliegen in Abläufe übersetzen",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P15"
+    },
+    {
+      "source": "technik",
+      "target": "organisation",
+      "label": "Wissen zugänglich machen",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P09"
+    },
+    {
+      "source": "spielraum",
+      "target": "kueche",
+      "label": "Budget und Lieferfähigkeit",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P10"
     },
     {
       "source": "spielraum",
       "target": "organisation",
-      "label": "Geprüfter Spielraum kann Teamarbeit ermöglichen",
-      "kind": "Gestaltungshypothese"
+      "label": "Qualität braucht Ressourcen",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P08"
     },
     {
-      "source": "partizipation",
-      "target": "organisation",
-      "label": "Rückmeldungen können Abläufe verbessern",
-      "kind": "Gestaltungshypothese"
+      "source": "medien",
+      "target": "kind",
+      "label": "Gemeinsam gestalten und begrenzen",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P18"
     },
     {
       "source": "passung",
-      "target": "beziehung",
-      "label": "Angebot und Familienalltag müssen zusammenpassen",
-      "kind": "Gestaltungshypothese"
+      "target": "familie",
+      "label": "Zeiten, Wege und Bedürfnisse",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P07"
+    },
+    {
+      "source": "partizipation",
+      "target": "familie",
+      "label": "Rückmeldung mit sichtbarer Folge",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P04"
+    },
+    {
+      "source": "leitung",
+      "target": "organisation",
+      "label": "Lernzeit und Begleitung schützen",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P02"
+    },
+    {
+      "source": "leitung",
+      "target": "kueche",
+      "label": "Einarbeitung im Alltag ermöglichen",
+      "kind": "Geplanter Eingriff",
+      "evidence": "P10"
+    },
+    {
+      "source": "traeger",
+      "target": "leitung",
+      "label": "Verantwortung und Mittel klären",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P08"
+    },
+    {
+      "source": "traeger",
+      "target": "spielraum",
+      "label": "Finanzierung der Einrichtung",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P08"
+    },
+    {
+      "source": "organisation",
+      "target": "kind",
+      "label": "Vertraute Erwachsene im Alltag",
+      "kind": "Organisatorische Verbindung",
+      "evidence": "P05"
     }
   ],
   "approach": [
@@ -193,6 +578,11 @@
       "body": "Geplante bilinguale Immersion; Mehrsprachigkeit der Familien wertschätzen."
     },
     {
+      "id": "medien",
+      "title": "Medien verstehen & gestalten",
+      "body": "Digitale Lebenswelten aufgreifen, gemeinsam kreativ werden und altersgerechte Grenzen verstehen."
+    },
+    {
       "id": "essen",
       "title": "Ernährung & Alltag",
       "body": "Gutes Essen, Beteiligung und verlässliche Abläufe zusammendenken."
@@ -208,7 +598,7 @@
     "steps": [
       {
         "title": "Bedarf klären",
-        "body": "Vorgeschlagen sind zehn Gespräche mit Leitungen oder Trägerverantwortlichen. Die Gespräche sind noch nicht als durchgeführt belegt."
+        "body": "Mit Leitungen, Familien und Teams klären wir konkrete Belastungen und Veränderungsbereitschaft. Zum Start braucht es eine verantwortliche Begleitung und geschützte Lernzeit; vorgeschlagen sind zunächst zehn Gespräche."
       },
       {
         "title": "Ein Modul auswählen",
@@ -224,7 +614,7 @@
       },
       {
         "title": "Gemeinsam entscheiden",
-        "body": "Nur bei nachvollziehbarem Nutzen verstetigen und eine weitere Einrichtung einbeziehen."
+        "body": "Bei nachvollziehbarem Nutzen weiterarbeiten. Fehlt eine verantwortliche Begleitung oder echte Mitwirkungsbereitschaft, suchen wir einen anderen Pilotpartner, statt eine Plattform auf Vorrat zu finanzieren."
       }
     ],
     "successCriteria": [
@@ -250,18 +640,7 @@
       "sourceUrl": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386"
     }
   },
-  "team": [
-    {
-      "name": "Jan",
-      "role": "Konzept und operative Entwicklung",
-      "status": "Initiator und primärer Treiber laut Projektauftrag"
-    },
-    {
-      "name": "Frank",
-      "role": "Strategische Mitentwicklung, Organisation und unterstützende Technologie",
-      "status": "Mitentwicklung; gesellschaftsrechtliche Rollen noch nicht festgelegt"
-    }
-  ],
+  "team": [],
   "ask": {
     "title": "Gesucht: ein Ort für die gemeinsame Erprobung",
     "body": "Wir suchen das Gespräch mit einer passenden Einrichtung und Menschen, die die Entwicklung eines nachvollziehbaren Piloten unterstützen möchten. Der nächste gemeinsame Schritt ist ein konkret abgegrenzter Versuch mit klarer Verantwortung, Aufwand und Auswertung."
@@ -306,7 +685,7 @@
       "id": "P06",
       "title": "Reggio als lebendige Orientierung",
       "slug": "reggio",
-      "summary": "Jans pädagogischer Ausgangspunkt und seine Übersetzung in konkrete Praxis.",
+      "summary": "Reggio-inspirierte Praxis mit Beziehung, Selbstbestimmung und einem durchgängigen Bildungsweg verbinden.",
       "path": "40 - Analysis & Evidence/43 - Synthesen/P06 - Reggio als lebendige Orientierung.md"
     },
     {
@@ -345,6 +724,13 @@
       "path": "40 - Analysis & Evidence/43 - Synthesen/P11 - Zuhören, bevor aus einer Vermutung ein Angebot wird.md"
     },
     {
+      "id": "P12",
+      "title": "Ausfälle und Wechsel verstehen, Betreuung verlässlich gestalten",
+      "slug": "ausfaelle-und-wechsel",
+      "summary": "Krankheit, Stellenwechsel, Berufsaustritt und tägliche Wechsel unterscheiden und aus der Betreuung heraus untersuchen.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P12 - Ausfälle und Wechsel verstehen, Betreuung verlässlich gestalten.md"
+    },
+    {
       "id": "P13",
       "title": "Was eine Kita-Adresse erzählt – und was offenbleibt",
       "slug": "standortrecherche",
@@ -378,6 +764,13 @@
       "slug": "name-und-marke",
       "summary": "Eine verständliche Identität entwickeln und vor verbindlicher Nutzung prüfen.",
       "path": "40 - Analysis & Evidence/43 - Synthesen/P17 - Ein Name, der ein Versprechen trägt.md"
+    },
+    {
+      "id": "P18",
+      "title": "Aufwachsen in einer digitalen Medienwelt",
+      "slug": "medienwelt",
+      "summary": "Wie wir verbreiteten Medienkonsum ernst nehmen und eigenes Gestalten, Begleitung und Grenzen verbinden.",
+      "path": "40 - Analysis & Evidence/43 - Synthesen/P18 - Aufwachsen in einer digitalen Medienwelt.md"
     }
   ]
 }

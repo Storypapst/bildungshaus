@@ -1,43 +1,31 @@
 
-# Das Bildungshaus
-## Executive Summary
+# Bildungshaus Wurzelwald
 
-**Ein guter Alltag schafft Raum für gute Bildung.** Das Bildungshaus ist Jans Initiative für ein ganzheitliches, Reggio-inspiriertes Bildungskonzept. Kinder sollen neugierig und selbstbestimmt lernen, verlässliche Beziehungen erleben und echte Möglichkeiten zur Mitgestaltung haben. Die Perspektive reicht von Krippe und Kita bis zu Hort und Schule. Der erste praktische Schritt liegt in der Kita.
+## Gute Betreuung beginnt bei ihrem Alltag.
 
-Jans Plan verbindet eigene pädagogische Praxis mit einem entwickelnden Lab. Erfahrungen aus dem Alltag sollen in klar beschriebene Module einfließen, die andere Einrichtungen übernehmen und an ihre Situation anpassen können. Frank ergänzt diese Vision um problemorientierte Recherche, Strategie und unterstützende Werkzeuge. Die pädagogische Arbeit gibt die Richtung vor.
+Wir wollen, dass Kinder bessere Möglichkeiten haben, ihr Leben zu gestalten: verlässliche Beziehungen, Raum für eigene Fragen und die Erfahrung, etwas bewirken zu können. Bildungshaus Wurzelwald verbindet eine Reggio-inspirierte Pädagogik mit einer Organisation, die diese Arbeit im Alltag trägt. Der Bildungsweg reicht perspektivisch von frühen Familienkontakten über Krippe und Kita bis zu Ganztag und Schule. Der erste praktische Entwicklungsschritt liegt im Kita-Bereich.
 
-### Das Problem
+**Unsere These:** Die pädagogische und organisatorische Gestaltung der Betreuung prägt die Qualität für Kinder und die Arbeitsbedingungen der Erwachsenen. Wo Beziehungen, Führung, Einarbeitung und Mitwirkung tragen, kann gute Arbeit verlässlich gelingen. Fehlen diese Bedingungen, können Überforderung, Ausfälle und jährliche Personalwechsel entstehen. Diese Folgen belasten Betreuung und Wirtschaftlichkeit anschließend zusätzlich. Deshalb beginnt unser Ansatz bei der gelebten Praxis.
 
-Gute Konzepte brauchen Bedingungen, unter denen Menschen sie jeden Tag umsetzen können. Personalausfälle erschweren die Kontinuität. Einarbeitung und verlässliche Unterstützung helfen Teams, gemeinsam handlungsfähig zu werden. Mitbestimmung muss in alltäglichen Situationen erkennbar sein. Zugleich verändern sich die regionalen Bedarfe und die wirtschaftlichen Voraussetzungen von Einrichtungen.
+**Die Forschungsfrage lautet: Warum gelingt Betreuung in manchen Einrichtungen deutlich besser?** Wir wollen gute Praxis mit Einrichtungen vergleichen, deren Finanzierung, Personal, Größe und Familienbedarfe möglichst ähnlich sind. Geld bleibt eine reale Voraussetzung. Zusätzlich interessiert uns, wie eine Einrichtung ihre Mittel in verlässliche Beziehungen und einen tragfähigen Arbeitsalltag übersetzt. Unbesetzte Stellen, Abwesenheit, jährliche Einrichtungswechsel, Berufsaustritte und tägliche Bezugspersonenwechsel werden getrennt untersucht. Der ERiK-Bericht nennt für 2022 einen Anteil von 65 Prozent der befragten Einrichtungen mit Personalfluktuation innerhalb eines Jahres. Das ist keine individuelle Kündigungsquote und kein Ursachenbeweis.
 
-Die Recherche macht diese Fragen konkret. Eine Auswertung von DAK-Versichertendaten berichtet für 2023 knapp 30 krankheitsbedingte Fehltage im Berufsfeld Kinderbetreuung und -erziehung, gegenüber rund 20 über alle Berufe. Der Wert zeigt Belastung, bestimmt aber keinen vermeidbaren Anteil. In der BiKA-Studie konnten Kinder in 46,5 Prozent von 86 beobachteten Essenssituationen vollständig über die Menge ihres Essens oder Trinkens entscheiden. Die Berliner Statistik meldet zum März 2026 einen Rückgang der betreuten Kinder in Einrichtungen ohne Hort um 2,7 Prozent gegenüber dem Vorjahr. Daraus folgt kein pauschaler Leerstand: Standort, Altersgruppe und Familienbedarfe müssen zusammenpassen.
+**Die pädagogische Antwort verbindet Beziehung und Eigenständigkeit.** Im teiloffenen Alltag finden Kinder vertraute Erwachsene, übersichtliche Räume und echte Wahlmöglichkeiten. Familienkontakte und fließende Eingewöhnung, bilinguale Immersion sowie altersangemessene Medienbildung gehören zum selben Konzept. REAL fasst unsere Haltung als eigenen Merksatz zusammen: Realität prüfen, Entwicklung ermöglichen, Autonomie stärken, Lernen in Beziehung.
 
-### Unser Ansatz
+**Mitwirkung soll auch in größeren Organisationen praktisch möglich bleiben.** Ein Anliegen erhält eine zuständige Person, eine verständliche Entscheidung und eine Rückmeldung. Fachkräfte bekommen geschützte Lernzeit. Neue sprachliche Werkzeuge können Erfahrungen in bearbeitbare Vorgänge übersetzen und freigegebenes Wissen zugänglich machen. Ihr Nutzen wird daran gemessen, ob Menschen wirksamer handeln und sich entwickeln können. Kürzere Validierungszyklen eröffnen die Chance, Ideen früh mit den Beteiligten zu prüfen.
 
-Das Bildungshaus erprobt Antworten dort, wo die Fragen entstehen: in einer Einrichtung, gemeinsam mit Fachkräften, Leitungen und Familien. Ein Modul kann etwa Einarbeitung, Eingewöhnung, Beteiligung oder das Zusammenspiel rund ums Essen betreffen. Es verbindet eine pädagogische Absicht mit praktikablen Abläufen, Begleitung und einer überschaubaren Auswertung.
+**Das Küchenbeispiel zeigt die Verbindung.** Ein neuer Koch lernt mit Begleitung und bezahlter Einarbeitungszeit. Kinder geben Rückmeldung und erfahren, was daraus wird. Ernährung, Geschmack, Allergene, Einkauf, Lieferfähigkeit, Lagerung, Frische und Budget werden zusammen geplant. Technik bereitet passende Vorschläge vor; fachliche Entscheidungen bleiben bei Verantwortlichen. Der Versuch untersucht Qualität, Aufwand und Kosten gemeinsam.
 
-Digitale Werkzeuge können doppelte Arbeit reduzieren, Wissen zugänglich machen und Rückmeldungen nutzbar machen. Ihr Wert bemisst sich am Alltag der Menschen. Die zentrale Hypothese lautet: Frei werdende Zeit und Mittel können zusätzlichen Spielraum für Qualität schaffen. Ob das gelingt und wie der Spielraum tatsächlich eingesetzt wird, wird gemessen. Ebenso wird untersucht, welche Arbeitsbedingungen mit Ausfällen zusammenhängen. Personalmangel und Personalausfall bleiben unterschiedliche Fragen.
+**Das Reallabor entwickelt daraus übertragbare Module.** Ein Pilot konzentriert sich auf ein Haus und einen konkreten Ablauf, beispielsweise über drei Monate. Vorher werden Situation und Ziel beschrieben, anschließend Erfahrungen und tatsächlicher Aufwand bewertet. Für ein zweites Haus werden Voraussetzungen, Materialien und Begleitung dokumentiert. Das langfristige Ziel bleibt ein durchgängiges Bildungshaus; der begrenzte Einstieg macht seine Entwicklung überprüfbar.
 
-### Die wirtschaftliche Perspektive
+Das Zielbild verbindet einen gemeinnützigen operativen Träger mit eigenen Einrichtungen als Reallaboren, ein wirtschaftliches Lab und eine mögliche spätere Stiftung zur Sicherung des Bildungsauftrags. Erprobte Module sollen freien und öffentlichen Trägern zugänglich werden. Ein früher Partnerpilot hält diesen langfristigen Aufbau offen.
 
-Mögliche Einnahmen des Labs entstehen aus Einführung und Begleitung, Qualifizierung sowie erprobten Modulen mit laufender Weiterentwicklung. Preise, Zahlungsbereitschaft und die Kosten der Übertragung werden mit Pilotpartnern geklärt.
+**Die wirtschaftliche Perspektive liegt in relevanten, erprobten Leistungen.** Einführung, Qualifizierung und laufende Weiterentwicklung können Erlöswege des Labs bilden. Als Größenordnung nennt das Berliner Kostenblatt ab August 2026 4.269,94 Euro Sachkosten je Ganztags-/Teilzeitplatz und Jahr: bei zehn Kindern 42.699,40 Euro. Diese Mittel finanzieren bereits Leistungen. Welche Zeit oder Ausgaben sich tatsächlich verändern, muss der Pilot zeigen. Freie Zeit und zahlungswirksame Einsparung werden getrennt bewertet. Ausgaben folgen belastbarer Nachfrage, Finanzierung oder einer notwendigen betrieblichen Aufgabe.
 
-Die Größenordnung lässt sich transparent darstellen: Der Berliner Sachkostensatz für Ganztags- und Teilzeitbetreuung beträgt ab August 2026 **4.269,94 Euro je Kind und Jahr**. Bei acht Einrichtungen mit jeweils 80 entsprechend finanzierten Kindern sind das rund 2,73 Millionen Euro jährlich. Ein rechnerischer Anteil von fünf Prozent entspricht rund 136.638 Euro. Diese fünf Prozent sind eine gewählte Annahme, keine gemessene Einsparung. Einführung, Betrieb und Begleitung müssen davon abgezogen werden; gebundene Mittel werden nicht automatisch verfügbar.
+**Gesucht wird eine konkrete Zusammenarbeit:** eine Einrichtung, eine relevante Alltagsfrage, verantwortliche Menschen und Zeit zur Erprobung. Gespräche und zielgruppenspezifische Fragebögen klären Bedarf und Veränderungsbereitschaft. Eigene Pilotresultate, bestätigte Investitionen und Partnerschaften liegen noch nicht vor. Bedarf und konkrete Bereitschaft zu geschützter Lernzeit müssen zusammenkommen. Fehlt ein verantworteter Versuch, suchen wir einen anderen Partner, bevor eine Plattform vorfinanziert wird. Umfang und Finanzierung des nächsten Schritts werden daraus gemeinsam entwickelt.
 
-Jans Zielbild sieht einen gemeinnützigen Träger, ein wirtschaftlich arbeitendes Lab und langfristig eine mögliche Stiftung für die Marke vor. Der nächste Schritt setzt keine vorschnelle Gründung voraus. Geld soll erst gebunden werden, wenn ein konkreter Bedarf, eine Einnahmeperspektive oder eine tragfähige Finanzierung den Aufwand rechtfertigt.
+## Quellen und vollständige Argumentation
 
-### Der nächste gemeinsame Schritt
-
-Gesucht wird eine passende Einrichtung für einen begrenzten Pilotversuch. Vorgeschlagen sind zunächst zehn strukturierte Gespräche mit Trägern oder Leitungen. Daraus wird ein häufiges, abgrenzbares Alltagsproblem ausgewählt. Vor dem Versuch werden Zeitaufwand, Kosten, Verantwortlichkeiten und Qualitätsmaßstäbe vereinbart. Danach wird gemeinsam entschieden, ob der Nutzen die Fortsetzung und eine Erprobung an einem weiteren Standort trägt.
-
-Eine finanzielle Beteiligung sollte an dieses konkrete Vorhaben anknüpfen: an einen definierten Zeitraum, eine benannte Verantwortung und einen überprüfbaren Lerngewinn. Kapitalbedarf, Bewertung und Beteiligungsbedingungen werden erst mit dem Pilotumfang belastbar. Bestätigte Pilotkunden oder zugesagte Investitionen liegen in den vorhandenen Unterlagen noch nicht vor.
-
-**Die Einladung:** Mit Jan einen Ort auswählen, eine relevante Frage eingrenzen und gemeinsam herausfinden, was im Alltag trägt.
-
-### Quellen und Vertiefung
-
-- [DAK-Daten zu krankheitsbedingten Fehlzeiten, ausgewertet von Akko/Bertelsmann Stiftung](https://www.bertelsmann-stiftung.de/de/publikationen/publikation/did/krankenstand-in-berufen-der-kindertagesbetreuung-und-erziehung)
-- [BiKA-Abschlussbericht, Tabelle 12](https://www.fruehe-chancen.de/fileadmin/user_upload/PDF-Dateien/Bika_Abschlussbericht-web.pdf)
-- [Amt für Statistik Berlin-Brandenburg: Kindertagesbetreuung 2026](https://www.statistik-berlin-brandenburg.de/presse/2026/113-kindertagesbetreuung-2026/)
-- [Berliner RV-Tag-Kostenblatt ab August 2026](https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386)
-- [Whitepaper - Das Bildungshaus](#lesen/whitepaper) · [00 Konzeptpapier Das Bildungshaus](#lesen/original) · Franks Eingaben - chronologisch
+- [Whitepaper](#lesen/whitepaper): zusammenhängende Argumentation und Vertiefungen.
+- [DJI: ERiK-Forschungsbericht IV](https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf): Personalfluktuation, Erhebung 2022, Bezugsgröße Einrichtungen.
+- [Reggio Children](https://www.reggiochildren.it/en/reggio-emilia-approach/): pädagogische Orientierung.
+- [Berliner Kostenblatt ab August 2026](https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf): Sachkostenbetrag, keine Einsparprognose.

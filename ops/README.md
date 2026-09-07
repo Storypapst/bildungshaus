@@ -1,6 +1,6 @@
 # Bildungshaus static release
 
-Release `20260907-v1` is deployed at `https://dreambau.com/bildungshaus/` and passed the coordinator’s live browser checks on 2026-09-07. See `docs/VERIFICATION.md`. The commands below describe subsequent releases; preparing files alone does not deploy them.
+Release `20260907-wurzelwald-v3` is deployed at `https://dreambau.com/bildungshaus/` and passed the coordinator’s live browser checks on 2026-09-07. See `docs/VERIFICATION.md`. The commands below describe subsequent releases; preparing files alone does not deploy them.
 
 ## Scope
 
@@ -20,15 +20,15 @@ Run from the web repository after the final build:
 
 ```sh
 npm run build
-python3 ops/deploy.py --release 20260907-v1
+python3 ops/deploy.py --release 20260907-next
 ```
 
-The default invocation validates **locally only**. It prints artifact count, size and the index hash. It does not connect to the server or modify a deployment. Release identifiers must be unique; reusing an existing release directory is rejected.
+The default invocation validates **locally only**. It prints artifact count, size and the index hash. It does not connect to the server or modify a deployment. `20260907-next` is an example new release name. Release identifiers must be unique; reusing an existing release directory is rejected.
 
 ## Deploy after the start signal
 
 ```sh
-python3 ops/deploy.py --release 20260907-v1 --ssh-host m4dreambau --apply
+python3 ops/deploy.py --release 20260907-next --ssh-host m4dreambau --apply
 ```
 
 The script saves the current Deployment and Bildungshaus Ingress, freezes the `dist` files, verifies every uploaded checksum, checks nginx syntax in the current image, and performs server-side Kubernetes dry runs before updating the existing pod template. It leaves the original homepage ConfigMap intact. The new Ingress is applied after the rollout becomes ready.
@@ -49,8 +49,8 @@ A ready pod does not complete this acceptance.
 ## Rollback
 
 ```sh
-python3 ops/rollback.py --release 20260907-v1 --ssh-host m4dreambau
-python3 ops/rollback.py --release 20260907-v1 --ssh-host m4dreambau --apply
+python3 ops/rollback.py --release 20260907-next --ssh-host m4dreambau
+python3 ops/rollback.py --release 20260907-next --ssh-host m4dreambau --apply
 ```
 
 The first invocation is a read-only drift check. The second restores only the saved homepage pod template and the separate Bildungshaus Ingress. Later template or route changes cause an explicit stop instead of being overwritten. Existing static release files and ConfigMaps are retained for inspection; no shared route, secret or database is deleted.

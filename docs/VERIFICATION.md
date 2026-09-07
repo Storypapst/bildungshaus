@@ -1,95 +1,43 @@
-# Verification — 2026-09-07
+# Verification — revised Wurzelwald presentation
 
-Release: `20260907-v1`, public URL: https://dreambau.com/bildungshaus/.
-The brief was authored under the user's explicit creative delegation.
+Public URL: https://dreambau.com/bildungshaus/ · revision date: 2026-09-07.
 
-## Content
+## Content and provenance
 
-The final source set contains the 3,176-word whitepaper, 16 research syntheses,
-executive summary, Jan's original concept and the source register. Twenty
-reader documents are included. The original concept and Frank's chronological
-transcript remain unchanged in the Core; the transcript is not published by
-this site. Website copies remove frontmatter and translate internal links to
-reader routes. Jan's text itself is retained.
+The revised source set contains 18 syntheses, a twelve-chapter 3,885-word whitepaper, executive summary, source register and unchanged original concept: 22 registered reader documents. Core concept and module files were also aligned against the original and chronological input. A 36-requirement coverage matrix and seven closed editorial review findings are recorded in the Core. No new empirical pilot or financial results are claimed.
 
-The independent editorial review found two ambiguities, both corrected before
-publication: the planned facility now reads as planned, and the calculation
-shows Berlin RV-Tag, Ganztag/Teilzeit, August 2026 and included meals beside the
-amount. Network edges and the adjustable percentage are explicitly hypotheses.
+The graph contains 13 nodes, including actual actors child, family, pedagogical team, kitchen, leadership and provider. Ordinary scrolling tells the complete story; opt-in spatial exploration and a list offer additional routes. Selection, map transform and page position survive the return from an article. Sources include their population, denominator and limits.
 
-## Public browser acceptance
+## Public release and browser checks
 
-`VERIFY_URL=https://dreambau.com/bildungshaus/ VERIFY_OUT=output/qa/live node scripts/verify.mjs`
+Release `20260907-wurzelwald-v3`: 50 files, 6,752,433 bytes. Every upload checksum verified before activation. Public HTML, JS and CSS match the build. Existing nginx, readonly release mount and no additional application service. Deployment backups and selective rollback: `ops/README.md`.
 
-Chrome: desktop 1440×1000, mobile 390×844, compact 360×640, reduced motion
-1440×900. All passed:
+Commands run against the actual public URL:
 
-- Problem-node selection and correct 46.5% finding; detail dialog, source text,
-  Escape dismissal and selected-topic persistence.
-- Keyboard slider changes the scenario; module accordion reveals detail.
-- Downloaded conversation notes contain the selected topic and its source.
-- No horizontal overflow, uncaught page errors or HTTP failures.
-- Axe WCAG 2 A/AA and 2.1 AA: zero reported violations in light/dark views and
-  open detail dialogs. This is automated coverage, not a full accessibility audit.
+```sh
+VERIFY_URL=https://dreambau.com/bildungshaus/ VERIFY_OUT=output/qa/public-v3-graph node scripts/verify-graph.mjs
+VERIFY_URL=https://dreambau.com/bildungshaus/ VERIFY_OUT=output/qa/public-v3-documents node scripts/verify-documents.mjs
+VERIFY_URL=https://dreambau.com/bildungshaus/ VERIFY_OUT=output/qa/public-v3-flow-settled node scripts/verify.mjs
+```
 
-`VERIFY_URL=https://dreambau.com/bildungshaus/ VERIFY_OUT=output/qa/live-documents node scripts/verify-documents.mjs`
+- 52 real node→dialog→article click paths passed: 13 × desktop/mobile × light/dark. Browser/contextual return, map pan/zoom, keyboard activation and normal wheel scrolling passed.
+- All 22 reader documents and exact downloadable bodies passed; library entry for P12/P18, unknown-document recovery and no-JS links passed.
+- Four complete interaction profiles passed: 1440×1000, 390×844, 360×640 and reduced motion at 1440×900. Includes dialog, source, theme, keyboard scenario slider, module accordion and conversation-note download.
+- Zero observed page errors, failed content responses or Axe WCAG 2/2.1 A/AA findings in those checks. This is not a complete accessibility certification. Mobile dimensions/touch were emulated in Chrome; no physical iOS/Android device tested.
+- Apex and Matrix discovery return 200. The slashless presentation URL resolves to the correct HTTPS URL; a missing asset returns 404. `output/qa/public-v3-routes.json` records actual responses and checksums.
 
-All 20 reader routes rendered. All 20 Markdown downloads returned HTTP 200 and
-matched their intended content exactly. Internal publication links resolve to
-known routes; Whitepaper axe scan is clear. Return navigation restores the
-library position, an unknown document has a working recovery link, and the
-no-JavaScript fallback has three accessible document links.
+`npm run build`, `npm run lint`, missing-file sync regression and `git diff --check` passed. Existing ScrollCraft/shadcn lint warnings remain. The sync rejects missing registered files before writing partial content.
 
-Reports and screenshots: `output/qa/live/`, `output/qa/live-documents/`.
+## Visual evidence
 
-## Scroll and visual review
+Public screenshots and reports are under `output/qa/public-v3-*`. Whole-story review and any subsequent targeted layout correction are recorded in `docs/REVISION-2026-09-07.md`. Earlier v1 findings are archived in `docs/VERIFICATION-v1.md` and are not substituted for current checks.
 
-Scroll Craft's official shoot harness captured contiguous final live frames
-for desktop and 390px mobile; contact sheets were inspected. Ten native-flow
-acts span approximately 10.9 desktop and 15.4 mobile viewport heights. Content
-remains ordered and reachable. No pinned timeline or video is used: ordinary
-flow acts are outside the harness's dead-scroll test and static prose is outside
-its cue-contrast test. Axe and manual screenshot inspection cover those cases.
-The separate reduced-motion contact sheet was inspected and is recorded in `output/scroll/live-reduced/`.
-Physical iOS/Safari hardware was not tested.
+The new sparse, crooked crayon relationship image is `public/images/beziehungen-punk-v2.png`, generated with the integrated image tool from the user's visual brief. It is generated artwork, not a child's original drawing. Amber Slate colours, Outfit and the ordered interface are retained.
 
-The intended curve was approachability → recognition → understanding → a
-concrete next step. The graph is the interaction peak. Review changed the
-initial overly tidy drawings to crooked crayon assets, made mobile headings
-fit, and repaired style precedence between Scroll Craft resets and shadcn.
-The final palette keeps Amber Slate's orange/blue while using legible text
-colors. Links inside longform documents are underlined.
+This repository remains local-only. No remote, PR or merge is implied. Formbricks is a separate installed/prepared service, stopped pending DNS and public end-to-end checks; the website does not claim an active survey.
 
-## Build and deployment
+## Final targeted layout and timing review
 
-`npm run build`: TypeScript and Vite passed. `npm run lint`: no errors; eleven
-warnings in unchanged Scroll Craft engine and shadcn export conventions.
-`npm audit --omit=dev`: zero reported vulnerabilities.
+Whole-page review identified overlapping edge text and an overly long mobile list. The final release moves edge descriptions into a selected-relationship legend and makes the mobile overview deliberately expandable (initial graph section approximately 2,002px instead of 4,795px). The visible UI changes passed targeted keyboard/list/edge checks, then the public 52-path graph suite and 22-document suite again.
 
-The 47-file static release uses a read-only release-specific mount in the
-existing nginx pod. Remote file checksums were verified before activation;
-nginx syntax and Kubernetes server dry-runs passed. Public bundles match local:
-
-- `index-BdDI2HV9.js`: `65f92a6677351ea0ff5c699afb1a6d78ba6b6dc37e230c7b71379dd3fef068de`
-- `Reader-oHn9ikKW.js`: `80525e91e65183fba1e8b53111ee29389c39a29f85e95c51a340728563cf8cbd`
-
-Apex and Testmails returned 200, protected Testmails API 401; Matrix discovery
-is byte-identical to its prior baseline. Missing assets return 404. No server
-process was added. Release backups and selective rollback instructions are in
-`ops/README.md`; deployment evidence is in `output/deploy/20260907-v1/`.
-
-This repository is local-only; no remote, PR or merge is implied. Formbricks
-is a separate prepared installation with unresolved RAM/DNS dependencies.
-
-## Assets and signature
-
-Two final raster assets were generated with the integrated image tool: the
-crooked house/people and plants. Two earlier, overly tidy versions are retained
-only in `assets-drafts/`. No paid KIE credit usage is claimed.
-
-Custom grammar: editorial workbook, chosen because the story needs readable
-source depth and a freely navigable graph. The brief records why the film,
-gallery, poster, live software surface, split stage and cutlist alternatives
-were unsuitable. Signature: graph selection highlights its relationships and
-builds a personal, source-linked conversation note. The fingerprint registry
-was empty before this first build.
+One full-flow Axe run measured the open dialog during its 100ms entry animation. The exact node was reproduced at 50ms/opacity 0.8024 with contrast 3.98:1; after completion the text is #586576 on white, 5.94:1. The test now awaits actual animation completion and opacity 1 before applying the same full ruleset. No CSS or accessibility-rule suppression was used. All four public full-flow profiles pass in `output/qa/public-v3-flow-settled/report.json`. Controlled diagnosis is in `output/qa/dialog-contrast-diagnostic/`.

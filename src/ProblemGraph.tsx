@@ -1,47 +1,40 @@
-import { useState } from 'react'
-import { ArrowUpRight, BookOpen, Check } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ArrowUpRight, BookOpen, Check, Baby, Users, HeartHandshake, Utensils, Coins, Shapes, MonitorPlay, Wrench, MapPin, GraduationCap, ZoomIn, ZoomOut, Move, List, Maximize, Focus, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { Content, Problem } from './types'
-
-export function ProblemGraph({ content, selected, onSelect, saved, onSave }: {content:Content; selected:string;onSelect:(id:string)=>void;saved:string[];onSave:(id:string)=>void}) {
- const [detail,setDetail]=useState<Problem|null>(null)
+const icons={kind:Baby,familie:Users,kueche:Utensils,spielraum:Coins,medien:MonitorPlay,technik:Wrench,personal:HeartHandshake,organisation:GraduationCap,leitung:Users,traeger:Coins,partizipation:Shapes,passung:MapPin,beziehung:HeartHandshake}
+const width=1280,height=910
+export function ProblemGraph({content,selected,onSelect,saved,onSave}:{content:Content;selected:string;onSelect:(id:string)=>void;saved:string[];onSave:(id:string)=>void}) {
+ const [detail,setDetail]=useState<Problem|null>(null),[exploring,setExploring]=useState(false),[list,setList]=useState(()=>matchMedia('(max-width:700px)').matches)
+ const [view,setView]=useState({x:0,y:0,scale:1}),[listExpanded,setListExpanded]=useState(false),[edgeFocus,setEdgeFocus]=useState<string|null>(null)
+ const compact=matchMedia('(max-width:700px)').matches
+ function choose(id:string){onSelect(id);setEdgeFocus(null);if(compact&&list){setListExpanded(false);requestAnimationFrame(()=>document.querySelector('.graph-finding')?.scrollIntoView({block:'start',behavior:'instant'}))}}
+ const viewport=useRef<HTMLDivElement>(null),drag=useRef<{x:number;y:number;originX:number;originY:number}|null>(null),touched=useRef(false)
  const current=content.nodes.find(n=>n.id===selected)??content.nodes[0]
- const neighbors=new Set(content.relations.filter(r=>r.source===selected||r.target===selected).flatMap(r=>[r.source,r.target]))
- const positions=content.nodes.map((_,i)=>{const a=-Math.PI/2+i*2*Math.PI/content.nodes.length;return {x:50+34*Math.cos(a),y:50+36*Math.sin(a)}})
- return <div className="graph-layout">
-  <div className="graph-map" aria-label="Zusammenhänge der Problemanalyse">
-   <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" className="graph-lines">
-    {content.relations.map((r,i)=>{const a=positions[content.nodes.findIndex(n=>n.id===r.source)],b=positions[content.nodes.findIndex(n=>n.id===r.target)]; if(!a||!b)return null; return <path key={i} d={`M ${a.x} ${a.y} Q ${50+(i%2?7:-7)} ${50+(i%3?4:-4)} ${b.x} ${b.y}`} className={cn('graph-edge',(r.source===selected||r.target===selected)&&'is-active')} />})}
-   </svg>
-   <div className="graph-center" aria-hidden="true">Der Alltag<br/><strong>eines Kindes</strong></div>
-   {content.nodes.map((n,i)=><button key={n.id} className={cn('graph-node',selected===n.id&&'is-selected',neighbors.has(n.id)&&'is-related')} style={{left:`${positions[i].x}%`,top:`${positions[i].y}%`}} aria-pressed={selected===n.id} onClick={()=>onSelect(n.id)}><span>{n.title}</span><ArrowUpRight aria-hidden="true"/></button>)}
+ const highlighted=content.relations.find(r=>`${r.source}:${r.target}`===edgeFocus)
+ const relations=content.relations.filter(r=>r.source===selected||r.target===selected)
+ function fit(){const el=viewport.current;if(!el)return;const scale=Math.min(el.clientWidth/width,el.clientHeight/height);setView({x:(el.clientWidth-width*scale)/2,y:(el.clientHeight-height*scale)/2,scale})}
+ useEffect(()=>{const el=viewport.current;if(!el)return;const observer=new ResizeObserver(()=>{if(!touched.current){const scale=Math.min(el.clientWidth/width,el.clientHeight/height);setView({x:(el.clientWidth-width*scale)/2,y:(el.clientHeight-height*scale)/2,scale})}});observer.observe(el);return()=>observer.disconnect()},[list])
+ function zoom(factor:number){touched.current=true;const el=viewport.current;if(!el)return;setView(v=>{const scale=Math.max(.25,Math.min(2,v.scale*factor));const ratio=scale/v.scale;return{x:el.clientWidth/2-(el.clientWidth/2-v.x)*ratio,y:el.clientHeight/2-(el.clientHeight/2-v.y)*ratio,scale}})}
+ function focusNode(n:Problem,keyboard=false){const el=viewport.current;if(!el)return;touched.current=true;setView(v=>{const scale=keyboard?Math.max(v.scale,.85):Math.max(v.scale,1);return{x:el.clientWidth/2-n.position.x*scale,y:el.clientHeight/2-n.position.y*scale,scale}})}
+ function navigate(event:React.MouseEvent<HTMLAnchorElement>){event.preventDefault();const target=event.currentTarget.hash;window.location.hash=target;setDetail(null)}
+ return <div className="graph-workspace">
+  <div className="graph-toolbar" aria-label="Ansicht der Zusammenhänge">
+   <div className="flex flex-wrap gap-2"><Button variant={list?'outline':'secondary'} onClick={()=>{setList(false);touched.current=false}} aria-pressed={!list}><Move/>Whiteboard</Button><Button variant={list?'secondary':'outline'} onClick={()=>setList(true)} aria-pressed={list}><List/>Als Liste</Button></div>
+   {!list&&<div className="flex flex-wrap gap-2"><Button variant={exploring?'secondary':'outline'} onClick={()=>setExploring(!exploring)} aria-pressed={exploring}>{exploring?'Verschieben beenden':'Verschieben aktivieren'}</Button><Button variant="outline" size="icon" aria-label="Vergrößern" onClick={()=>zoom(1.25)}><ZoomIn/></Button><Button variant="outline" size="icon" aria-label="Verkleinern" onClick={()=>zoom(.8)}><ZoomOut/></Button><Button variant="outline" onClick={()=>{touched.current=false;fit()}}><Maximize/>Alles zeigen</Button><Button variant="outline" onClick={()=>focusNode(current)}><Focus/>Zur Auswahl</Button></div>}
   </div>
-  <aside className="graph-finding" aria-live="polite" aria-atomic="true">
-   <Badge variant="outline">{current.evidenceStatus}</Badge>
-   <h3>{current.title}</h3>
-   <p className="finding-metric">{current.metric}</p>
-   <p className="metric-caption">{current.metricLabel}</p>
-   <Separator/>
-   <p>{current.summary}</p>
-   <div className="flex flex-wrap gap-2">
-    <Button onClick={()=>setDetail(current)}>Befund vertiefen <ArrowUpRight data-icon="inline-end"/></Button>
-    <Button variant="outline" onClick={()=>onSave(current.id)} aria-pressed={saved.includes(current.id)}>{saved.includes(current.id)?<Check data-icon="inline-start"/>:<BookOpen data-icon="inline-start"/>}{saved.includes(current.id)?'Vorgemerkt':'Fürs Gespräch'}</Button>
+  {!list?<><p id="graph-help" className="graph-help">Knoten anklicken oder mit Tab auswählen. Nach „Verschieben aktivieren“: freie Fläche ziehen oder dort die Pfeiltasten nutzen. Plus/Minus vergrößert oder verkleinert, Escape beendet das Verschieben. Die Seite bleibt normal scrollbar. Wähle eine Beziehung unter dem Befund, um ihre Beschriftung auf der Karte hervorzuheben.</p>
+  <div ref={viewport} className={cn('board-viewport',exploring&&'is-exploring')} tabIndex={0} role="region" aria-label="Beziehungsnetz erkunden" aria-describedby="graph-help" onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==='Escape'){setExploring(false);return}if(e.key==='+'||e.key==='='){e.preventDefault();zoom(1.25)}if(e.key==='-'){e.preventDefault();zoom(.8)}if(exploring&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();touched.current=true;setView(v=>({...v,x:v.x+(e.key==='ArrowLeft'?60:e.key==='ArrowRight'?-60:0),y:v.y+(e.key==='ArrowUp'?60:e.key==='ArrowDown'?-60:0)}))}}} onPointerDown={e=>{if(!exploring||e.button!==0||(e.target as HTMLElement).closest('button'))return;touched.current=true;drag.current={x:e.clientX,y:e.clientY,originX:view.x,originY:view.y}}} onPointerMove={e=>{if(!drag.current)return;setView(v=>({...v,x:drag.current!.originX+e.clientX-drag.current!.x,y:drag.current!.originY+e.clientY-drag.current!.y}))}} onPointerUp={()=>{drag.current=null}} onPointerCancel={()=>{drag.current=null}} onPointerLeave={()=>{drag.current=null}}>
+   <div className="board-selected-relation" hidden={!highlighted} aria-live="polite">{highlighted?.label}</div><div className="board-world" style={{width,height,transform:`translate(${view.x}px,${view.y}px) scale(${view.scale})`}} data-view={`${view.x},${view.y},${view.scale}`}>
+    <svg width={width} height={height} aria-hidden="true" className="board-lines"><defs><marker id="edge-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6" fill="none" stroke="currentColor"/></marker></defs>{content.relations.map((r,i)=>{const a=content.nodes.find(n=>n.id===r.source)!.position,b=content.nodes.find(n=>n.id===r.target)!.position;const active=r.source===selected||r.target===selected;const flat=Math.abs(a.y-b.y)<80&&Math.abs(a.x-b.x)>400;const bend=flat?(a.y>height/2?150:a.x<b.x?-160:170):-20;return <g key={i} className={cn('board-edge',active&&'is-active',edgeFocus===`${r.source}:${r.target}`&&'is-highlighted')} data-kind={r.kind}><path d={`M ${a.x} ${a.y} Q ${(a.x+b.x)/2+25} ${(a.y+b.y)/2+bend} ${b.x} ${b.y}`} /></g>})}</svg>
+    {content.nodes.map(n=>{const Icon=icons[n.id as keyof typeof icons]??Shapes;return <button key={n.id} data-node={n.id} className={cn('board-node',n.id==='kind'&&'child-node',selected===n.id&&'is-selected')} style={{left:n.position.x,top:n.position.y}} aria-pressed={selected===n.id} onFocus={e=>{if(e.currentTarget.matches(':focus-visible'))focusNode(n,true)}} onClick={()=>choose(n.id)}><Icon aria-hidden="true"/><span><small>{n.type}</small>{n.title}</span></button>})}
    </div>
-   <p className="graph-relation-label">Verknüpft mit</p>
-   <ul className="related-list">{content.relations.filter(r=>r.source===selected||r.target===selected).map((r,i)=><li key={i}>{r.label}</li>)}</ul>
-  </aside>
-  <Dialog open={!!detail} onOpenChange={open=>!open&&setDetail(null)}>
-   <DialogContent className="max-h-[88dvh] overflow-y-auto sm:max-w-2xl">
-    <DialogHeader><DialogTitle>{detail?.title}</DialogTitle><DialogDescription>{detail?.metric} · {detail?.metricLabel}</DialogDescription></DialogHeader>
-    <div className="detail-prose">{detail?.detail.split('\n').filter(Boolean).map((p,i)=><p key={i}>{p}</p>)}</div>
-    <h4>Quellen zum Nachlesen</h4>
-    <ul className="source-list">{detail?.sources.map(s=><li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.title} <ArrowUpRight aria-hidden="true"/></a></li>)}</ul>
-    <a className={buttonVariants({variant:'secondary'})} href={`#lesen/${detail?.relatedPaper?.match(/P\d+/)?.[0]??detail?.relatedPaper}`} onClick={()=>setDetail(null)}>Ausführliche Synthese lesen</a>
-   </DialogContent>
-  </Dialog>
+  </div></>:<><div className="board-list-toggle"><p>Ausgewählt: <strong>{current.title}</strong></p><Button variant="outline" aria-expanded={listExpanded} aria-controls="board-topic-list" onClick={()=>setListExpanded(!listExpanded)}>{listExpanded?<ChevronUp/>:<ChevronDown/>}{listExpanded?'Themenliste einklappen':`Alle ${content.nodes.length} Themen anzeigen`}</Button></div><ul id="board-topic-list" className={cn("board-list",!listExpanded&&"is-collapsed")} aria-label="Alle Zusammenhänge">{content.nodes.map(n=>{const Icon=icons[n.id as keyof typeof icons]??Shapes;return <li key={n.id}><button data-node={n.id} aria-pressed={selected===n.id} onClick={()=>choose(n.id)} className={cn(selected===n.id&&'is-selected')}><Icon aria-hidden="true"/><span><small>{n.type}</small><strong>{n.title}</strong><span>{n.summary}</span></span></button></li>})}</ul></>}
+  <div className="edge-legend" aria-label="Bedeutung der Verbindungen">{['Beobachteter Zusammenhang','Annahme','Organisatorische Verbindung','Geplanter Eingriff'].map(k=><span data-kind={k} key={k}><i aria-hidden="true"/>{k}</span>)}</div>
+  <aside className="graph-finding" aria-live="polite" aria-atomic="true"><div><Badge variant="outline">{current.evidenceStatus}</Badge><h3>{current.title}</h3><p className="finding-metric">{current.metric}</p><p className="metric-caption">{current.metricLabel}</p><p>{current.summary}</p><div className="flex flex-wrap gap-2"><Button onClick={()=>setDetail(current)}>Befund vertiefen <ArrowUpRight data-icon="inline-end"/></Button><Button variant="outline" onClick={()=>onSave(current.id)} aria-pressed={saved.includes(current.id)}>{saved.includes(current.id)?<Check/>:<BookOpen/>}{saved.includes(current.id)?'Vorgemerkt':'Fürs Gespräch'}</Button></div></div><div><h4>Wie dieser Aspekt mit anderen zusammenhängt</h4><ul className="related-list">{relations.map((r,i)=>{const other=content.nodes.find(n=>n.id===(r.source===selected?r.target:r.source))!;return <li key={i}><button onClick={()=>choose(other.id)}>{other.title} <ArrowUpRight aria-hidden="true"/></button>{!list?<button className="edge-highlight" title="Diese Verbindung auf der Karte hervorheben" aria-pressed={edgeFocus===`${r.source}:${r.target}`} onClick={()=>setEdgeFocus(edgeFocus===`${r.source}:${r.target}`?null:`${r.source}:${r.target}`)}>{r.label}</button>:<p>{r.label}</p>}<small>{r.kind} · <a href={`#lesen/${/^P\d+$/.test(r.evidence)?r.evidence:current.documentId}`}>Einordnung lesen</a></small></li>})}</ul></div></aside>
+  <Dialog open={!!detail} onOpenChange={open=>!open&&setDetail(null)}><DialogContent className="max-h-[88dvh] overflow-y-auto sm:max-w-2xl"><DialogHeader><DialogTitle>{detail?.title}</DialogTitle><DialogDescription>{detail?.metric} · {detail?.metricLabel}</DialogDescription></DialogHeader><div className="detail-prose">{detail?.detail.split('\n').filter(Boolean).map((p,i)=><p key={i}>{p}</p>)}</div>{!!detail?.sources.length&&<><h4>Quellen zum Nachlesen</h4><ul className="source-list">{detail.sources.map(s=><li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.title} <ArrowUpRight aria-hidden="true"/></a>{s.year&&<p>Bezugsjahr: {s.year}</p>}{s.population&&<p>{s.population}</p>}{s.denominator&&<p>Bezugsgröße: {s.denominator}</p>}{s.location&&<small>Fundstelle: {s.location}</small>}</li>)}</ul></>}<a className={buttonVariants({variant:'secondary'})} href={`#lesen/${detail?.documentId??''}`} onClick={navigate}>Ausführliche Synthese lesen</a></DialogContent></Dialog>
  </div>
 }

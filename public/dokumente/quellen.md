@@ -1,9 +1,9 @@
 
 # Quellenregister der Publikationsfassung
 
-Dieses Register umfasst die zentralen Nachweise der 16 Synthesen, des Whitepapers und der Website-Inhalte. Die vollständigen historischen Literaturlisten bleiben in den Originalpapieren erhalten. Es wurde keine neue systematische Literaturrecherche oder Metaanalyse durchgeführt. Aktuelle Schlüsseldaten und einschlägige amtliche Grundlagen wurden live geprüft; der jeweilige Umfang ist unten angegeben.
+Dieses Register umfasst die zentralen Nachweise der 18 Synthesen, des Whitepapers und der Website-Inhalte. Die vollständigen historischen Literaturlisten bleiben in den Originalpapieren erhalten. Es wurde keine neue systematische Literaturrecherche oder Metaanalyse durchgeführt. Aktuelle Schlüsseldaten und einschlägige amtliche Grundlagen wurden live geprüft; der jeweilige Umfang ist unten angegeben.
 
-Die Konzeptelemente und Alltagsbeispiele sind eigene redaktionelle Ableitungen aus Jans Konzept und Franks Eingaben. Beispiele beschreiben keine bereits durchgeführten Piloten. Ein HTTP-Erfolg allein ist keine inhaltliche Prüfung. Umgekehrt sagt eine vorübergehende Abrufsperre nichts über die wissenschaftliche Güte einer Quelle.
+Die Konzeptelemente und Alltagsbeispiele sind eigene redaktionelle Ableitungen aus dem Ursprungskonzept und den chronologischen Eingaben. Beispiele beschreiben keine bereits durchgeführten Piloten. Ein HTTP-Erfolg allein ist keine inhaltliche Prüfung. Umgekehrt sagt eine vorübergehende Abrufsperre nichts über die wissenschaftliche Güte einer Quelle.
 
 ## S01 · Arbeitsunfähigkeit
 
@@ -29,7 +29,7 @@ Verwendung: P04; P01-Kontext; Whitepaper; Graph. Prüfung am 7. September 2026: 
 
 **[ WiFF, Studie kompakt Nr. 6, April 2026; Paneldaten 2025 ](https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf)**
 
-Fundstelle: Abschnitte Onboarding und Outcomes, Abb. 7–11.
+Fundstelle: Einarbeitungsplan 24,9 Prozent; gewichtete Auswertung n=476, Welle 2/Kohorte 1 (2025), Abb. 9, S. 10. Weitere Zusammenhänge in Abb. 7–11.
 
 Reichweite: Berufseinsteigerbefragung; Zusammenhang ist kein kausaler Nachweis vermiedener Kündigungen oder Krankheit.
 
@@ -51,7 +51,7 @@ Verwendung: P01; P07; P13; Whitepaper; Graph. Prüfung am 7. September 2026: Vol
 
 Fundstelle: Erste PDF-Seite, Ganztag und Teilzeit.
 
-Reichweite: 4.269,94 Euro pro Kind/Jahr; inklusive Verpflegung, kein freies Innovationsbudget. Fünf Prozent eigene Szenarioannahme.
+Reichweite: 4.269,94 Euro pro Kind/Jahr; inklusive Verpflegung, kein freies Innovationsbudget. Zehn entsprechende Plätze ergeben rechnerisch 42.699,40 Euro jährlich. Hypothetische Szenarioanteile sind keine Einsparprognose.
 
 Verwendung: P08; Whitepaper; Graph. Prüfung am 7. September 2026: Amtliche Tabelle live geprüft.
 
@@ -121,7 +121,7 @@ Verwendung: P02; P14-Kontext. Prüfung am 7. September 2026: Offizielle Seite li
 
 Fundstelle: Einordnung des Konstrukts und zugeordnete Literatur einschließlich Neufeld/Maté.
 
-Reichweite: Darstellung aus dem Neufeld-Umfeld, kein unabhängiger Wirksamkeitsnachweis des Gesamtmodells. Die dort zusammengestellte Literatur wird nicht als pauschale Bestätigung aller theoretischen Aussagen behandelt. Die weiterführende Verbindung zu Reggio und Kegan bleibt Franks Konzept-Hypothese.
+Reichweite: Darstellung aus dem Neufeld-Umfeld, kein unabhängiger Wirksamkeitsnachweis des Gesamtmodells. Die dort zusammengestellte Literatur wird nicht als pauschale Bestätigung aller theoretischen Aussagen behandelt. Die weiterführende Verbindung zu Reggio und Kegan bleibt eine eigene Konzept-Hypothese.
 
 Verwendung: P14. Prüfung am 7. September 2026: Seite live vollständig gelesen. Ein älteres Vortrags-PDF war automatisiert nicht erreichbar und wurde als öffentlicher Artikelverweis durch diese zugängliche Quelle ersetzt.
 
@@ -248,3 +248,19 @@ Das Szenario setzt 640 nach dem genannten Sachkostensatz finanzierte Kinder vora
 ## Umgang mit offenen Nachweisen
 
 Für P12 liegt kein eigenes Papier vor. Standortbelegung, Kundenbedarf, Zahlungsbereitschaft, durchgeführte Leitungsinterviews, eigene Wirkungsgrößen und vertragliche Partnerschaften sind in dieser Publikationsfassung nicht als erwiesen ausgewiesen. Frühere Domainabfragen werden nicht als aktuell verfügbar dargestellt. Abweichende oder überzogene Aussagen aus älteren Research-Versionen sind nicht stillschweigend fortgeschrieben.
+
+
+## Ergänzungen der Überarbeitung vom 7. September 2026
+
+| Quelle | Fundstelle und Bezugsgröße | Verwendung und Reichweite |
+|---|---|---|
+| [DJI: ERiK-Forschungsbericht IV](https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf) | Erhebung 2022; gesamte Leitungsbefragung n=4.832; S. 108–109. 65 Prozent der Einrichtungen berichten Personalfluktuation binnen zwölf Monaten. Wechselgründe mit eigenen Nennern n=2.639–2.729. | P01/P03/P12, Whitepaper, Graph, Pitch. Einrichtungsebene; keine individuelle Kündigungsquote und kein Ursachenbeweis. |
+| [Fachkräftebarometer 2025](https://www.fachkraeftebarometer.de/fileadmin/Redaktion/FKB_2025/Publikation/WiFF_FKB_2025.pdf) | BA-Daten; Beschäftigtenmobilität und Berufsfeldwechsel mit getrennten Bezugsgrößen. | P12: Einrichtungswechsel, Berufsaustritt, Abwesenheit und tägliche Bezugspersonenkontinuität unterscheiden. |
+| [mpfs: miniKIM 2023](https://mpfs.de/app/uploads/2025/01/miniKIM-2023_PDF_barrierearm.pdf) | n=600 primäre Erziehungspersonen von 2–5-Jährigen in Onlinehaushalten; S. 24–25. Kostenlose Videoportale: 19 Prozent täglich/fast täglich, 50 Prozent mindestens wöchentlich, 25 Prozent nie. | P18, Medienkonzept, Whitepaper. Elternangaben; Videoportale wie YouTube sind eine breitere Kategorie als YouTube allein. |
+| [mpfs: KIM 2024](https://mpfs.de/app/uploads/2025/05/KIM-Studie-2024.pdf) | n=1.225 deutschsprachige Kinder 6–13 Jahre und Erziehungspersonen; S. 41–42. YouTube mindestens wöchentlich nach Altersgruppen 6–7/8–9/10–11/12–13: 21/40/66/80 Prozent. | P18, Whitepaper, Website und Pitch. Altersbezogene Nutzungsbefragung, kein Kausalnachweis einer Entwicklungswirkung. |
+| [EU-Kommission: Schutz Minderjähriger, Leitlinien 2025](https://digital-strategy.ec.europa.eu/en/library/commission-publishes-guidelines-protection-minors) | Plattformgestaltung, Empfehlungen und Schutz Minderjähriger. | P18. Gestaltungs- und Regulierungsrahmen; keine Gehirnstudie. |
+| [AMI: Montessori-Umgebungen](https://montessori-ami.org/about-montessori/montessori-environments) und [HighScope: Our Approach](https://highscope.org/our-approach/) | Primäre Selbstbeschreibungen pädagogischer Ansätze. | P06. Begründete Anleihen, keine behauptete Überlegenheit oder pauschale Evidenz aller Methoden. |
+| [Minds at Work](https://www.mindsatwork.com/our-thinking) | Immunity to Change: Ziel, Verhalten, konkurrierende Verpflichtung, Annahme und begrenzter Versuch. | P02/P14, Whitepaper. Methodenselbstbeschreibung; freiwillige Reflexionshilfe, keine KI-Diagnose. |
+| [Anthropic: Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) und [Garry Tan: Thin Harness, Fat Skills](https://github.com/garrytan/gbrain/blob/master/docs/ethos/THIN_HARNESS_FAT_SKILLS.md) | Versionierte fachliche Bausteine und überschaubare Ausführung. | P09/P15. Technische Architekturquellen; keine Nachweise pädagogischer Wirkung oder einer allgemeinen Kostensenkungsquote. |
+
+Diese Fundstellen wurden bei der Überarbeitung in den drei thematischen Arbeitssträngen anhand der Primärquellen geprüft. Die vollständigen Quellenzuordnungen stehen zusätzlich in den jeweiligen Synthesen. Die Erkenntnislücke zur kausalen Gesamtkette sowie zu deutschen Eurokosten je Personalwechsel bleibt ausdrücklich offen und wird im Pilot mit Trägerdaten bearbeitet.

@@ -1,8 +1,8 @@
-export type Source = { title: string; url: string }
-export type Problem = { id: string; title: string; metric: string; metricLabel: string; summary: string; detail: string; evidenceStatus: string; sources: Source[]; relatedPaper: string }
+export type Source = { title: string; url: string; year?:number; population?:string; denominator?:string; location?:string }
+export type Problem = { id: string; type:string; position:{x:number;y:number}; documentId:string; claimIds:string[]; title: string; metric: string; metricLabel: string; summary: string; detail: string; evidenceStatus: string; sources: Source[]; relatedPaper: string }
 export type Content = {
  title:string; subtitle:string; origin:{name:string;role:string;description:string}; thesis:{title:string;body:string};
- nodes:Problem[]; relations:{source:string;target:string;label:string;kind:string}[];
+ nodes:Problem[]; relations:{source:string;target:string;label:string;kind:string;evidence:string}[];
  approach:{title:string;body:string}[]; modules:{id:string;title:string;body:string}[];
  pilot:{title:string;steps:{title:string;body:string}[];successCriteria:string[]};
  economics:{title:string;body:string;scenario:Record<string,unknown>};
