@@ -1,3 +1,7 @@
+# Current survey release
+
+See [five-role pretest verification](VERIFICATION-PRETESTS.md) for the current CTA and data check. V6 evidence below remains applicable to the unchanged hero, diagrams and mindmap.
+
 Current revision: [V6 scaling, diagrams and hero verification](VERIFICATION-V6.md). The following records the preceding V3 revision.
 
 # Verification — revised Wurzelwald presentation
