@@ -27,7 +27,7 @@ export default function ArticleDiagram({diagram}:{diagram:ArticleDiagramData}){
     <div className="diagram-item" ref={node=>{itemRefs.current[index]=node}}>{item.group&&<small>{item.group}</small>}<strong>{item.title}</strong>{item.detail&&<span>{item.detail}</span>}</div>
     {['flow','cycle','bridge','timeline'].includes(diagram.kind)&&index<diagram.items.length-1&&<Arrow/>}
    </div>)}
-   {diagram.kind==='cycle'&&connectors.cycle&&<svg className="diagram-cycle-return" viewBox={`0 0 ${connectors.width} ${connectors.height}`} preserveAspectRatio="none" aria-label="Rückkopplung zum Ausgangspunkt"><defs><marker id={`cycle-arrow-${diagram.id}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs><path d={connectors.cycle} markerEnd={`url(#cycle-arrow-${diagram.id})`}/></svg>}
+   {diagram.kind==='cycle'&&connectors.cycle&&<svg className="diagram-cycle-return" viewBox={`0 0 ${connectors.width} ${connectors.height}`} preserveAspectRatio="none" aria-label="Rückkopplung zum Ausgangspunkt"><defs><marker id={`cycle-arrow-${diagram.id}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 2 1 L 9 5 L 2 9"/></marker></defs><path d={connectors.cycle} markerEnd={`url(#cycle-arrow-${diagram.id})`}/></svg>}
   </div>
   <figcaption>{diagram.caption}</figcaption>
  </figure>
