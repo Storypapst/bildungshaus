@@ -1,4 +1,4 @@
-Current revision: [V5 learning and mindmap verification](VERIFICATION-V5.md). The following records the preceding V3 revision.
+Current revision: [V6 scaling, diagrams and hero verification](VERIFICATION-V6.md). The following records the preceding V3 revision.
 
 # Verification — revised Wurzelwald presentation
 
