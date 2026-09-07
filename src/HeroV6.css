@@ -1,0 +1,15 @@
+/* The same visual weight for both halves; one shared scene underneath. */
+.hero.page-width{padding-top:44px;min-height:0;padding-bottom:58px}
+.hero.hero h1.shared-proverb{font-size:clamp(31px,3.3vw,46px);gap:30px;line-height:1.16;letter-spacing:-.035em}
+.hero.hero h1.shared-proverb strong{font-weight:500;margin-top:7px}
+.hero.hero .proverb-source{font-size:13px;margin-top:20px;min-height:24px;text-decoration:underline;text-underline-offset:4px}
+.hero.hero .hero-bottom{grid-template-columns:1.25fr 1fr;gap:36px;margin-top:32px;align-items:center}
+.hero.hero .hero-copy{padding:0;gap:19px}
+.hero.hero .hero-copy h2{font-size:clamp(26px,2.5vw,35px);line-height:1.14;max-width:24ch;text-wrap:pretty}
+.hero.hero .hero-copy>p{font-size:18px;line-height:1.55;max-width:44ch}
+.hero.hero .hero-copy .hero-origin{font-size:13px;line-height:1.65}
+.hero.hero .hero-art{margin:0;transform:rotate(-2deg);background:transparent;overflow:visible;min-width:0}
+.hero.hero .hero-art img{max-height:none;width:100%;mix-blend-mode:normal;border-radius:0;object-fit:contain}
+.hero-art figcaption{font-size:13px;color:var(--muted-foreground);text-align:center;margin-top:4px;transform:rotate(2deg)}
+@media(max-width:800px){.hero.hero .hero-bottom{grid-template-columns:1fr;gap:26px}.hero.hero .hero-art{width:min(600px,100%);justify-self:center}.hero.hero .hero-copy{max-width:600px;justify-self:center}.hero.hero .hero-copy>p{max-width:60ch}.hero.hero .hero-copy h2{max-width:none}.hero.hero h1.shared-proverb{font-size:clamp(29px,4.2vw,38px);gap:24px}.hero.page-width{padding-top:32px;padding-bottom:40px}}
+@media(max-width:600px){.hero.hero h1.shared-proverb{display:block;font-size:31px;line-height:1.18;letter-spacing:-.025em}.hero.hero h1.shared-proverb>span{display:block}.hero.hero h1.shared-proverb>span+span{margin-top:25px}.hero.hero h1.shared-proverb strong{margin-top:3px}.hero.hero .hero-bottom{margin-top:22px;gap:23px}.hero.hero .hero-copy h2{font-size:28px}.hero.hero .hero-copy>p{font-size:17px}.hero-art figcaption{font-size:12px}.hero.hero .proverb-source{font-size:12px;line-height:1.5;margin-top:17px}}
