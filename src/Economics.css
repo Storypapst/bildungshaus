@@ -1,5 +1,5 @@
 /* The unfilled track is a control, not a disabled state. */
-.economics-layout [data-slot=slider-track] { height: 8px; background: var(--muted-foreground); outline: 1px solid var(--muted-foreground); outline-offset: 2px; }
+.economics-layout [data-slot=slider-track] { height: 6px; background: #7d8794; outline: none; }
 .economics-layout [data-slot=slider-range] { background: var(--strong-ink); }
 .economics-layout [data-slot=slider-thumb] { width: 24px; height: 24px; background: var(--background); border: 3px solid var(--strong-ink); }
 .economics-layout [data-slot=slider-thumb]:focus-visible { outline: 3px solid var(--foreground); outline-offset: 5px; box-shadow: 0 0 0 3px var(--background); }
@@ -9,3 +9,5 @@
  .economics-layout [data-slot=slider-range] { background: Highlight; }
  .economics-layout [data-slot=slider-thumb] { background: Canvas; border-color: Highlight; }
 }
+
+.dark .economics-layout [data-slot=slider-track] { background: #8f99a6; }

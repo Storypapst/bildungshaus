@@ -67,3 +67,50 @@
 
 .graph-scroll-cue { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--strong-ink); flex-shrink: 0; }
 .graph-scroll-cue svg { width: 14px; height: 14px; }
+/* Finite mindmap: transformed descendants cannot scroll their clipping parent. */
+.mindmap { min-width: 0; }
+.mindmap [data-slot=tabs-list] { width: 100%; height: 44px; }
+.mindmap [data-slot=tabs-trigger] { color: var(--foreground); min-height: 38px; padding-inline: 12px; }
+.mindmap-controls { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-block: 16px 10px; }
+.mindmap-controls>p { font-size: 14px; max-width: 38ch; }
+.mindmap-controls>div { display: flex; flex-shrink: 0; gap: 6px; }
+.mindmap-help,.mindmap-model-note { font-size: 13px; color: var(--muted-foreground); margin-block: 10px; }
+.mindmap-frame { height: min(680px,70dvh); min-height: 460px; position: relative; overflow: clip; contain: layout paint; border: 2px solid var(--input); border-radius: 8px; background: var(--muted); background-image: radial-gradient(var(--graph-edge) 1px,transparent 1px); background-size: 24px 24px; cursor: grab; touch-action: pan-y; user-select: none; }
+.mindmap-frame:active { cursor: grabbing; }
+.mindmap-frame:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+.mindmap-world { position: absolute; inset: 0 auto auto 0; transform-origin: 0 0; }
+.mindmap-lines { position: absolute; inset: 0; pointer-events: none; }
+.mindmap-lines path { stroke: var(--graph-edge); stroke-width: 3; stroke-dasharray: 7 6; fill: none; }
+.mindmap-lines [data-kind="Organisatorische Verbindung"] path { stroke-dasharray: none; }
+.mindmap-lines .active path { stroke: var(--strong-ink); stroke-width: 4; }
+.mindmap-lines text { fill: var(--foreground); font-size: 17px; font-weight: 500; paint-order: stroke; stroke: var(--muted); stroke-width: 8px; stroke-linejoin: round; }
+.mindmap-node { display: flex; align-items: center; gap: 14px; position: absolute; transform: translate(-50%,-50%); padding: 22px 20px; border: 2px solid var(--input); border-radius: 9px; background: var(--card); color: var(--foreground); text-align: left; font-size: 24px; line-height: 1.35; box-shadow: 3px 4px 0 var(--accent); cursor: pointer; }
+.mindmap-node>span { flex: 1; min-width: 0; overflow-wrap: anywhere; hyphens: auto; white-space: normal; }
+.mindmap-node svg { flex: 0 0 30px; width: 30px; height: 30px; color: inherit; }
+.mindmap-node.is-selected { background: var(--secondary); color: var(--secondary-foreground); border-color: var(--secondary); }
+.mindmap-house { position: absolute; top: 25px; width: 300px; height: 390px; border: 2px solid var(--strong-ink); border-radius: 16px; background: var(--paper-blue); }
+.mindmap-house.house-a { left: 15px; }
+.mindmap-house.house-b { right: 15px; }
+.mindmap-house>span { display: block; padding: 17px; font-size: 23px; font-weight: 500; color: var(--strong-ink); }
+.graph-complete-detail { display: flex; flex-direction: column; gap: 18px; }
+.graph-detail-summary { font-weight: 500; }
+.graph-pane-actions a { min-height: 44px; width: 100%; white-space: normal; text-align: center; }
+.graph-topic-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; list-style: none; padding: 0; margin: 0; max-height: 70dvh; overflow-y: auto; }
+.graph-topic-list button { text-align: left; width: 100%; height: 100%; min-height: 90px; padding: 20px; border: 2px solid var(--input); border-radius: 8px; background: var(--card); color: var(--foreground); overflow-wrap: anywhere; }
+.graph-topic-list .is-selected { background: var(--secondary); color: var(--secondary-foreground); }
+@media(max-width:1000px) {
+ .mindmap-controls { align-items: flex-start; flex-direction: column; }
+ .mindmap-controls>p { max-width: none; }
+ .mindmap-frame { height: 70dvh; min-height: 370px; max-height: 620px; }
+ .mindmap [data-slot=tabs-trigger] { font-size: 12px; padding-inline: 7px; }
+ .graph-topic-list { grid-template-columns: 1fr; max-height: none; overflow: visible; }
+ .graph-topic-list button { min-height: 64px; }
+}
+@media(forced-colors:active) {
+ .mindmap-node { border-color: ButtonText; }
+ .mindmap-node.is-selected { border: 4px double Highlight; }
+ .mindmap-lines path { stroke: CanvasText; }
+ .mindmap-lines text { fill: CanvasText; stroke: Canvas; }
+}
+
+.mindmap-lines path[data-provider-edge] { stroke: var(--strong-ink); stroke-dasharray: none; stroke-width: 3; }

@@ -16,19 +16,27 @@
     {
       "id": "personal",
       "title": "Betreuung gestalten",
-      "metric": "Beim Alltag anfangen",
-      "metricLabel": "Unsere These: pädagogische und organisatorische Bedingungen gemeinsam gestalten",
-      "summary": "Wie Betreuung organisiert und gelebt wird, prägt Beziehungen, Mitwirkung und die Arbeit im Team. Ausfälle und häufige Wechsel können Folgen belastender Bedingungen sein und diese anschließend verstärken.",
-      "detail": "Unsere These beginnt bei der Betreuung: Können Erwachsene Kindern zugewandt begegnen, selbst mitgestalten und ihre Arbeit gemeinsam weiterentwickeln? Fehlende Orientierung, wenig geschützte Lernzeit und brüchige Übergaben können diese Bedingungen erschweren.\n\nKrankheitstage und jährliche Fluktuation sind mögliche Folgen und Warnsignale. Sie sind keine vollständige Erklärung. Stellenwechsel, Berufsaustritt, Abwesenheit und wechselnde Bezugspersonen innerhalb eines Tages müssen getrennt erfasst werden.\n\nIm ERiK-Bericht berichten 65 Prozent der befragten Leitungen von Fluktuation in ihrer Einrichtung innerhalb der letzten zwölf Monate (Erhebung 2022, 4.832 Leitungen). Das ist ein Anteil von Einrichtungen, keine Kündigungsquote einzelner Beschäftigter.\n\nWir wollen auch Einrichtungen vergleichen, in denen Betreuung besser gelingt: bei möglichst ähnlicher Finanzierung, Personalbesetzung, Größe und Familienbedarfen. Unterschiede helfen, konkrete Gestaltungsmöglichkeiten zu erkennen; sie widerlegen nicht die Bedeutung ausreichender Mittel.",
+      "metric": "24,9 % mit Einarbeitungsplan",
+      "metricLabel": "WiFF: 476 Befragte, gewichtete Onboarding-Auswertung 2025",
+      "summary": "Die neue Fachkraft soll sofort übernehmen. Die erfahrene Kollegin soll sie einarbeiten und gleichzeitig die Gruppe begleiten. Für beides fehlt geschützte Zeit.",
+      "detail": "Eine Kollegin zeigt kurz den Raum und muss zum nächsten Kind. Die Neue kennt weder die Absprachen noch den Hilfeweg. Sie fragt wiederholt nach oder entscheidet allein. Die erfahrene Kraft wird unterbrochen, Kinder warten und Eltern bekommen widersprüchliche Antworten. So wird fehlende Einarbeitung zu einem Betreuungsproblem.\n\n24,9 Prozent der 476 Befragten in der gewichteten WiFF-Onboarding-Auswertung berichteten einen strukturierten Einarbeitungsplan. Das sind Berufseinsteigende der Erhebung 2025, nicht alle Beschäftigten. ERiK berichtet für 2022 Personalfluktuation in 65 Prozent der befragten Einrichtungen; die gesamte Leitungsbefragung umfasste 4.832 Personen. Das misst betroffene Häuser, nicht den Anteil kündigender Mitarbeitender.\n\nWir beginnen mit einem tatsächlich wiederkehrenden Übergang: begleiten, gemeinsam ausführen, selbst übernehmen, Rückmeldung erhalten. Leitung und Träger sichern dafür Zeit und Vertretung. Eine kurze Arbeitskarte hält Wissen und Hilfewege fest. Sie entlastet eine erfahrene Person nur, wenn sie nicht zusätzlich alles allein erklären muss.\n\nIm Versuch vergleichen wir vereinbarte und tatsächlich erhaltene Begleitung, selbstständig bewältigte Schritte, wiederholte Rückfragen und die Situation der Kinder. Wachsen Können und erlebte Wirksamkeit, kann das Motivation und Kontinuität stärken. Diese Wirkungskette prüfen wir; Ausfälle und Wechsel bleiben mögliche Folgen und Verstärker.",
       "evidenceStatus": "Gestaltungsthese mit getrennten Befunden",
       "sources": [
+        {
+          "title": "WiFF-Panel, Studie kompakt 6 (2026), Daten 2025",
+          "url": "https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf",
+          "year": 2025,
+          "population": "476 Befragte der gewichteten Onboarding-Auswertung, Kohorte 1/Welle 2",
+          "denominator": "Anteil Befragter mit strukturiertem Einarbeitungsplan",
+          "location": "Abbildung 9, gedruckte S. 10; Rollenklarheit und Integration Abb. 7–11"
+        },
         {
           "title": "DJI: ERiK-Forschungsbericht IV, Erhebung 2022",
           "url": "https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf",
           "year": 2022,
           "population": "4.832 Kita-Leitungen",
           "denominator": "Anteil befragter Einrichtungen",
-          "location": "Kapitel Personalfluktuation"
+          "location": "Gedruckte S. 108–109, Erhebung 2022; gesamte Leitungsbefragung n=4.832"
         }
       ],
       "relatedPaper": "P01",
@@ -49,18 +57,26 @@
       "id": "partizipation",
       "title": "Mitbestimmung im Alltag",
       "metric": "46,5 %",
-      "metricLabel": "der beobachteten Situationen: Menge vollständig selbst entscheiden",
-      "summary": "Beteiligung wird am Mittagstisch sichtbar, lange bevor ein Kinderparlament tagt.",
-      "detail": "In der BiKA-Studie konnten Kinder in 46,5 Prozent der auswertbaren beobachteten Essenssituationen vollständig selbst bestimmen, wie viel sie essen oder trinken. Der Wert bezieht sich auf 86 Situationen, nicht auf einen repräsentativen Anteil aller Kinder.\n\nDas Bildungshaus will Entscheidungsspielräume konkret machen: erkennen Erwachsene ein Nein, kann ein Kind nachnehmen, und erfährt es, was aus seinem Vorschlag geworden ist? Formale Gremien ergänzen diese Praxis.",
+      "metricLabel": "BiKA: selbst bestimmte Menge in 86 beobachteten Essenssituationen",
+      "summary": "Ein Kind möchte weniger auf dem Teller. Die Fachkraft meint es gut und teilt trotzdem zu. Ein Vorschlag ist erst Beteiligung, wenn daraus eine erkennbare Entscheidung wird.",
+      "detail": "In 46,5 Prozent der 86 auswertbaren Essenssituationen der BiKA-Studie konnten Kinder die Menge vollständig selbst bestimmen. Das ist ein Beobachtungsbefund, keine repräsentative Quote aller Kinder.\n\nBleibt das Nein ohne Wirkung, lernt das Kind wenig über seinen eigenen Einfluss. Bleibt eine Rückmeldung zum Essen irgendwo zwischen Gruppe und Küche liegen, kann auch der Koch nichts damit anfangen. Das Problem liegt im Weg vom Äußern zum Handeln.\n\nWir erproben einen vollständigen Ablauf: Kinder können Mengen wählen und freiwillig Rückmeldung geben. Das Team unterscheidet Geschmack, Konsistenz und Essatmosphäre. Die Küche schlägt eine fachlich passende Änderung vor; die Kinder erfahren, was beim nächsten Essen anders wird. Gesundheit und Allergensicherheit bleiben Aufgabe der Erwachsenen.\n\nWir beobachten konkrete Wahlmöglichkeiten, nachvollziehbare Antworten und den nächsten Versuch. Die Zahl gesammelter Stimmen genügt nicht: Entscheidend ist, ob Kinder ihren Einfluss verstehen und ob die Küche mit der Rückmeldung arbeiten kann.",
       "evidenceStatus": "Beobachtungsbefund",
       "sources": [
         {
           "title": "BiKA-Abschlussbericht (2018–2020), Tabelle 12",
           "url": "https://www.fruehe-chancen.de/fileadmin/user_upload/PDF-Dateien/Bika_Abschlussbericht-web.pdf",
-          "location": "Tabelle 12",
+          "location": "Tabelle 12, gedruckte S. 43",
           "year": 2020,
           "population": "86 auswertbare beobachtete Essenssituationen",
           "denominator": "Anteil der beobachteten Situationen"
+        },
+        {
+          "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas, Nachdruck 2023",
+          "url": "https://www.dge.de/fileadmin/dok/gemeinschaftsgastronomie/dge-qualitaetsstandards/2023/230929-DGE-QST-Kita.pdf",
+          "year": 2023,
+          "population": "Kita-Verpflegung",
+          "denominator": "Fachstandard, keine Ausfall- oder Einsparquote",
+          "location": "Kapitel 2, 4 und 5: Verpflegung, Prozesse und Qualität"
         }
       ],
       "relatedPaper": "P04",
@@ -78,19 +94,19 @@
     {
       "id": "organisation",
       "title": "Pädagogisches Team",
-      "metric": "Ansprechbar sein",
-      "metricLabel": "Unterstützung und Rollenklarheit als Ansatzpunkte",
-      "summary": "Fachkräfte brauchen verlässliche Beziehungen, klare Zuständigkeiten und Zeit, selbst zu lernen und mitzugestalten. Einarbeitung verbindet praktische Orientierung mit Zugehörigkeit.",
-      "detail": "Das WiFF-Panel untersucht Berufseinsteigerinnen und Berufseinsteiger. Unterstützung, Wertschätzung und strukturierende Einarbeitung stehen mit Rollenklarheit und sozialer Integration in Zusammenhang. Die Befragung beweist keine durch eine bestimmte Maßnahme verursachte Verringerung von Kündigungen oder Krankheit.\n\nUnser Ansatz: feste Begleitung, klare Zuständigkeiten und kurze gemeinsame Reflexion. Im Pilot wird geprüft, ob dadurch weniger unnötige Rückfragen und mehr Handlungssicherheit entstehen.",
+      "metric": "24,9 % mit Einarbeitungsplan",
+      "metricLabel": "WiFF: Berufseinstieg, n=476 in der gewichteten Auswertung",
+      "summary": "Eine erfahrene Kraft kann den Alltag gut tragen. Sobald sie neue Menschen einarbeiten soll, fällt die dafür nötige Zeit aus. Ihr Können bleibt an ihre Anwesenheit gebunden.",
+      "detail": "Eine neue Kollegin übernimmt die Abholung. Sie kennt eine Absprache mit der Familie nicht und muss die erfahrene Kraft aus der Gruppe holen. Die Rückfrage ist berechtigt; trotzdem fehlt diese Person jetzt bei den Kindern. Häuft sich das, geraten Neue und Erfahrene unter Druck.\n\nDas WiFF-Panel zeigt Zusammenhänge zwischen Unterstützung, Rollenklarheit und sozialer Integration. Einen strukturierten Einarbeitungsplan berichteten 24,9 Prozent der 476 Befragten in der gewichteten Auswertung 2025. Ein Plan allein sagt noch nicht, ob jemand tatsächlich begleitet wurde.\n\nWir teilen Einarbeitung in beobachtbare Lernschritte. Eine neue Fachkraft probiert einen Übergang mit Begleitung, erhält Rückmeldung und übernimmt ihn anschließend selbst. Die erfahrene Person bekommt dafür ein Zeitfenster und Unterstützung für die Gruppe. Wenn sie später selbst jemanden einarbeitet, gilt dieselbe Regel.\n\nDer Prüfpunkt ist Können im Alltag: Welche Aufgabe kann die Person sicher übernehmen, wann benötigt sie Hilfe und erlebt sie ihre Arbeit als wirksam? Wir hören auch auf Kinder und Familien. Motivation wird nicht aus Klickzahlen abgeleitet, sondern mit den Beteiligten besprochen.",
       "evidenceStatus": "Zusammenhang; eigene Wirkung offen",
       "sources": [
         {
           "title": "WiFF-Panel, Studie kompakt 6 (2026), Daten 2025",
           "url": "https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf",
-          "location": "WiFF-Studie kompakt 6, Zusammenhänge mit Rollenklarheit und Integration",
           "year": 2025,
-          "population": "Berufseinsteigerinnen und Berufseinsteiger im WiFF-Panel",
-          "denominator": "Befragte im Berufseinstieg"
+          "population": "476 Befragte der gewichteten Onboarding-Auswertung, Kohorte 1/Welle 2",
+          "denominator": "Anteil Befragter mit strukturiertem Einarbeitungsplan",
+          "location": "Abbildung 9, gedruckte S. 10; Rollenklarheit und Integration Abb. 7–11"
         }
       ],
       "relatedPaper": "P03",
@@ -109,10 +125,10 @@
     {
       "id": "passung",
       "title": "Der passende Ort",
-      "metric": "−2,7 %",
-      "metricLabel": "Kinder in Berliner Einrichtungen gegenüber 2025, ohne Hort",
-      "summary": "Sinkende Kinderzahlen verändern die Planung; Bedarfe bleiben örtlich verschieden.",
-      "detail": "Zum 1. März 2026 wurden in Berliner Einrichtungen fast 162.000 Kinder betreut, ohne Hortkinder. Das waren 2,7 Prozent weniger als im Vorjahr. Die Gesamtzahl einschließlich öffentlich geförderter Kindertagespflege sank um 3,0 Prozent.\n\nDiese Entwicklung beweist weder eine allgemeine Elternflucht noch freie passende Plätze in jeder Nachbarschaft. Für einen Standort zählen Altersgruppen, Wege, Zeiten, Familienbedarfe und tatsächlich nutzbare Kapazität.",
+      "metric": "−2,7 % betreute Kinder",
+      "metricLabel": "Berlin 2026 gegenüber 2025, Einrichtungen ohne Hort",
+      "summary": "Eine Familie findet einen Platz, aber die Zeiten passen nicht und bei Übergaben fehlt die vertraute Person. Gleichzeitig bleiben anderswo Plätze unbesetzt.",
+      "detail": "Zum 1. März 2026 wurden in Berliner Einrichtungen ohne Hort fast 162.000 Kinder betreut, 2,7 Prozent weniger als im Vorjahr. Das ist eine stadtweite Veränderung der betreuten Kinderzahl. Sie zeigt nicht, welche Straße freie passende Plätze hat.\n\nFür ein Kind zählen verlässliche Menschen; für die Familie zusätzlich Wege, Zeiten und Verständigung. Für den Träger zählt eine tragfähige Belegung. Wenn diese Ebenen getrennt geplant werden, kann ein rechnerisch vorhandener Platz im Alltag schlecht passen.\n\nVor einer Standortentscheidung sprechen wir mit Familien und Einrichtungen über eine konkrete Woche: Ankommen, Abholen, Schichten, Sprachen und Übergänge. Tatsächlich nutzbare Kapazität und Personalbegleitung gehören in dieselbe Planung wie Raum und Nachfrage.\n\nGeprüft werden passende Öffnungszeiten, erreichbare Ansprechpartner, örtliche Nachfrage und finanzierbare Kapazität. Sinkende Kinderzahlen belegen weder Elternflucht noch die Überlegenheit eines neuen Konzepts.",
       "evidenceStatus": "Amtlicher Befund, Stichtag 1. März 2026",
       "sources": [
         {
@@ -136,16 +152,16 @@
     {
       "id": "beziehung",
       "title": "Beziehung trägt Bildung",
-      "metric": "Vertraute Erwachsene",
-      "metricLabel": "Feinfühligkeit in der Gruppe zählt",
-      "summary": "Kinder sollen sich sicher genug fühlen, um selbst tätig zu werden.",
-      "detail": "Eine Metaanalyse von 40 Untersuchungen mit 2.867 Kindern findet Zusammenhänge zwischen feinfühliger Betreuung und Beziehungssicherheit. In Einrichtungen war insbesondere der sensible Umgang mit der Gruppe bedeutsam. Daraus folgt keine universelle Eingewöhnungsfrist.\n\nFür das Bildungshaus heißt das: vertraute Ansprechpersonen, eine individuell abgestimmte Eingewöhnung und ein Team, das Kinder auch in Gruppensituationen wahrnimmt. Beziehungen zu Eltern und zu anderen Kindern gehören dazu.",
+      "metric": "40 Untersuchungen · 2.867 Kinder",
+      "metricLabel": "Metaanalyse: Feinfühligkeit und Beziehungssicherheit, 2006",
+      "summary": "Das Kind möchte etwas Neues versuchen, traut sich aber nicht zur zuständigen Person. Ein gut vorbereitetes Angebot allein löst diesen Beziehungskonflikt nicht.",
+      "detail": "Ein Kind bleibt vor dem Atelier stehen. Die bekannte Fachkraft ist mit einer unerwarteten Übergabe beschäftigt; die Vertretung erkennt den Blick noch nicht. Das Kind zieht sich zurück. Fachliche Vorbereitung und erreichbare Zuwendung müssen im selben Moment zusammenkommen.\n\nAhnert, Pinquart und Lamb bündelten 40 Untersuchungen mit 2.867 Kindern. Feinfühligkeit hing mit Beziehungssicherheit zusammen; in Einrichtungen war der sensible Umgang mit der Gruppe besonders wichtig. Daraus lässt sich keine feste Eingewöhnungsdauer und kein bestimmter Personalschlüssel ableiten.\n\nWir bereiten Vertretungen vor, klären eine erreichbare Ansprechperson und besprechen schwierige Kontakte. Wenn ein Kind eine Person meidet, kann eine andere vertraute Erwachsene zunächst eine Brücke bilden. Das Team erhält Unterstützung, die Situation zu verstehen. Ein Kind muss nicht jeden Erwachsenen gleich gern mögen.\n\nIm Versuch beobachten wir, ob Kinder Hilfe suchen, nach einer Enttäuschung wieder in Kontakt kommen und eigene Vorhaben aufnehmen. Neben der Kinderperspektive zählt, ob die Erwachsenen dafür tatsächlich Zeit und Orientierung haben.",
       "evidenceStatus": "Forschungsbefund; Gestaltung als Ableitung",
       "sources": [
         {
           "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
           "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/",
-          "location": "Ahnert, Pinquart und Lamb: Ergebnisse zur Feinfühligkeit in Gruppen",
+          "location": "Child Development 77(3), S. 664–679; Metaanalyse zur Beziehungssicherheit",
           "year": 2006,
           "population": "40 Untersuchungen mit 2.867 Kindern",
           "denominator": "Metaanalyse, keine Prävalenzquote"
@@ -163,16 +179,16 @@
     {
       "id": "spielraum",
       "title": "Zeit und Mittel wirksam einsetzen",
-      "metric": "4.269,94 €",
-      "metricLabel": "Sachkosten je Kind und Jahr, Berliner Ganztag/Teilzeit ab August 2026",
-      "summary": "Auch ein kleiner Anteil eines Budgets kann relevant sein. Ob er verfügbar wird, muss sich zeigen.",
-      "detail": "Das Berliner Kostenblatt setzt für Ganztags- und Teilzeitbetreuung Sachkosten von 4.269,94 Euro pro Kind und Jahr an. Das ist eine Finanzierungsgröße einschließlich Verpflegung, keine frei verfügbare Softwarekasse.\n\nBei acht Einrichtungen mit jeweils 80 entsprechend finanzierten Kindern ergeben sich rechnerisch rund 2,73 Millionen Euro pro Jahr. Fünf Prozent davon wären rund 136.638 Euro. Diese fünf Prozent sind ein frei gewähltes Szenario, keine gemessene Ersparnis. Einführung, Betrieb und Qualitätsfolgen müssen mitgerechnet werden.",
+      "metric": "4.269,94 € je Kind/Jahr",
+      "metricLabel": "Berlin: Sachkosten Ganztag/Teilzeit ab August 2026",
+      "summary": "Für Einarbeitung fehlt Zeit, während Rückfragen, Fehlbestellungen und doppelte Planung Zeit verbrauchen. Ein günstigeres Werkzeug hilft erst, wenn ein Teil davon tatsächlich frei wird.",
+      "detail": "Der Berliner Sachkostensatz beträgt 4.269,94 Euro je Kind und Jahr einschließlich Verpflegung. Das Geld finanziert den Betrieb; es ist kein frei verfügbares Entwicklungsbudget.\n\nBei acht Häusern mit jeweils 80 nach diesem Satz finanzierten Kindern ergibt sich ein rechnerischer Jahresbetrag von 2.732.761,60 Euro. Fünf Prozent wären 136.638,08 Euro. Die Häuserzahl, Kinderzahl und fünf Prozent sind ein Szenario, keine vorhandene Belegung und keine gemessene Ersparnis.\n\nDie Wirkungskette wäre: weniger vermeidbare Such- und Doppelarbeit schafft Kapazität; ein vereinbarter Teil geht in Begleitung und Qualitätsarbeit; stabilere Abläufe verringern erneute Reibung. Ob diese Rückkopplung entsteht, hängt auch von Personal, Finanzierung und Leitung ab.\n\nWir rechnen vorher und nachher mit Arbeitszeit, Einführung, fachlicher Pflege, Betrieb und Qualitätsfolgen. Zeitgewinn wird nicht automatisch zu Geldgewinn. Nur ein belegter Überschuss oder eine tatsächlich nutzbare Kapazität kann erneut eingesetzt werden.",
       "evidenceStatus": "Amtlicher Satz plus ausdrücklich hypothetisches Szenario",
       "sources": [
         {
           "title": "Senatsverwaltung Berlin: RV-Tag-Kostenblatt ab 1. August 2026",
           "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386",
-          "location": "RV-Tag-Kostenblatt ab 1. August 2026",
+          "location": "Kostenblatt ab 1. August 2026, erste PDF-Seite, Ganztag/Teilzeit",
           "year": 2026,
           "population": "Berliner Ganztags- und Teilzeitbetreuung",
           "denominator": "Euro Sachkosten je Kind und Jahr"
@@ -197,10 +213,10 @@
       },
       "documentId": "P06",
       "relatedPaper": "P06",
-      "metric": "Sicher. Neugierig. Beteiligt.",
-      "metricLabel": "Bedürfnisse als Ausgangspunkt",
-      "summary": "Ein Kind braucht Zugehörigkeit und Freiraum. Es soll seine Welt erkunden, eigene Ideen verfolgen und erfahren, dass seine Mitwirkung etwas verändert.",
-      "detail": "Reggio-inspiriert heißt für uns: Kinder ernst nehmen, unterschiedliche Ausdrucksformen ermöglichen und Räume als Einladung zum Forschen gestalten. Vertraute Erwachsene geben dabei Halt.\n\nElemente freier Pädagogik ergänzen diese Haltung: Wahlmöglichkeiten, altersübergreifendes Lernen und echte Verantwortung im passenden Rahmen. Kein Kind muss seine Bedürfnisse gegen die Gruppe durchsetzen, um gehört zu werden.\n\nDie Perspektive reicht von der Krippe über Kita und Hort bis zur Schule. Wir entwickeln und prüfen den ersten Baustein im Kita-Alltag.",
+      "metric": "46,5 % selbst bestimmte Menge",
+      "metricLabel": "BiKA: 86 Essenssituationen; ein konkreter Beteiligungsbefund",
+      "summary": "Ein Kind hat eine Idee und hört: später. Es erlebt Mitwirkung erst, wenn jemand die Idee aufgreift, einen Versuch ermöglicht und zeigt, was daraus geworden ist.",
+      "detail": "Das Kind möchte eine Brücke aus Brettern bauen. Eine Erwachsene hilft beim sicheren Aufbau und fragt, was die Brücke tragen soll. Beim zweiten Versuch verändert das Kind seine Konstruktion. Es erfährt Können und Wirkung im eigenen Tun.\n\nWie leicht Mitwirkung im Alltag verloren geht, zeigt ein anderer konkreter Bereich: In 46,5 Prozent von 86 beobachteten Essenssituationen konnten Kinder in BiKA die Menge vollständig selbst bestimmen. Diese Zahl beschreibt die Mahlzeit, nicht die Qualität von Projektarbeit.\n\nReggio-inspirierte Räume, freie Wahl und verlässliche Beziehungen geben dem Entdecken einen Rahmen. Unser zusätzlicher Auftrag ist, dass Erwachsene diese Haltung gemeinsam lernen und auch neue Kolleginnen sie praktisch umsetzen können. Ein Atelier genügt nicht, wenn niemand Zeit hat, ein Vorhaben zu begleiten.\n\nWir prüfen, ob Kinder eigene Fragen verfolgen, Hilfe finden und auf eine Entscheidung zurückblicken können. Aus solchen erprobten Abläufen soll ein Baukasten entstehen, der später auch im Ganztag und in der Schule trägt; die Form wird jeweils mit den Beteiligten neu geprüft.",
       "evidenceStatus": "Konzept und überprüfbare Gestaltung",
       "claimIds": [
         "A06",
@@ -211,9 +227,19 @@
       ],
       "sources": [
         {
-          "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
-          "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/",
-          "location": "Volltext und Einordnung im verlinkten Artikel"
+          "title": "BiKA-Abschlussbericht (2018–2020), Tabelle 12",
+          "url": "https://www.fruehe-chancen.de/fileadmin/user_upload/PDF-Dateien/Bika_Abschlussbericht-web.pdf",
+          "location": "Tabelle 12, gedruckte S. 43",
+          "year": 2020,
+          "population": "86 auswertbare beobachtete Essenssituationen",
+          "denominator": "Anteil der beobachteten Situationen"
+        },
+        {
+          "title": "Reggio Children: Reggio Emilia Approach",
+          "url": "https://www.reggiochildren.it/en/reggio-emilia-approach/",
+          "population": "Selbstbeschreibung des pädagogischen Ansatzes",
+          "denominator": "Keine eigene Wirkungsquote",
+          "location": "Kind, Beziehungen, Räume und pädagogische Dokumentation"
         }
       ]
     },
@@ -227,10 +253,10 @@
       },
       "documentId": "P14",
       "relatedPaper": "P14",
-      "metric": "Ein Beziehungsdorf",
-      "metricLabel": "Familie und Einrichtung verbinden",
-      "summary": "Eltern gehören zum Bildungsweg. Frühe Begegnungen, erreichbare Bezugspersonen und eine verständliche Rückmeldung können Vertrauen wachsen lassen.",
-      "detail": "Eingewöhnung ist ein gemeinsamer Übergang, kein fester Trennungsfahrplan. Offene Begegnungen vor dem Start können Vertrautheit ermöglichen, wenn die Einrichtung Zeit und Raum dafür hat.\n\nFamilien unterscheiden sich in ihren Zeiten, Sprachen und Möglichkeiten. Beteiligung soll auch für Menschen funktionieren, die nicht zu jedem Elternabend kommen können. Kurze gesprochene Anliegen oder selbst gewählte Zusammenfassungen sind mögliche Zugänge, deren Nutzen wir erproben wollen.",
+      "metric": "Eine Übergabe, zwei verschiedene Auskünfte",
+      "metricLabel": "Örtlich prüfen: verlässliche Absprachen und erreichbare Hilfe",
+      "summary": "Gestern galt eine Absprache, heute weiß niemand davon. Die Familie muss von vorn erklären, die neue Fachkraft fühlt sich unsicher und das Kind erlebt einen angespannten Übergang.",
+      "detail": "Eine Familie hat mit dem Team einen behutsamen Abschied vereinbart. Bei der Vertretung ist diese Absprache nicht angekommen. Eltern müssen nachfragen, während die Fachkraft zugleich andere Kinder begrüßt. Fehlende Übergabe trifft damit Familie, Kind und Team gleichzeitig.\n\nBeziehung ist auch eine Forschungsfrage: Die Metaanalyse von Ahnert und Kollegen umfasst 40 Untersuchungen mit 2.867 Kindern und untersucht Sicherheit in Beziehungen zu außerfamiliären Betreuungspersonen. Sie beziffert keine Elternfrustration. Für unseren konkreten Hilfeweg brauchen wir Erfahrungen der beteiligten Familien.\n\nWir vereinbaren, welche Information eine neue Ansprechperson benötigt, wer erreichbar bleibt und wie eine Familie eine Unklarheit ohne zusätzlichen Elternabend melden kann. Eine kurze gesprochene Nachricht kann helfen, wenn sie eine zuständige Person erreicht und beantwortet wird.\n\nWir fragen nach widersprüchlichen Auskünften, wiederholt erklärten Anliegen und tatsächlich erhaltenen Antworten. Frühe Begegnungen und Eltern-Kind-Angebote sollen Vertrautheit aufbauen; ihre Zeiten müssen auch zu Familien mit wenig Spielraum passen.",
       "evidenceStatus": "Konzept und überprüfbare Gestaltung",
       "claimIds": [
         "A08",
@@ -241,7 +267,17 @@
         {
           "title": "Ahnert, Pinquart & Lamb (2006): Metaanalyse zu Beziehungen zu Betreuungspersonen",
           "url": "https://pubmed.ncbi.nlm.nih.gov/16686794/",
-          "location": "Volltext und Einordnung im verlinkten Artikel"
+          "location": "Child Development 77(3), S. 664–679; Metaanalyse zur Beziehungssicherheit",
+          "year": 2006,
+          "population": "40 Untersuchungen mit 2.867 Kindern",
+          "denominator": "Metaanalyse, keine Prävalenzquote"
+        },
+        {
+          "title": "Berliner Familienportal: Familienzentren als Begegnungsorte",
+          "url": "https://familienportal.berlin.de/artikel/berliner-familienzentren-begegnungsort-fuer-eltern",
+          "population": "Bestehende Berliner Familienangebote",
+          "denominator": "Keine bestätigte Partnerschaft oder eigene Wirkungsquote",
+          "location": "Beschreibung der Angebote"
         }
       ]
     },
@@ -255,10 +291,10 @@
       },
       "documentId": "P10",
       "relatedPaper": "P10",
-      "metric": "Mehr als ein Speiseplan",
-      "metricLabel": "Geschmack, Gesundheit, Lernen und Logistik",
-      "summary": "Der Koch braucht Einarbeitungszeit. Kinder brauchen Mitsprache. Gute Ernährung braucht zudem ein Budget, passende Lieferungen und sichere Abläufe.",
-      "detail": "Ein Koch erprobt mit einer Begleitung einen neuen Ablauf. Seine Lernzeit steht im Dienstplan. Kinder melden zurück, was ihnen schmeckt, und erfahren, was aus ihrem Vorschlag wird.\n\nGesundheit, Vielfalt, Allergene, verfügbare Zutaten, Budget und Geräte setzen den Rahmen. Die Wahl zwischen frisch, gekühlt und tiefgekühlt hängt auch von Lagerung, Chargen, Lieferfähigkeit und Arbeitszeit ab.\n\nTechnik kann Rückmeldungen ordnen und geprüfte Alternativen vorbereiten. Fachverantwortliche geben sie frei. So wird der ganze Ablauf lernfähig, ohne den Koch heimlich zu bewerten.",
+      "metric": "Kochwechsel + Ersatzlieferung",
+      "metricLabel": "Ein guter Ablauf muss auch unter veränderten Bedingungen tragen",
+      "summary": "Der neue Koch kennt das bewährte Gericht noch nicht. Dann fehlt eine Zutat. Die Bestellung läuft weiter, die Ausgabe verspätet sich und das Team versucht, die Unruhe am Tisch aufzufangen.",
+      "detail": "Ein gutes Rezept war bisher vor allem Erfahrung einer Person. Beim Wechsel fehlen Geräteeinstellungen, Mengenhinweise und eine geprüfte Alternative. Kommt eine Ersatzlieferung hinzu, können Preis, Allergene und Zubereitungszeit gleichzeitig anders sein.\n\nDer DGE-Qualitätsstandard verbindet Planung, Einkauf, Zubereitung und Mahlzeit. Er liefert keine Quote überforderter Köche. Der Berliner Sachkostensatz von 4.269,94 Euro je Kind und Jahr umfasst auch Verpflegung; daraus lässt sich kein tägliches Zutatenbudget ablesen.\n\nWir erproben eine wiederholbare Einarbeitung: freigegebenes Rezept am vorhandenen Gerät, begleitetes Kochen, kurze Rückmeldung und erneuter Versuch. Kinder berichten freiwillig über Geschmack und Esssituation. Diese Hinweise verbessern Rezept und Ablauf, nicht eine verdeckte Personenbewertung.\n\nDer Träger ergänzt Händler, Saison, Gebindegrößen, Budget, Lagerung und Lieferfristen. Technik bereitet eine geprüfte Ersatzoption vor; Fachverantwortliche entscheiden. Können und sichere Routine wachsen durch Übung. Wenn Rückmeldung als persönlicher Angriff erlebt wird oder Hilfe nicht erbeten werden darf, braucht es zusätzlich gemeinsame Arbeit an diesen Annahmen.\n\nWir vergleichen pünktliche Ausgabe, passende Mengen, Reste nach derselben Methode, gesamten Zeitaufwand und Kosten. Beim nächsten Kochwechsel prüfen wir, was wirklich übertragbar geworden ist.",
       "evidenceStatus": "Konzept und überprüfbare Gestaltung",
       "claimIds": [
         "A18",
@@ -268,10 +304,28 @@
       ],
       "sources": [
         {
-          "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas",
-          "url": "https://www.fitkid-aktion.de/fileadmin/user_upload/medien/DGE-QST/DGE_Qualitaetsstandard_Kita.pdf",
+          "title": "DGE-Qualitätsstandard für die Verpflegung in Kitas, Nachdruck 2023",
+          "url": "https://www.dge.de/fileadmin/dok/gemeinschaftsgastronomie/dge-qualitaetsstandards/2023/230929-DGE-QST-Kita.pdf",
+          "year": 2023,
           "population": "Kita-Verpflegung",
-          "location": "Qualitätsstandard und Prozessanforderungen"
+          "denominator": "Fachstandard, keine Ausfall- oder Einsparquote",
+          "location": "Kapitel 2, 4 und 5: Verpflegung, Prozesse und Qualität"
+        },
+        {
+          "title": "Senatsverwaltung Berlin: RV-Tag-Kostenblatt ab 1. August 2026",
+          "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386",
+          "location": "Kostenblatt ab 1. August 2026, erste PDF-Seite, Ganztag/Teilzeit",
+          "year": 2026,
+          "population": "Berliner Ganztags- und Teilzeitbetreuung",
+          "denominator": "Euro Sachkosten je Kind und Jahr"
+        },
+        {
+          "title": "Harvard Graduate School of Education: Be the Change (2015), Kegan und Lahey",
+          "url": "https://www.gse.harvard.edu/ideas/usable-knowledge/15/07/be-change",
+          "year": 2015,
+          "population": "Darstellung des Veränderungsansatzes",
+          "denominator": "Keine Wirkungsquote für Kitas",
+          "location": "Abschnitt zur Unterscheidung technischer und adaptiver Herausforderungen"
         }
       ]
     },
@@ -286,9 +340,9 @@
       "documentId": "P18",
       "relatedPaper": "P18",
       "metric": "50 % mindestens wöchentlich",
-      "metricLabel": "Kostenlose Videoportale bei 2–5-Jährigen, miniKIM 2023",
-      "summary": "Digitale Medien gehören bereits zum Leben vieler Kinder. Unser Medienkonzept verbindet gemeinsames Verstehen, eigenes Gestalten und altersgerechte Grenzen.",
-      "detail": "Die miniKIM 2023 befragte 600 Haupterziehende von zwei- bis fünfjährigen Kindern in Haushalten mit Internetzugang. Die Hälfte berichtete mindestens wöchentliche Nutzung kostenloser Videoportale wie YouTube. Das ist keine YouTube-exklusive Quote.\n\nDas Kita-Konzept reagiert darauf: Kinder können mit Erwachsenen Bildergeschichten gestalten, Werbung erkennen oder darüber sprechen, warum ein Video immer weiterläuft. Solche Erfahrungen brauchen keine täglichen Bildschirme.\n\nWir unterscheiden Inhalt, Nutzungsdauer, Begleitung und einnehmende Produktgestaltung. Verbreitete Nutzung beweist keine pauschale Schädigung. Sie macht eine bewusste Auseinandersetzung nötig.",
+      "metricLabel": "miniKIM 2023: kostenlose Videoportale bei 2–5-Jährigen",
+      "summary": "Ein Kind erzählt vom nächsten Video und versteht nicht, warum es immer weitergeht. Die Fachkraft möchte begleiten, hat aber selbst keine gemeinsame Orientierung mit Team und Eltern.",
+      "detail": "In miniKIM 2023 berichtete die Hälfte der 600 befragten Haupterziehenden mindestens wöchentliche Nutzung kostenloser Videoportale durch ihr zwei- bis fünfjähriges Kind. Befragt wurden Haushalte mit Internetzugang. Videoportale wie YouTube sind eine breitere Kategorie als YouTube allein.\n\nEine allgemeine Bildschirmregel erklärt dem Kind noch nicht, wie Aufmerksamkeit gelenkt wird. Gleichzeitig kann unvorbereitetes Ausprobieren Erwachsene und Kinder überfordern. Das Medienkonzept verbindet deshalb die Lebenswelt der Kinder mit fachlicher Begleitung und Lernen im Team.\n\nWir greifen eine konkrete Frage auf: Warum startet der nächste Film von allein? Kinder können mit Erwachsenen eine eigene Bildergeschichte gestalten und einen selbst gewählten Schluss setzen. Eltern erfahren, was ausprobiert wurde. Dafür braucht es keine tägliche Bildschirmzeit.\n\nWir prüfen altersgerechtes Verstehen, freiwillige Beteiligung und die Sicherheit der begleitenden Erwachsenen. Nutzungszahlen belegen Verbreitung, keine pauschale Schädigung. Die Erfahrungen aus Kita und Familie werden für spätere Fragen im Schulalter weiterentwickelt.",
       "evidenceStatus": "Konzept und überprüfbare Gestaltung",
       "claimIds": [
         "A10",
@@ -316,10 +370,10 @@
       },
       "documentId": "P15",
       "relatedPaper": "P15",
-      "metric": "Schneller sinnvoll prüfen",
-      "metricLabel": "Alltagssprache mit verlässlichen Regeln verbinden",
-      "summary": "KI kann helfen, unklare Anliegen zu verstehen, nachzufragen und Wissen zugänglich zu machen. Ob das Menschen wirklich stärkt, prüfen wir im Alltag.",
-      "detail": "Günstigere Validierung ist die Chance: Ein Team kann eine Idee früh ausprobieren und korrigieren, bevor viel Geld gebunden wird. Sprachliche Hilfe kann Vorgänge zugänglich machen, die bisher zu aufwendig waren.\n\nFachwissen liegt in versionierten, überprüfbaren Bausteinen. Die Ausführung bleibt überschaubar: Anliegen verstehen, bei Unsicherheit nachfragen, Regeln prüfen, eine verantwortliche Person entscheiden lassen und das Ergebnis zurückmelden.\n\nTechnologie ist nicht automatisch neutral. Ziele, Daten, Rechte und Freigaben bestimmen, wem sie hilft. Erfolg heißt hier: Menschen können mehr bewirken und gemeinsam lernen. Eine schönere Oberfläche allein genügt nicht.",
+      "metric": "Rückmeldung → prüfbare Änderung",
+      "metricLabel": "Erst mit Menschen erproben, dann zuverlässig betreiben",
+      "summary": "Das Team meldet: Das Essen klappt nicht. Ein Formular verlangt eine eindeutige Kategorie. Eine Software kann die falsche Frage schneller abarbeiten, ohne das eigentliche Problem zu verstehen.",
+      "detail": "Gemeint sein können Geschmack, Wartezeit, fehlende Übung oder eine falsche Lieferung. Wenn alles als Unzufriedenheit gespeichert wird, landet die Rückmeldung beim falschen Menschen. Dann wächst Dokumentation, während der Ablauf gleich bleibt.\n\nIm Labor betrachten wir die Situation gemeinsam und zeigen einen kleinen Entwurf. Vielleicht reichen Gespräch und Arbeitskarte. Vielleicht hilft ein Sprachwerkzeug beim Nachfragen und beim Auffinden eines freigegebenen Ablaufs. Nach dem nächsten Versuch streichen wir Überflüssiges und ergänzen, was fehlt.\n\nBei Rezepten und Arbeitsanleitungen ist erkennbar, welche Fassung gilt und wer sie geprüft hat. Mengen werden nachvollziehbar berechnet, Rechte und Freigaben bleiben eindeutig. Ein Modell darf Unsicherheit benennen; es darf fehlende Produktangaben nicht erfinden. Ein möglicher Zeitgewinn zählt erst nach Einführung, Prüfung und laufender Pflege.\n\nWir messen den Aufwand bis zur brauchbaren Entscheidung, wiederholte Missverständnisse und die tatsächlich veränderte Arbeit. Eine allgemeine Einsparquote für unseren Einsatz liegt noch nicht vor. Der Wert entsteht, wenn die Menschen vor Ort mehr verstehen und bewirken können.",
       "evidenceStatus": "Konzept und überprüfbare Gestaltung",
       "claimIds": [
         "A13",
@@ -351,18 +405,27 @@
         "A17",
         "A18"
       ],
-      "metric": "Zeit zum Mitgestalten",
-      "metricLabel": "Verantwortung, Unterstützung und Spielräume verbinden",
-      "summary": "Leitung schafft den Rahmen: geschützte Lernzeit, erreichbare Begleitung und nachvollziehbare Entscheidungen. Ein Verbesserungsvorschlag darf nicht einfach als zusätzliche Aufgabe beim Team landen.",
-      "detail": "Eine Leitung kann Beteiligung ermöglichen, indem sie Zuständigkeiten und Entscheidungsspielräume klärt und Lernzeit tatsächlich in der Planung schützt. Reale Zeitnot lässt sich nicht durch Motivation wegreden.\n\nImmunity to Change bietet eine mögliche Gesprächsstruktur: Ein gemeinsames Ziel benennen, das bisherige Verhalten verstehen, konkurrierende Verpflichtungen sichtbar machen und eine Annahme mit einem kleinen freiwilligen Versuch überprüfen. Dafür braucht es Vertrauen, keine psychologische Bewertung von Beschäftigten.\n\nEine neue Routine wird mit dem Team erprobt. Die Leitung organisiert Begleitung und sorgt dafür, dass aus einer Rückmeldung eine sichtbare Entscheidung wird. Ob dies im konkreten Haus hilft, wird gemeinsam geprüft.",
+      "metric": "24,9 % mit Einarbeitungsplan",
+      "metricLabel": "WiFF: 476 Befragte, gewichtete Auswertung 2025",
+      "summary": "Die Leitung fordert mehr Eigenständigkeit, muss aber jede Entscheidung freigeben. Gleichzeitig wird die geplante Einarbeitung gestrichen, sobald jemand ausfällt.",
+      "detail": "Eine neue Fachkraft fragt sicherheitshalber bei jeder Abweichung nach. Die Leitung erlebt das als mangelnde Selbstständigkeit. Die Fachkraft weiß jedoch nicht, was sie selbst entscheiden darf und wer einen Fehler mit ihr auffängt. Mehr Motivation allein klärt diese Lage nicht.\n\n24,9 Prozent der 476 Befragten in der gewichteten WiFF-Auswertung berichteten einen strukturierten Einarbeitungsplan. Der Befund beschreibt Berufseinsteigende, nicht die Qualität jeder Leitung. Für die einzelne Einrichtung zählt auch, ob geplante Lernzeit wirklich stattfindet.\n\nWir unterscheiden drei Aufgaben: Wissen und Übung bereitstellen; Zeit, Besetzung und Zuständigkeiten organisieren; gegebenenfalls eigene Annahmen überprüfen. Kegan und Lahey richten Immunity to Change auf diese adaptive Seite. Ein fehlender Dienstplan ist kein psychologischer Widerstand.\n\nEin freiwilliger Versuch kann lauten: Eine Kollegin entscheidet eine Woche lang einen klar begrenzten Ablauf selbst, mit erreichbarer Hilfe und gemeinsamem Rückblick. Wir prüfen, was sie jetzt kann, wie sicher sie sich fühlt und welche Verantwortung tatsächlich übernommen wurde. Auch Leitungen brauchen Begleitung, wenn sie diese Arbeitsweise erstmals einführen.",
       "evidenceStatus": "Geplante organisatorische Gestaltung",
       "sources": [
         {
-          "title": "Minds at Work: Immunity to Change",
-          "url": "https://www.mindsatwork.com/our-thinking",
-          "population": "Modell für individuelle und organisationale Veränderung",
-          "denominator": "Keine Kita-Wirkungsquote",
-          "location": "Darstellung des Ansatzes durch seine Entwickler"
+          "title": "WiFF-Panel, Studie kompakt 6 (2026), Daten 2025",
+          "url": "https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf",
+          "year": 2025,
+          "population": "476 Befragte der gewichteten Onboarding-Auswertung, Kohorte 1/Welle 2",
+          "denominator": "Anteil Befragter mit strukturiertem Einarbeitungsplan",
+          "location": "Abbildung 9, gedruckte S. 10; Rollenklarheit und Integration Abb. 7–11"
+        },
+        {
+          "title": "Harvard Graduate School of Education: Be the Change (2015), Kegan und Lahey",
+          "url": "https://www.gse.harvard.edu/ideas/usable-knowledge/15/07/be-change",
+          "year": 2015,
+          "population": "Darstellung des Veränderungsansatzes",
+          "denominator": "Keine Wirkungsquote für Kitas",
+          "location": "Abschnitt zur Unterscheidung technischer und adaptiver Herausforderungen"
         }
       ]
     },
@@ -381,16 +444,24 @@
         "A06",
         "A21"
       ],
-      "metric": "Qualität tragfähig machen",
-      "metricLabel": "Finanzierung gehört zur Organisation",
-      "summary": "Der Träger verantwortet Ressourcen und die Bedingungen der Einrichtungen. Er muss Betreuungsqualität, Personalbindung, Belegung und wirtschaftliche Tragfähigkeit gemeinsam betrachten.",
-      "detail": "Finanzierung, verlässliche Personalplanung und Unterstützung der Leitung gehören zur Verantwortung des Trägers. Kosten sind eine Eigenschaft der Organisation, kein Merkmal des Kindes.\n\nIn unserer zu prüfenden Wirkungskette können instabile Teams das Vertrauen von Familien belasten. Sinkende Belegung kann bei weiterlaufenden Fixkosten den finanziellen Druck erhöhen. Ob und wie dies in einem Haus zusammenhängt, braucht lokale Daten.\n\nEigene Einrichtungen sollen als Reallabore dienen. Freie Träger, öffentliche Einrichtungen und Eigenbetriebe sind mögliche spätere Nutzer erprobter Module. Ein erster Partnerpilot ersetzt dieses langfristige Ziel nicht.",
+      "metric": "65 % der Einrichtungen mit Fluktuation",
+      "metricLabel": "ERiK 2022; gesamte Leitungsbefragung n=4.832",
+      "summary": "In einem Haus funktioniert die Küche gut, im nächsten beginnt die Einarbeitung wieder bei null. Wissen bleibt bei Einzelnen, während der Träger dieselben Probleme mehrfach bezahlt.",
+      "detail": "Eine Leitung hat einen hilfreichen Ablauf entwickelt. Ein zweites Haus kennt ihn nicht oder hat andere Geräte, Zeiten und Lieferanten. Wird nur eine Datei verteilt, fehlen Erklärung, Übung und die Möglichkeit, die Unterschiede zurückzumelden.\n\nIm ERiK-Bericht gaben 65 Prozent der befragten Einrichtungen Personalfluktuation binnen zwölf Monaten an; die gesamte Leitungsbefragung 2022 umfasste 4.832 Personen. Das macht Übergabe und Einarbeitung relevant, belegt aber weder dieselbe Wechselquote für alle Träger noch die Ursache einzelner Wechsel.\n\nDer Träger finanziert Begleitung und verbindet die Häuser: Welche Teile eines Moduls gelten gemeinsam, welche werden vor Ort angepasst, und wer pflegt eine Verbesserung ein? In der Küche gehören Saison, Beschaffung, Lagerung und Budget dazu. Bei neuen Leitungen wird diese Verantwortung ebenfalls eingeübt.\n\nWir erproben den Transfer erst in einem zweiten Haus und prüfen Zeitaufwand, fachliche Qualität und lokale Anpassungen. Tatsächlich freigewordene Kapazität kann erneut in Lernen fließen. Eigene Reallabore und spätere Partner sollen dadurch gemeinsam Wissen aufbauen, das nicht mit dem nächsten Personalwechsel verschwindet.",
       "evidenceStatus": "Organisatorische Verantwortung und zu prüfende Zusammenhänge",
       "sources": [
         {
+          "title": "DJI: ERiK-Forschungsbericht IV, Erhebung 2022",
+          "url": "https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf",
+          "year": 2022,
+          "population": "4.832 Kita-Leitungen",
+          "denominator": "Anteil befragter Einrichtungen",
+          "location": "Gedruckte S. 108–109, Erhebung 2022; gesamte Leitungsbefragung n=4.832"
+        },
+        {
           "title": "Senatsverwaltung Berlin: RV-Tag-Kostenblatt ab 1. August 2026",
           "url": "https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf?ts=1788348386",
-          "location": "RV-Tag-Kostenblatt ab 1. August 2026",
+          "location": "Kostenblatt ab 1. August 2026, erste PDF-Seite, Ganztag/Teilzeit",
           "year": 2026,
           "population": "Berliner Ganztags- und Teilzeitbetreuung",
           "denominator": "Euro Sachkosten je Kind und Jahr"
@@ -536,61 +607,61 @@
   "approach": [
     {
       "title": "Vom Alltag ausgehen",
-      "body": "Mit Kindern, Familien, Fachkräften und Leitungen verstehen, wo ein konkreter Ablauf gelingt und wo er unnötig schwer wird."
+      "body": "Eine neue Fachkraft, ein Kochwechsel oder eine schwierige Übergabe: Mit den Beteiligten klären, welches Wissen, welche Zeit und welche Unterstützung fehlen."
     },
     {
       "title": "Gemeinsam erproben",
-      "body": "Ein begrenztes Modul im wirklichen Betrieb testen, mit klarer Verantwortung und vertretbarem Aufwand."
+      "body": "Einen Ablauf gemeinsam tun, Rückmeldung aufnehmen und erneut versuchen. Das Labor begleitet die Menschen vor Ort und ändert auch den Entwurf, wenn er zu viel oder zu wenig verlangt."
     },
     {
       "title": "Wirkung sorgfältig prüfen",
-      "body": "Entlastung, Kosten und pädagogische Folgen zusammen betrachten. Erfahrungen dokumentieren und widersprüchliche Ergebnisse ernst nehmen."
+      "body": "Kann jemand die Aufgabe nun sicher übernehmen? Erleben Kinder und Familien eine Verbesserung? Lernen, Motivation, Zeit und Kosten gemeinsam betrachten."
     },
     {
       "title": "Weitergeben, was trägt",
-      "body": "Erprobte Routinen, Begleitung und passende Werkzeuge für andere Einrichtungen nutzbar machen."
+      "body": "Ein zweites Haus probiert den Baustein mit Begleitung aus. Seine Erfahrungen verbessern den gemeinsamen Bestand; für Ganztag und Schule wird die Übertragung erneut geprüft."
     }
   ],
   "modules": [
     {
       "id": "beziehungen",
       "title": "Beziehung & Eingewöhnung",
-      "body": "Vertraute Erwachsene und ein guter Übergang zwischen Familie und Kita."
+      "body": "Eine neue Bezugsperson kennt das Kind noch nicht: Übergaben, Eingewöhnung und erreichbare Hilfe gemeinsam einüben."
     },
     {
       "id": "team",
       "title": "Team & Entwicklung",
-      "body": "Einarbeitung, gemeinsame Orientierung und geschützte Reflexion."
+      "body": "Vormachen, begleitet erproben, selbst übernehmen und später andere einarbeiten – mit bezahlter Lernzeit für Neue und Erfahrene."
     },
     {
       "id": "beteiligung",
       "title": "Beteiligung",
-      "body": "Echte Entscheidungsspielräume und verständliche Rückmeldungen."
+      "body": "Vom Nein am Mittagstisch bis zum Vorschlag des Teams: Zuständigkeit, Entscheidung und verständliche Rückmeldung verbinden."
     },
     {
       "id": "raeume",
       "title": "Räume & Entdecken",
-      "body": "Reggio-inspirierte Ateliers und anregende, übersichtliche Funktionsräume."
+      "body": "Reggio-inspirierte Ateliers laden zum Forschen ein. Das Team lernt, Vorhaben zu begleiten und die Räume mit den Kindern weiterzuentwickeln."
     },
     {
       "id": "sprache",
       "title": "Sprache & Begegnung",
-      "body": "Geplante bilinguale Immersion; Mehrsprachigkeit der Familien wertschätzen."
+      "body": "Sprachen im gemeinsamen Tun erleben. Bilinguale Immersion braucht vorbereitete Menschen, Kontinuität und die Verbindung zu den Familiensprachen."
     },
     {
       "id": "medien",
       "title": "Medien verstehen & gestalten",
-      "body": "Digitale Lebenswelten aufgreifen, gemeinsam kreativ werden und altersgerechte Grenzen verstehen."
+      "body": "Fragen aus der digitalen Lebenswelt aufgreifen. Kinder gestalten mit Begleitung; Fachkräfte und Familien lernen gemeinsam, welche Grenzen helfen."
     },
     {
       "id": "essen",
       "title": "Ernährung & Alltag",
-      "body": "Gutes Essen, Beteiligung und verlässliche Abläufe zusammendenken."
+      "body": "Auch bei Kochwechsel und Ersatzlieferung: Rezepte, Übung, Kinderfeedback, Beschaffung und Trägerbudget zu einem lernfähigen Ablauf verbinden."
     },
     {
       "id": "werkzeuge",
       "title": "Organisation & Werkzeuge",
-      "body": "Doppelte Arbeit prüfen, Wissen zugänglich machen und Entscheidungen nachvollziehbar unterstützen."
+      "body": "Wissen auffindbar machen, passende Rückfragen stellen und geprüfte Arbeitsschritte unterstützen. Gemeinsam testen, bevor eine aufwendige Anwendung entsteht."
     }
   ],
   "pilot": {
@@ -643,7 +714,7 @@
   "team": [],
   "ask": {
     "title": "Gesucht: ein Ort für die gemeinsame Erprobung",
-    "body": "Wir suchen das Gespräch mit einer passenden Einrichtung und Menschen, die die Entwicklung eines nachvollziehbaren Piloten unterstützen möchten. Der nächste gemeinsame Schritt ist ein konkret abgegrenzter Versuch mit klarer Verantwortung, Aufwand und Auswertung."
+    "body": "Wir suchen eine Kita, die mit uns einen schwierigen Ablauf verbessern möchte, und Menschen, die diesen ersten Versuch fachlich oder finanziell unterstützen. Gemeinsam klären wir die Aufgabe, die verfügbare Zeit und woran wir den Nutzen erkennen."
   },
   "papers": [
     {

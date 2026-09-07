@@ -1,5 +1,5 @@
 
-# Bildungshaus
+# Bildungshaus — Konzept
 
 ## Gute Betreuung beginnt bei ihrem Alltag.
 
@@ -9,7 +9,7 @@ Das Bildungshaus verbindet eine Reggio-inspirierte Pädagogik mit einer Organisa
 
 **Unsere These:** Die Gestaltung der Betreuung prägt die Qualität für Kinder und die Arbeitsbedingungen der Erwachsenen. Wo Beziehungen, Führung, Einarbeitung und tatsächliche Mitwirkung tragen, kann gute Arbeit verlässlich gelingen. Wo sie fehlen, können Überforderung, Ausfälle und Personalwechsel entstehen. Diese Folgen belasten anschließend die Beziehungen und die Wirtschaftlichkeit zusätzlich. Deshalb setzen wir an der gelebten pädagogischen und organisatorischen Praxis an.
 
-Damit ist eine Entwicklungsaufgabe beschrieben. Der erste eigene Wirkungsnachweis steht noch aus. Die vorliegende Recherche liefert dafür Befunde, begründete Ansätze und konkrete Fragen. Das Whitepaper führt sie zu einem Arbeitsmodell zusammen; die verlinkten Synthesen erläutern einzelne Argumente ausführlicher.
+Wir entwickeln ein Haus, das mit seinen Menschen lernt: Kinder erfahren Mitwirkung, Mitarbeitende entwickeln ihr Können und das Lab verbessert mit ihnen die Bedingungen dafür. Der erste eigene Wirkungsnachweis steht noch aus. Das Konzept beschreibt den Weg vom konkreten Problem über einen gemeinsamen Versuch bis zu einem Baustein, den ein weiteres Haus nutzen kann.
 
 ## 1. Realität prüfen, Entwicklung ermöglichen
 
@@ -25,9 +25,13 @@ Diese Haltung lässt unterschiedliche pädagogische Traditionen miteinander ins 
 
 An einem Montag beginnt eine neue Fachkraft. In einem Haus weiß sie, wer sie begleitet, welche Kinder gerade zusätzliche Orientierung brauchen und wann sie Fragen besprechen kann. Im anderen bekommt sie einen Ordner und übernimmt sofort Verantwortung, weil jemand fehlt. Beide Häuser können ein ähnliches Konzeptpapier besitzen. Für die Kinder und die neue Kollegin entsteht dennoch ein anderer Tag.
 
+Die Einarbeitung endet nicht mit dem ersten Arbeitstag. Auch eine erfahrene Fachkraft muss einen neuen Ablauf lernen, eine Leitung das Begleiten neuer Kolleginnen und ein Träger die Einführung in einem weiteren Haus. Fehlt dafür Zeit, bleibt Wissen bei Einzelnen. Neue Menschen müssen häufiger nachfragen; die Erfahrenen werden bei der Betreuung unterbrochen. Kinder erleben weniger zugewandte Zeit, Familien unklare Auskünfte. Gelingendes Lernen kann diesen Zusammenhang verändern: Wer eine Aufgabe sicher bewältigt, erlebt Wirkung und kann später andere unterstützen. Damit diese Motivation trägt, muss auch deren Einarbeitung wieder ermöglicht werden.
+
 An dieser Stelle liegt unsere Vergleichsfrage: Was machen Einrichtungen anders, in denen Betreuung deutlich besser gelingt? Finanzierung und tatsächlich verfügbares Personal gehören zwingend zum Vergleich. Zusätzlich betrachten wir die Bedarfe der Kinder und Familien, Größe, Lage, Führung, Einarbeitung und die Umsetzung des pädagogischen Konzepts. Erst bei möglichst vergleichbaren Voraussetzungen lässt sich erkennen, welche organisatorischen und pädagogischen Faktoren einen zusätzlichen Unterschied machen könnten.
 
 Mehr Geld kann reale Engpässe verringern. Es erklärt für sich noch nicht, wie aus den Mitteln verlässliche Beziehungen, hilfreiche Übergaben und eine lernfähige Organisation werden. Genau diese Übersetzung wollen wir verstehen. Eine gut funktionierende Einrichtung ist dabei ein möglicher Lernpartner. Ihr Erfolg muss beschrieben werden, bevor man einen einzelnen Bestandteil daraus übernimmt.
+
+Das WiFF-Panel macht eine konkrete Lücke sichtbar: 24,9 Prozent der 476 Befragten in der gewichteten Onboarding-Auswertung berichteten einen strukturierten Einarbeitungsplan. Erfasst wurde der Berufseinstieg 2025. Wir wollen darüber hinaus wissen, ob Begleitung tatsächlich stattfindet und welche Aufgabe eine Person anschließend selbstständig übernehmen kann. [WiFF Studie kompakt 6, Abb. 9, S. 10](https://www.weiterbildungsinitiative.de/fileadmin/Redaktion/Publikationen/WiFF_Studie_kompakt_Nr.6_Panel.pdf)
 
 Krankentage und jährliche Fluktuation stehen in dieser Untersuchung auf der Seite möglicher Folgen und Warnsignale. Der ERiK-Forschungsbericht IV berichtet für 2022, dass 65 Prozent der befragten Einrichtungen Personalfluktuation innerhalb der vorausgegangenen zwölf Monate angaben. Gemeint ist der Anteil betroffener Einrichtungen, nicht eine Kündigungsquote von 65 Prozent der Beschäftigten. Der Befund zeigt die Verbreitung des Themas; er erklärt noch nicht den Grund eines einzelnen Wechsels. [DJI: ERiK-Forschungsbericht IV](https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf)
 
@@ -40,6 +44,8 @@ Vertiefung: [Betreuungsalltag und Beziehung](#lesen/P01), [Ausfälle und Wechsel
 ## 3. Eine pädagogische Linie vom Ankommen bis zur Schule
 
 Reggio-inspiriert heißt für uns: Kinder sind aktiv, haben eigene Ausdrucksformen und entwickeln ihre Fragen im Austausch mit Menschen und Umgebung. Beziehung, Beteiligung, Räume und pädagogische Dokumentation gehören zusammen. Diese Verbindung findet sich auch in der Selbstdarstellung des Reggio Emilia Approach. Sie ist eine fachliche Orientierung, kein Nachweis der Wirksamkeit unseres noch zu erprobenden Konzepts. [Reggio Children](https://www.reggiochildren.it/en/reggio-emilia-approach/)
+
+Die Verbindung hat eine gemeinsame Aufgabe: Kinder sollen ihre Welt handelnd verstehen und erleben, dass ihr Tun etwas bewirkt. Reggio gibt dafür eine räumliche und pädagogische Orientierung. Die Beziehungsdimension klärt, wer beim Erkunden Halt gibt. Beteiligung macht den Einfluss der Kinder konkret. Change Leadership lenkt den Blick darauf, wie Erwachsene diese Arbeit gemeinsam lernen und verantworten. Das Lab prüft mit ihnen, wo die Verbindung im Betrieb trägt. So ergänzen sich die Perspektiven an einer praktischen Frage, statt als Sammlung von Methoden nebeneinanderzustehen.
 
 Im teiloffenen Alltag können Kinder zwischen übersichtlichen Funktionsräumen, Atelier, Bewegung und Rückzug wählen. Materialien sind erreichbar und bewusst ausgewählt. Eine Erwachsene begleitet, beobachtet und greift eine Frage auf, ohne jeden Schritt vorzugeben. Das Kind weiß zugleich, wo es Hilfe findet. Die Offenheit des Raums und die Verlässlichkeit der Menschen müssen zueinander passen.
 
@@ -73,6 +79,8 @@ Vertiefung: [Beteiligung im Alltag](#lesen/P04).
 
 Eine Leitung möchte Verantwortung verteilen und kontrolliert dennoch jede Entscheidung. Dahinter kann die Sorge stehen, im Ernstfall allein verantwortlich gemacht zu werden. Ein Team möchte offen über Probleme sprechen und vermeidet zugleich Kritik, um den Zusammenhalt nicht zu gefährden. Solche Spannungen lassen sich mit einer zusätzlichen Anweisung kaum bearbeiten.
 
+Manche Schwierigkeiten verlangen eine fachliche Anleitung, andere zusätzliche Zeit oder eine geklärte Zuständigkeit. Eine adaptive Herausforderung entsteht dort, wo außerdem eigene Annahmen und eingeübte Rollen verändert werden müssen. Kegan und Lahey richten ihre Arbeit auf diesen Anteil. Wenn eine Leitung jede Entscheidung kontrolliert, kann die Frage sein, unter welchen Bedingungen sie anderen verantwortlich vertrauen kann. Wenn die Dienstzeit für Begleitung fehlt, muss hingegen die Planung geändert werden. [Harvard Graduate School of Education: Be the Change](https://www.gse.harvard.edu/ideas/usable-knowledge/15/07/be-change)
+
 Immunity to Change liefert dafür eine mögliche Gesprächsstruktur: ein wichtiges Entwicklungsziel benennen, eigenes entgegenwirkendes Verhalten betrachten, konkurrierende Verpflichtungen verstehen und eine zugrunde liegende Annahme in einem kleinen Versuch prüfen. Wir nutzen diese Idee als freiwillige Reflexionshilfe. Sie ist keine Diagnose durch ein System und kein vorgeschriebenes Bekenntnis. [Minds at Work: Ansatz und Grundlagen](https://www.mindsatwork.com/our-thinking)
 
 Im Leitungsbeispiel könnte der Versuch lauten: Eine Kollegin entscheidet eine klar abgegrenzte Woche lang selbst über einen Ablauf; Verantwortung, Unterstützung und Rückblick werden vorher vereinbart. Die Leitung beobachtet, was tatsächlich passiert, statt entweder alles abzugeben oder alles weiter zu kontrollieren. Ein anderes Problem braucht eine andere Antwort. Fehlt schlicht Zeit, muss die Organisation Zeit schaffen.
@@ -93,19 +101,23 @@ Für die pädagogische Arbeit entstehen daraus konkrete Fragen: Was schauen Kind
 
 Bei jüngeren Kindern kann Medienbildung ohne Bildschirm stattfinden: eine Geschichte nachspielen, Bilder ordnen, Geräusche aufnehmen und gemeinsam anhören. Ältere Kinder können eine eigene kleine Geschichte filmen, mit Zustimmung fotografieren oder vergleichen, wie ein Clip ihre Aufmerksamkeit gewinnt. Im Schulalter kommen Werbung, Empfehlungen, Quellenprüfung und die Grenzen automatisch erzeugter Inhalte hinzu. Das Medienkonzept beschreibt für jede Altersgruppe Ziele und Grenzen. Ein digitales Angebot wird nicht allein deshalb eingesetzt, weil es verfügbar ist.
 
+Harari stellt in einem Buchauszug die relative Beständigkeit früherer Berufe einer unsicheren Arbeitswelt der Zukunft gegenüber. Für uns folgt daraus eine Bildungsfrage: Wie lernen Menschen, sich mit Neuem auseinanderzusetzen und handlungsfähig zu bleiben? [Harari: 21 Lessons, Auszug bei WIRED](https://www.wired.com/story/yuval-noah-harari-extract-21-lessons-for-the-21st-century/) Unser Haus schafft dafür überschaubare Erfahrungen: etwas ausprobieren, Folgen verstehen, mit anderen beraten und einen nächsten Versuch wagen. Das gilt in der Kita, später in der Schule und ebenso für Erwachsene. Technik erweitert diese Möglichkeiten und verlangt zugleich einen bewussten Umgang mit ihren Grenzen.
+
 Parallel gestalten wir die Werkzeuge für Erwachsene nach derselben Haltung. Sie sollen gemeinsame Ziele unterstützen, nicht Aufmerksamkeit binden oder Menschen in verdeckte Ranglisten einsortieren. Technologie ist nicht von sich aus unparteiisch: Daten, Regeln und Rechte bestimmen mit, welche Perspektive sichtbar wird. Diese Entscheidungen gehören zur pädagogischen Verantwortung des Hauses.
 
 Vertiefung: [Aufwachsen in einer digitalen Medienwelt](#lesen/P18).
 
 ## 7. Am Mittagstisch wird die Verbindung konkret
 
-Ein neuer Koch übernimmt eine Küche. Er kann kochen, kennt aber Portionsgrößen, Abläufe und die Kinder noch nicht. Statt ihn an einer sofort perfekten Ausgabe zu messen, vereinbart das Team einen Lernschritt und reserviert Einarbeitungszeit. Er begleitet zunächst eine erfahrene Person, probiert einen begrenzten Ablauf und bringt eigene Erfahrungen ein. Einfache Arbeitskarten unterstützen ihn dort, wo er sie braucht.
+Ein neuer Koch übernimmt eine Küche. Das Gericht, das seiner Vorgängerin zuverlässig gelang, kommt zu spät an den Tisch. Er kennt das Gerät noch nicht; außerdem wurde eine Zutat durch eine andere Packungsgröße ersetzt. Die Gruppen warten, das Team muss improvisieren und der Koch erlebt die Rückmeldung als Kritik. An dieser Stelle reicht weder ein besseres Rezept noch ein Appell, sich mehr Mühe zu geben. Wir vereinbaren einen Lernschritt, organisieren Begleitung und lassen ihn den Ablauf wiederholt erproben. Geprüfte Arbeitskarten halten das Wissen fest, das sonst an einzelnen Personen hängt.
 
 Nach dem Essen berichten Kinder, was ihnen gefallen hat. Manche mögen den Geschmack, andere die Konsistenz nicht. Das Team unterscheidet solche Rückmeldungen von Portionsmengen, Resten und der Atmosphäre am Tisch. Es entsteht ein Gespräch über Essen und Zusammenleben. Ein leerer Teller ist weder eine Verpflichtung noch der einzige Qualitätsmaßstab.
 
 Nun werden die Anforderungen gemeinsam sichtbar. Die Kinder wünschen sich Pasta. Der Speiseplan soll zugleich abwechslungsreich sein und zu fachlichen Ernährungsanforderungen, Allergenen, Geräten, Budget und verfügbaren Zutaten passen. Der DGE-Qualitätsstandard bietet dafür eine fachliche Grundlage. Die konkrete Planung und sichere Ausführung bleiben Aufgabe qualifizierter Verantwortlicher. [DGE: Qualitätsstandard für die Verpflegung in Kitas](https://www.fitkid-aktion.de/fileadmin/user_upload/medien/DGE-QST/DGE_Qualitaetsstandard_Kita.pdf)
 
 Ein unterstützendes System könnte geeignete Varianten vorschlagen: Welche Zutaten sind lieferbar? Welche Mengen werden benötigt? Welche Zubereitung gelingt in der verfügbaren Zeit? Was kann mit den vorhandenen Geräten frisch hergestellt, sicher gekühlt oder tiefgekühlt eingesetzt werden? Rezept, Einkauf, Lagerung, Charge und Ausgabe müssen zusammenpassen. Fehlt eine entscheidende Information, wird nachgefragt; sie wird nicht geraten.
+
+Der Träger gehört in diesen Ablauf hinein. Er vereinbart Lieferanten, Bestellfristen, saisonale Alternativen und einen tragbaren Kostenrahmen. Eine Ersatzbestellung wird vor der Verwendung fachlich geprüft und an die Küche zurückgemeldet. Was ein Haus dabei lernt, kann den nächsten Standort unterstützen. Die Lernschritte werden auch beim späteren Kochwechsel wieder genutzt; das System soll passende Hilfe anbieten, keine Menschen nach vermeintlicher Leistung sortieren.
 
 Damit rückt die bislang unsichtbare Arbeit hinter einer Mahlzeit ins Konzept. Ein günstiger Einkauf kann zusätzliche Arbeitszeit erzeugen. Eine andere Verpackungsgröße kann Reste verringern, aber mehr Lagerraum verlangen. Eine frisch gekochte Variante ist unter anderen Voraussetzungen sinnvoll als die Verwendung geeigneter tiefgekühlter Komponenten. Diese Alternativen werden anhand der Küche verglichen, nicht nach einer pauschalen Frische-Ideologie.
 
@@ -133,6 +145,8 @@ Vertiefung: [Werkzeuge im pädagogischen Alltag](#lesen/P09) und [Neue Möglichk
 
 Das Reallabor verbindet den Kita-Alltag mit der Entwicklung. Sein Gegenstand ist ein konkreter Ablauf, zum Beispiel Einarbeitung, Beteiligung beim Essen oder ein Übergang mit Familien. Fachkräfte, Leitung und gegebenenfalls Eltern legen gemeinsam fest, was besser werden soll. Es gibt eine verantwortliche Person, Zeit zum Ausprobieren und einen vereinbarten Rückblick.
 
+Das Lab bleibt während der Erprobung ansprechbar. Ein erster Entwurf kann zu viel Dokumentation verlangen oder eine wichtige Ausnahme übersehen. Dann gehen Entwicklung und Team erneut durch die Situation, verändern den Ablauf und versuchen es wieder. Das Haus liefert Erfahrung, das Lab macht eine überprüfbare Änderung daraus, und die Menschen beurteilen deren Wirkung. Diese dauerhafte Verbindung ist die Voraussetzung des Baukastens.
+
 Vor dem Start beschreiben wir den bestehenden Ablauf. Im Versuch betrachten wir die Erfahrungen der Beteiligten, beobachtbare Qualität, Aufwand und unerwünschte Folgen. Bei Teamwechseln, Ferien oder neuen Rahmenbedingungen wird festgehalten, was sich zusätzlich verändert hat. So lässt sich ein gutes Ergebnis ernst nehmen, ohne jede Veränderung automatisch dem neuen Modul zuzuschreiben.
 
 Langfristig sind eigene Einrichtungen des gemeinnützigen Trägers als Reallabore vorgesehen. Der Einstieg mit einer bestehenden Partnereinrichtung macht eine frühe Erprobung möglich und hält diesen Aufbau offen. Erprobte Module sollen später freien und öffentlichen Trägern zugänglich sein, auch größeren Trägern und kommunalen Eigenbetrieben.
@@ -148,6 +162,8 @@ Ein Träger muss sein Angebot dauerhaft finanzieren können. Deshalb betrachten 
 Unsere Untersuchung fragt deshalb, welche Bedeutung Betreuungsqualität und Kontinuität für Familien, Personal und wirtschaftliche Stabilität haben. Freie Plätze beweisen keinen Qualitätsmangel; Nachfrage hängt auch von Alter, Betreuungszeit und Lage ab. Gerade deshalb müssen Markt und gelebte Praxis zusammen betrachtet werden.
 
 Ein amtlicher Betrag verdeutlicht den Spielraum, um den es gehen kann. Das Berliner RV-Tag-Kostenblatt ab August 2026 nennt für Ganztags- und Teilzeitplätze 4.269,94 Euro Sachkosten pro Kind und Jahr. Zehn entsprechend finanzierte Kinder stehen damit rechnerisch für 42.699,40 Euro jährlich. Diese Mittel sind bereits für Leistungen vorgesehen, einschließlich Verpflegung. Sie sind kein freier Softwaretopf. [Senatsverwaltung: Kostenblatt RV Tag ab 1. August 2026](https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf)
+
+Auch kleine Anteile werden über mehrere Häuser relevant. Acht Einrichtungen mit jeweils 80 entsprechend finanzierten Kindern ergeben rechnerisch 2.732.761,60 Euro jährliche Sachkosten. Fünf Prozent davon wären 136.638,08 Euro. Das ist eine Größenordnung für eine Frage, keine Einsparzusage: Welcher Anteil lässt sich nach Einführung und laufendem Aufwand tatsächlich anders einsetzen, ohne Qualität zu mindern? Ein gemeinsam vereinbarter Teil eines belegten Spielraums könnte wieder in Lernzeit und gute Betreuung fließen.
 
 Die Rechnung wird anschließend am Träger konkret: Welche Ausgaben verändern sich? Wie viel bezahlte Arbeitszeit wird nutzbar? Welche neuen Kosten entstehen für Einführung, Betrieb und Begleitung? Bei Personalwechseln betrachten wir die gesamte Kostenkette: Suche und Auswahl, gegebenenfalls Vakanz und Vertretung, die Einarbeitung neuer Beschäftigter und die Begleitzeit der bereits erfahrenen Kolleginnen. Diese Aufwände werden anhand konkreter Trägerdaten erhoben; eine pauschale deutsche Eurozahl je Kündigung liegt der Rechnung nicht zugrunde. Gewonnene Zeit kann die Arbeit mit Kindern verbessern, ohne dass die Gehaltszahlung sinkt. Zahlungswirksame Einsparung und Qualitätsgewinn werden deshalb getrennt ausgewiesen und anschließend gemeinsam bewertet.
 

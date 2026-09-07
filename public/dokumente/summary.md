@@ -25,7 +25,7 @@ Das Zielbild verbindet einen gemeinnützigen operativen Träger mit eigenen Einr
 
 ## Quellen und vollständige Argumentation
 
-- [Whitepaper](#lesen/whitepaper): zusammenhängende Argumentation und Vertiefungen.
+- [Konzept](#lesen/whitepaper): zusammenhängende Argumentation und Vertiefungen.
 - [DJI: ERiK-Forschungsbericht IV](https://www.dji.de/fileadmin/user_upload/bibs2025/ERiK-Forschungsbericht_IV.pdf): Personalfluktuation, Erhebung 2022, Bezugsgröße Einrichtungen.
 - [Reggio Children](https://www.reggiochildren.it/en/reggio-emilia-approach/): pädagogische Orientierung.
 - [Berliner Kostenblatt ab August 2026](https://www.berlin.de/sen/jugend/familie-und-kinder/kindertagesbetreuung/fachinfo/xxxix_rv-tag-kostenblaetter-01082026.pdf): Sachkostenbetrag, keine Einsparprognose.
