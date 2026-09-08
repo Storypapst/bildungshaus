@@ -1,0 +1,21 @@
+html{scrollbar-color:var(--scrollbar-thumb) transparent;accent-color:var(--strong-ink);caret-color:var(--strong-ink)}
+::selection{background:var(--selection-bg);color:var(--selection-text)}
+.brand-dot.brand-dot{background:var(--brand-orange)}
+/* The bundled reveal engine adds sc-in. Reduced motion stays immediate. */
+[data-sc-in],[data-sc-stagger]>*{transition:opacity var(--motion-reveal) var(--motion-ease),transform var(--motion-reveal) var(--motion-ease)}
+.economics-result.economics-result{background:var(--card);padding:28px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--result-shadow),var(--edge-light)}
+.economics-result output{font-variant-numeric:tabular-nums}
+.economics-layout.economics-layout [data-slot=slider-thumb]{width:20px;height:20px;background:var(--secondary);border:2px solid var(--palette-white);box-shadow:0 0 0 1px var(--control-border)}
+.economics-layout [data-slot=slider-thumb]::after{content:'';position:absolute;inset:-12px}
+.graph-workspace .mindmap-node{box-shadow:var(--elevation-1),var(--edge-light);border-color:var(--control-border)}
+.graph-workspace .mindmap-node.is-selected{box-shadow:var(--elevation-3);border-color:var(--secondary)}
+.graph-workspace .graph-finding.graph-detail-pane{box-shadow:var(--elevation-2);border-width:1px;border-top-width:3px}
+@media(hover:hover) and (pointer:fine){.graph-workspace .mindmap-node:hover{box-shadow:var(--elevation-3)}}
+.chapter-nav.chapter-nav{gap:0;right:4px}
+.chapter-nav.chapter-nav a{width:44px;min-height:44px;position:relative;writing-mode:horizontal-tb;justify-content:center}
+.chapter-nav .chapter-dot{width:8px;height:8px;background:var(--muted-foreground);border-radius:8px;transition:height var(--motion-fast)}
+.chapter-nav .active .chapter-dot{height:20px;background:var(--strong-ink);outline:none}
+.chapter-nav.chapter-nav a .chapter-label{position:absolute;right:44px;white-space:nowrap;width:auto;height:auto;padding:6px 10px;border-radius:var(--radius);background:var(--card);color:var(--foreground);box-shadow:var(--elevation-1);font-size:13px;opacity:0;transform:translateX(6px);transition:opacity var(--motion-fast),transform var(--motion-fast);pointer-events:none}
+.chapter-nav a:hover .chapter-label,.chapter-nav a:focus-visible .chapter-label{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){[data-sc-in],[data-sc-stagger]>*{opacity:1!important;transform:none!important;transition:none!important}.chapter-dot{transition:none}}
+@media print{[data-sc-in],[data-sc-stagger]>*{opacity:1!important;transform:none!important}}

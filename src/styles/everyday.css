@@ -1,0 +1,12 @@
+/* The explanation and drawings share the full page measure. */
+.everyday-intro{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.everyday-intro h2{margin:0;max-width:14ch}
+.everyday-copy{min-width:0}
+.everyday-copy p{font-size:19px;line-height:1.65;max-width:60ch}
+.everyday .everyday-layout .thesis-chain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px;margin:56px 0 32px}
+.everyday .everyday-layout .thesis-chain li{min-width:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:18px;line-height:1.45}
+.everyday .thesis-chain li span{display:block;max-width:23ch;overflow-wrap:break-word}
+.everyday .thesis-chain img{width:100%;margin-bottom:20px;border-radius:3px}
+.everyday .mechanism-note{max-width:85ch}
+@media(max-width:1000px){.everyday-intro{grid-template-columns:1fr;gap:28px}.everyday-intro h2{max-width:22ch}.everyday .everyday-layout .thesis-chain{gap:24px}.everyday-copy p{max-width:68ch}}
+@media(max-width:700px){.everyday-copy p{font-size:17px}.everyday .everyday-layout .thesis-chain{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 24px;margin-top:36px}.everyday .everyday-layout .thesis-chain li{font-size:16px}.everyday .thesis-chain img{margin-bottom:14px}}

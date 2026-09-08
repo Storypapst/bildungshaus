@@ -1,0 +1,15 @@
+.reader.reader--illustrated{width:100%;max-width:none}
+.reader--illustrated>.reader-nav,.reader--illustrated>.longform,.reader--illustrated>.reader-related,.reader--illustrated>a:last-child{display:block;width:min(900px,calc(100% - 40px));margin-inline:auto}
+.reader--illustrated>.reader-nav{display:flex}
+.reader-artwork{width:100%;margin:0 0 52px;overflow:hidden}
+.reader-artwork img{display:block;width:100%;max-width:none;height:clamp(280px,33.333vw,620px);object-fit:cover;object-position:50% 55%}
+@media(max-width:600px){
+  .reader-artwork{margin-bottom:34px}
+  .reader-artwork img{height:370px;object-position:50% 55%}
+  .reader-artwork--fingerpaint img{height:300px}
+  .reader-artwork--place img{object-position:50% 50%}
+  .reader-artwork--continuity img{height:250px;object-position:60% 55%}
+  .reader-artwork--learning img{height:290px;object-position:55% 55%}
+  .reader-artwork--participation img{height:280px;object-position:55% 55%}
+}
+@media print{.reader-artwork img{height:55mm;break-inside:avoid}}

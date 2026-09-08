@@ -1,0 +1,62 @@
+/* Amber Slate reference → semantic roles → component decisions.
+   Brand orange is preserved; action orange is darker for white text. */
+:root {
+ --palette-white:#ffffff; --palette-ink:#333333; --palette-orange:#df6035;
+ --palette-action:#c44e28; --palette-action-hover:#ad4320;
+ --palette-navy:#2f4b79; --palette-navy-dark:#284167;
+ --palette-blue-paper:#d6e4f0; --palette-blue-dark:#2a3656;
+ --palette-canvas:#e8ebed; --palette-night:#1a1a1a; --palette-night-card:#202020;
+ --palette-muted:#f9fafb; --palette-night-muted:#2a2a2a;
+ --palette-text-soft:#59616b; --palette-night-text:#e5e5e5; --palette-night-soft:#a3a3a3;
+ --palette-border:#cccccc; --palette-night-border:#353535;
+ --palette-control:#7d8794; --palette-control-dark:#8f99a6;
+ --palette-link-dark:#b7cce5; --palette-orange-paper:#fbf0e9; --palette-orange-night:#322720;
+ --palette-note:#fff4cf; --palette-note-dark:#393428;
+ --note-paper:var(--palette-note); --note-ink:var(--palette-ink);
+ --palette-red:#b82b35; --palette-red-light:#ff9c9c;
+ --background:var(--palette-canvas); --foreground:var(--palette-ink);
+ --card:var(--palette-white); --card-foreground:var(--foreground);
+ --popover:var(--card); --popover-foreground:var(--foreground);
+ --primary:var(--palette-action); --primary-foreground:var(--palette-white);
+ --primary-hover:var(--palette-action-hover); --brand-orange:var(--palette-orange);
+ --secondary:var(--palette-navy); --secondary-foreground:var(--palette-white);
+ --muted:var(--palette-muted); --muted-foreground:var(--palette-text-soft);
+ --accent:var(--palette-blue-paper); --accent-foreground:var(--foreground);
+ --border:var(--palette-border); --input:var(--palette-control); --ring:var(--palette-action);
+ --strong-ink:var(--palette-navy); --paper-blue:var(--palette-blue-paper);
+ --paper-orange:var(--palette-orange-paper); --graph-edge:var(--palette-control);
+ --control-border:var(--palette-control); --slider-track:var(--palette-control);
+ --destructive:var(--palette-red); --on-blue:var(--palette-white);
+ --on-blue-soft:var(--palette-blue-paper); --on-blue-border:var(--palette-link-dark);
+ --shadow-color:color-mix(in srgb,var(--palette-navy) 18%,transparent);
+ --edge-light:inset 0 1px 0 color-mix(in srgb,var(--palette-white) 28%,transparent);
+ --elevation-1:0 2px 5px var(--shadow-color);
+ --elevation-2:0 6px 18px var(--shadow-color),inset 0 1px 0 color-mix(in srgb,var(--palette-white) 40%,transparent);
+ --elevation-3:0 12px 30px var(--shadow-color),0 2px 5px var(--shadow-color);
+ --result-shadow:0 8px 20px color-mix(in srgb,var(--palette-orange-night) 14%,transparent);
+ --radius:.5rem; --control-height:44px; --control-padding:18px; --control-font:15px;
+ --motion-fast:160ms; --motion-reveal:620ms; --motion-ease:cubic-bezier(.2,.7,.2,1);
+ --selection-bg:var(--accent); --selection-text:var(--foreground);
+ --scrollbar-thumb:color-mix(in srgb,var(--foreground) 45%,transparent);
+ --sc-canvas:var(--background); --sc-surface:var(--card); --sc-ink:var(--foreground);
+ --sc-ink-soft:var(--muted-foreground); --sc-accent:var(--primary); --sc-accent-ink:var(--primary-foreground);
+ --sc-font-display:'Outfit',sans-serif; --sc-font-text:'Outfit',sans-serif;
+ --chart-1:var(--secondary); --chart-2:var(--brand-orange); --chart-3:var(--destructive);
+ --chart-4:var(--strong-ink); --chart-5:var(--muted-foreground);
+ --sidebar:var(--card); --sidebar-foreground:var(--foreground); --sidebar-primary:var(--primary);
+ --sidebar-primary-foreground:var(--primary-foreground); --sidebar-accent:var(--accent);
+ --sidebar-accent-foreground:var(--foreground); --sidebar-border:var(--border); --sidebar-ring:var(--ring);
+}
+.dark {
+ --note-paper:var(--palette-note-dark); --note-ink:var(--palette-night-text);
+ --background:var(--palette-night); --foreground:var(--palette-night-text);
+ --card:var(--palette-night-card); --secondary:var(--palette-navy-dark);
+ --muted:var(--palette-night-muted); --muted-foreground:var(--palette-night-soft);
+ --accent:var(--palette-blue-dark); --border:var(--palette-night-border);
+ --input:var(--palette-control-dark); --control-border:var(--palette-control-dark);
+ --slider-track:var(--palette-control-dark); --ring:var(--brand-orange);
+ --paper-blue:var(--palette-blue-dark); --paper-orange:var(--palette-orange-night);
+ --graph-edge:var(--palette-control-dark); --strong-ink:var(--palette-link-dark);
+ --destructive:var(--palette-red-light);
+ --shadow-color:color-mix(in srgb,var(--palette-night) 65%,transparent);
+}

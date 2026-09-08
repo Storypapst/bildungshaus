@@ -1,0 +1,12 @@
+import {createRoot} from 'react-dom/client'
+import {useState} from 'react'
+import {Button} from './components/ui/button'
+import {Economics} from './Economics'
+import './index.css'
+import './styles/library.css'
+const tokens=['background','foreground','card','muted','muted-foreground','brand-orange','primary','secondary','accent','border','control-border','ring','strong-ink','paper-blue','paper-orange']
+export function Library(){
+ const [dark,setDark]=useState(false)
+ return <main className="token-library"><header><div><p>Bildungshaus weWeit · interne Designbibliothek</p><h1>Farben mit Aufgaben.</h1></div><Button variant="secondary" onClick={()=>{document.documentElement.classList.toggle('dark',!dark);setDark(!dark)}}>{dark?'Helles Design':'Dunkles Design'}</Button></header><p>Amber Slate ist die Palette. Semantische Tokens legen fest, wo eine Farbe eingesetzt wird. Diese Ansicht verwendet dieselben Komponenten und Styles wie die Website.</p><section><h2>Palette und Rollen</h2><div className="token-grid">{tokens.map(token=><article key={token}><div className="token-swatch" style={{background:`var(--${token})`}}/><code>--{token}</code></article>)}</div><p>Markenorange bleibt erhalten. Der dunklere Aktionston ermöglicht weiße Buttontexte. Neutrale Grauwerte ersetzen den bisherigen Blaustich der Flächen.</p></section><section><h2>Aktionen und Zustände</h2><div className="token-buttons"><Button>Konzept herunterladen</Button><Button variant="secondary">Pilot ansehen</Button><Button variant="outline">Gesprächszettel laden</Button><Button variant="ghost">Schließen</Button><Button disabled>Nicht verfügbar</Button><Button variant="link">Konzept in Kürze</Button></div><p>Mit Tab prüfen: sichtbarer Fokus. Lange Beschriftungen dürfen umbrechen. Alle Aktionen haben mindestens 44 Pixel Höhe.</p><div className="token-narrow"><Button>Auch eine längere Beschriftung bleibt vollständig lesbar</Button></div></section><section><h2>Rechner im Alltag</h2><Economics/></section><section><h2>Oberflächen</h2><div className="token-depth">{[1,2,3].map(level=><article key={level} style={{boxShadow:`var(--elevation-${level})`}}>Ebene {level}<p>Karte · Auswahl · Detail</p></article>)}</div></section></main>
+}
+createRoot(document.getElementById('root')!).render(<Library/> )

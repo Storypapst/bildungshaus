@@ -1,27 +1,72 @@
-# Bildungshaus Wurzelwald – interaktive Präsentation
+# Bildungshaus weWeit – interaktive Präsentation
 
 React/TypeScript-Präsentation mit shadcn/ui, Scroll Craft und Amber-Slate-Farben.
 Die redaktionelle Quelle ist der geroutete Bildungshaus Core. Originalkonzept und
 chronologische Eingaben bleiben dort unverändert. Dieses Repository enthält daraus
 abgeleitete Veröffentlichungstexte, keine vertraulichen Umfrageantworten.
 
-## Development
+## Auf einem anderen Computer bearbeiten
+
+Voraussetzungen: Git und Node.js 22.12 oder neuer. Das Repository ist der
+bearbeitbare Website-Code inklusive Bilder, Lesedokumente und Designbibliothek.
 
 ```sh
+git clone https://github.com/Storypapst/bildungshaus.git
+cd bildungshaus
 npm ci
-npm run dev
-npm run build
-npm run lint
-node scripts/verify.mjs
+npm run dev -- --host 127.0.0.1 --port 5182
 ```
 
-Die Anwendung verwendet den Basispfad `/bildungshaus/`. `BILDUNGSHAUS_CORE` zeigt
-auf den maschinenlokal aufgelösten Core. Aktualisierung der Veröffentlichung:
+Danach im Browser öffnen:
+
+- Website: http://127.0.0.1:5182/bildungshaus/
+- Designbibliothek: http://127.0.0.1:5182/bildungshaus/design-system.html
+- Hero-Entwurf: http://127.0.0.1:5182/bildungshaus/hero-lab.html
+
+Den geklonten Ordner in VS Code, Cursor oder einem anderen Editor öffnen.
+Weitere Änderungen mit Git übertragen; `node_modules` und die laufende Vorschau
+werden auf jedem Computer separat erzeugt. Die Vorschau braucht keinen Zugriff
+auf Google Drive oder den Server.
+
+## Wo liegt was?
+
+| Ordner | Inhalt |
+| --- | --- |
+| `src/` | React-Komponenten, Interaktionen und Gestaltung |
+| `src/styles/` | Gemeinsame Farb- und Gestaltungstokens |
+| `src/content/` | Eingebundene Lesetexte, Quellen und Mindmap-Inhalte |
+| `public/images/` | Illustrationen und Bilddateien |
+| `public/dokumente/` | PDF-Downloads |
+| `docs/` | Designentscheidungen und Prüfberichte |
+| `scripts/` | Prüfungen, Inhaltssynchronisation und PDF-Erzeugung |
+| `ops/` | Manuell auszuführende Deployment- und Rollback-Werkzeuge |
+
+Die vollständigen Arbeitsdokumente, Transkripte und Originalquellen bleiben im
+Google-Drive-Core „06 - Bildungshaus CC“. Hier liegen die für die Website
+aufbereiteten Inhalte. Umfragedaten und Zugangsdaten gehören nicht in dieses
+öffentliche Repository.
+
+## Prüfen und Inhalte aktualisieren
+
+```sh
+npm run build
+npm run lint
+node scripts/verify-token-contract.mjs
+```
+
+Browserprüfungen in `scripts/verify-*.mjs` erwarten eine laufende lokale Vorschau
+und installiertes Google Chrome. Die Anwendung verwendet den Basispfad
+`/bildungshaus/`. Für die optionale Inhaltssynchronisation zeigt
+`BILDUNGSHAUS_CORE` auf den maschinenlokal aufgelösten Drive-Core:
 
 ```sh
 BILDUNGSHAUS_CORE="<routed core>" node scripts/sync-content.mjs
 npm run build
 ```
+
+Ein Git-Push veröffentlicht die Website nicht. Deployment erfolgt separat und
+manuell gemäß `ops/README.md`. Die Designbibliothek und das Hero-Lab sind lokale
+Entwurfsseiten.
 
 ## Inhalt und Verhalten
 

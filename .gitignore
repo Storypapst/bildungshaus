@@ -28,3 +28,10 @@ output/
 
 __pycache__/
 *.pyc
+
+# Local generated previews and credentials
+tmp/
+.playwright-cli/
+.env
+.env.*
+!.env.example

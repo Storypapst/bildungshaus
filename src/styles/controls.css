@@ -1,0 +1,21 @@
+/* One geometry for buttons and links rendered with buttonVariants. */
+.ui-button.ui-button{min-height:var(--control-height);height:auto;max-width:100%;min-width:0;padding:10px var(--control-padding);gap:8px;border-radius:var(--radius);font-size:var(--control-font);line-height:1.4;white-space:normal;overflow-wrap:anywhere;text-align:center;text-decoration:none;border-color:transparent;box-shadow:var(--elevation-1),var(--edge-light);transition:background-color var(--motion-fast),box-shadow var(--motion-fast),transform var(--motion-fast)}
+.ui-button-primary{background:var(--primary);color:var(--primary-foreground)}
+.ui-button-secondary{background:var(--secondary);color:var(--secondary-foreground)}
+.ui-button-outline.ui-button{background:var(--card);border-color:var(--control-border);color:var(--foreground)}
+.ui-button-ghost{background:transparent;color:var(--foreground)}
+.ui-button-link{background:transparent;color:var(--strong-ink);text-decoration:underline!important}
+.ui-button-destructive{background:var(--muted);color:var(--destructive)}
+.ui-button-icon.ui-button{width:var(--control-height);min-width:var(--control-height);padding:10px}
+.ui-button:focus-visible{outline:3px solid var(--ring);outline-offset:4px}
+.ui-button:active:not(:disabled){transform:translateY(1px)}
+@media(hover:hover) and (pointer:fine){
+ .ui-button-primary:hover{background:var(--primary-hover)}
+ .ui-button-secondary:hover{background:color-mix(in srgb,var(--secondary) 88%,var(--palette-night))}
+ .ui-button-outline:hover,.ui-button-ghost:hover{background:var(--accent)}
+ .ui-button:hover{box-shadow:var(--elevation-2),var(--edge-light)}
+}
+@media(prefers-reduced-motion:reduce){.ui-button.ui-button{transition:none;transform:none}}
+
+.ui-button.ui-button:active:not(:disabled){box-shadow:var(--elevation-1)}
+.ui-button.ui-button-ghost,.ui-button.ui-button-link{box-shadow:none}

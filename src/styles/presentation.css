@@ -1,0 +1,66 @@
+/* Reading surfaces stay quiet; blue is reserved for an intentional emphasis. */
+.survey-invitation.survey-invitation{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:none;padding:40px}
+.people-section.people-section{background:var(--background)}
+.people-section .page-width{border-top:1px solid var(--border);padding-top:56px}
+.people-section.section-pad{padding-top:16px}
+.graph-workspace .graph-finding.graph-detail-pane{position:static;height:710px;border:1px solid var(--border);box-shadow:none;padding:24px}
+.graph-workspace .map-perspectives [data-slot=tabs-list]{height:auto;background:transparent;gap:12px;padding:0;align-items:stretch}
+.graph-workspace .map-perspectives [data-slot=tabs-trigger]{height:auto;min-height:92px;white-space:normal;flex:1;align-items:flex-start;justify-content:flex-start;text-align:left;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:none;font-size:17px;line-height:1.3;gap:12px}
+.map-perspectives [data-slot=tabs-trigger] span{min-width:0}.map-perspectives small{display:block;font-size:13px;font-weight:400;margin-top:7px;color:var(--muted-foreground)}
+.graph-workspace .map-perspectives [data-slot=tabs-trigger][data-active]{background:var(--secondary);color:var(--secondary-foreground);border-color:var(--secondary)}
+.map-perspectives [data-active] small{color:var(--on-blue-soft)}
+.map-perspectives svg{width:22px;height:22px;flex-shrink:0}
+.graph-workspace .mindmap-frame{background:var(--card);background-image:none;border:1px solid var(--border);border-radius:var(--radius)}
+.graph-workspace .mindmap-node{background:var(--note-paper);color:var(--note-ink);border:0;border-radius:2px 4px 7px 2px;box-shadow:var(--elevation-1);padding:20px;font-size:23px}
+.graph-workspace .mindmap-node::before{content:'';position:absolute;top:-5px;left:38%;width:24%;height:12px;background:color-mix(in srgb,var(--card) 65%,transparent);transform:rotate(-3deg)}
+.graph-workspace .mindmap-node.is-selected{background:var(--secondary);color:var(--secondary-foreground);box-shadow:var(--elevation-2)}
+.mindmap-lines .marker-understroke{stroke:var(--strong-ink);opacity:.12;stroke-width:7;stroke-linecap:round;stroke-dasharray:none;transform:translate(1px,1px)}
+.mindmap-lines .marker-stroke{stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;opacity:.45}
+.mindmap-lines .active .marker-stroke{stroke:var(--strong-ink);stroke-width:4;opacity:1;stroke-dasharray:1;animation:draw-marker 650ms var(--motion-ease) both}
+.mindmap-lines .active .marker-understroke{opacity:.2}
+@keyframes draw-marker{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){.mindmap-lines .active .marker-stroke{animation:none}}
+@media(max-width:700px){.survey-invitation.survey-invitation{padding:26px 22px}.graph-workspace .map-perspectives [data-slot=tabs-list]{flex-direction:column}.graph-workspace .map-perspectives [data-slot=tabs-trigger]{min-height:76px;font-size:16px}.people-section .page-width{padding-top:36px}}
+
+/* Two canvases form one scroll journey, with a shared reading pane. */
+.graph-workspace .graph-split{gap:32px}
+.graph-workspace .graph-detail-pane{position:sticky!important;top:24px;height:min(780px,calc(100dvh - 48px))!important}
+.canvas-title{font-size:32px;margin:8px 0 20px}
+.graph-workspace .mindmap-frame{height:auto;aspect-ratio:1120/1340;min-height:0;max-height:none;border:0;background:var(--card)}
+.graph-workspace .mindmap-node,.graph-workspace .mindmap-node.is-selected{background:transparent url('/images/postit-neon-v1.png') center/100% 100% no-repeat;color:var(--palette-ink);border:0;box-shadow:none;border-radius:0;padding:58px 25px 30px;flex-direction:column;justify-content:center;gap:7px;font-family:'Kalam',cursive;font-size:29px;line-height:1.15;text-align:center}
+.graph-workspace .mindmap-node::before{display:none}
+.graph-workspace .mindmap-node span{flex:0;hyphens:none;overflow-wrap:normal}
+.graph-workspace .mindmap-node svg{width:25px;height:25px;flex:0 0 25px}
+.graph-workspace .mindmap-node.is-selected{outline:3px dashed var(--primary);outline-offset:3px}
+.graph-workspace .mindmap-house{top:30px;height:650px;width:290px;background:transparent;border:1px dashed var(--border);border-radius:50% 4% 3% 6% / 3% 4% 4% 5%}
+.graph-workspace .house-a{left:15px}.graph-workspace .house-b{left:815px}
+.map-flight{padding:60px 20px 65px;text-align:center}.map-flight img{width:100%;height:auto}.map-flight p{font-family:'Kalam',cursive;font-size:27px;transform:rotate(-3deg);margin:8px auto 0}
+@media(max-width:700px){.graph-workspace .mindmap-frame{height:570px;aspect-ratio:auto}.canvas-title{font-size:27px}.map-flight{padding:44px 0}.map-flight p{font-size:23px}}
+
+.graph-workspace .mindmap-node:hover{box-shadow:none;filter:brightness(1.025)}
+
+/* Collected notes, rather than repeated stationery. */
+.graph-workspace .mindmap-node[data-paper="1"]{background-image:url('/images/postit-coral-v2.png')}
+.graph-workspace .mindmap-node[data-paper="2"]{background-image:url('/images/postit-turquoise-v3.png')}
+.graph-workspace .mindmap-node.is-selected{outline:none}
+.graph-workspace .mindmap-node.is-selected::after{content:'';position:absolute;inset:8px 4px 3px;border:2.5px solid var(--primary);border-radius:4% 7% 3% 6% / 7% 3% 6% 4%;transform:rotate(-1.5deg);pointer-events:none}
+.graph-workspace .mindmap-node:focus-visible{outline:3px solid var(--ring);outline-offset:5px}
+.graph-workspace .mindmap-house{border:2px dashed var(--graph-edge);border-radius:8% 5% 6% 4% / 3% 7% 4% 6%;transform:rotate(-1deg)}
+.graph-workspace .house-b{transform:rotate(1.3deg)}
+.mindmap-lines .marker-understroke{stroke-width:4;opacity:.18;transform:translate(2px,-1px)}
+.aspects-overview h3{font-size:32px;margin:4px 0 18px}.aspects-overview>p{font-size:17px;line-height:1.6;margin-bottom:26px}
+.graph-workspace .aspects-overview .graph-topic-list{max-height:none;overflow:visible}
+.graph-workspace .graph-finding.graph-detail-pane{border:1px solid var(--border);border-top:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--elevation-1);gap:18px}
+.graph-detail-pane .graph-pane-heading h3{font-size:28px;line-height:1.15}.graph-pane-label{color:var(--muted-foreground)}
+.graph-detail-tabs{display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.graph-detail-tabs [data-slot=tabs-list]{padding:0;gap:22px;background:transparent;border-radius:0;border-bottom:1px solid var(--border);height:46px;justify-content:flex-start}
+.graph-detail-tabs [data-slot=tabs-trigger]{flex:0 0 auto;border:0;border-radius:0;background:transparent;box-shadow:none!important;padding:8px 0 12px;font-size:15px;color:var(--muted-foreground);min-height:44px}
+.graph-detail-tabs [data-slot=tabs-trigger][data-active]{background:transparent;color:var(--foreground);border-bottom:2px solid var(--primary)}
+.graph-detail-tabs .graph-pane-scroll{border-bottom:0;padding-top:4px;scrollbar-width:thin}
+.graph-detail-tabs .graph-scroll-cue{display:flex;align-items:center;justify-content:center;gap:8px;flex-shrink:0;background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:var(--radius);min-height:44px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}
+.graph-detail-tabs .graph-scroll-cue:hover{background:var(--accent)}
+.graph-pane-actions{padding-top:16px;border-top:1px solid var(--border)}
+.graph-pane-actions .ui-button{box-shadow:none}
+.graph-pane-actions .ui-button[data-variant=outline]{background:transparent;border-color:transparent}
+
+.graph-workspace .graph-finding.graph-detail-pane{border:1px solid var(--border)!important}

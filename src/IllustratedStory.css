@@ -10,9 +10,9 @@
 .thesis-chain img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:5px;margin-bottom:16px}
 .thesis-chain li:nth-child(2) img{transform:rotate(2deg)}
 .thesis-chain li:nth-child(3) img{transform:rotate(-2deg)}
-.relationship-bridge{border-left:2px solid #b9cce6;padding:0 0 0 26px;max-width:740px;margin:-22px 0 58px}
+.relationship-bridge{border-left:2px solid var(--on-blue-border);padding:0 0 0 26px;max-width:740px;margin:-22px 0 58px}
 .relationship-bridge p:first-child{font-size:25px;line-height:1.4;margin-bottom:16px}
-.relationship-bridge p+p{color:#e0e9f5;font-size:17px}
+.relationship-bridge p+p{color:var(--on-blue-soft);font-size:17px}
 .relationship-bridge a{display:inline-block;margin-top:18px;font-size:15px}
 .relationship-bridge svg{display:inline;width:16px;height:16px}
 .kitchen-illustration{margin:-20px auto 44px;width:min(780px,100%)}

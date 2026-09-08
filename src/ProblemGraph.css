@@ -8,7 +8,7 @@
 .graph-workspace .node-detail-cue { display: block; font-size: 14px; font-weight: 500; margin-top: 8px; }
 .graph-workspace .board-node.child-node { font-size: 25px; }
 .graph-workspace .edge-legend { gap: 9px 18px; margin: 12px 0 0; }
-.graph-workspace .graph-finding.graph-detail-pane { display: flex; flex-direction: column; position: sticky; top: 24px; height: min(710px,calc(100dvh - var(--pane-top,24px) - 24px)); min-height: 356px; width: auto; padding: 20px; gap: 16px; background: var(--card); border: 2px solid var(--strong-ink); border-top-width: 5px; border-radius: 8px; }
+.graph-workspace .graph-finding.graph-detail-pane { display: flex; flex-direction: column; position: static; height: 710px; min-height: 356px; width: auto; padding: 20px; gap: 16px; background: var(--card); border: 2px solid var(--strong-ink); border-top-width: 5px; border-radius: 8px; }
 .graph-workspace .graph-detail-pane>div { gap: 12px; }
 .graph-pane-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; flex-shrink: 0; }
 .graph-pane-label { font-size: 13px; color: var(--strong-ink); }
