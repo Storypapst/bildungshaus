@@ -1,9 +1,10 @@
 # weWeit Designsystem
 
 Diese Datei ist der Einstieg zur gemeinsamen Gestaltung. Die interaktive
-[Designbibliothek lokal öffnen](http://127.0.0.1:5182/bildungshaus/design-system.html)
-verwendet denselben Code wie die Website. Sie wird mit dem unten beschriebenen
-Entwicklungsserver gestartet; GitHub zeigt hier die Dokumentation und Quelldateien.
+[Designbibliothek öffentlich öffnen](https://dreambau.com/bildungshaus/design-system)
+verwendet denselben Code wie die Website und wird gemeinsam mit ihr veröffentlicht.
+Für die Entwicklung lässt sie sich auch [lokal öffnen](http://127.0.0.1:5182/bildungshaus/design-system.html).
+GitHub zeigt hier die Dokumentation und Quelldateien.
 
 ## Dateien im Repository
 
