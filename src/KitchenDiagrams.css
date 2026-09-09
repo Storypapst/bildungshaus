@@ -1,0 +1,21 @@
+.longform .kitchen-note-cycle>figcaption,.longform .kitchen-module-flow>figcaption{max-width:none}
+.longform .reader-visual.kitchen-note-cycle>ol{grid-template-columns:repeat(2,minmax(0,1fr));gap:42px 70px}
+.kitchen-note-cycle>ol>li:nth-child(3){grid-area:2/2}.kitchen-note-cycle>ol>li:nth-child(4){grid-area:2/1}
+.kitchen-cycle-note{position:relative;max-width:290px;aspect-ratio:1;margin:0 auto 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px 32px;background:url('/images/postit-neon-v1.png') center/100% 100% no-repeat;color:var(--palette-ink)}
+.kitchen-cycle-note--1,.kitchen-cycle-note--3{background-image:url('/images/postit-neon-tilted-v4.png')}
+.kitchen-cycle-note--2{background-image:url('/images/postit-neon-down-v5.png')}
+.kitchen-note-number{position:absolute;left:12%;top:16%;font:22px Kalam,cursive}
+.kitchen-note-sketch{width:76px;height:70px;fill:none;stroke:var(--palette-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.longform .kitchen-note-cycle .kitchen-cycle-note h3{font:26px/1.15 Kalam,cursive;text-align:center;margin:5px 0 0;color:var(--palette-ink)}
+.longform .reader-visual.kitchen-note-cycle>ol>li>p{max-width:32ch;margin:auto;font-size:16px}
+.kitchen-diagram-arrow{position:absolute;right:-52px;top:38%;width:42px;height:28px;fill:none;stroke:var(--strong-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.kitchen-note-cycle>ol>li:nth-child(2)>.kitchen-diagram-arrow{right:46%;top:auto;bottom:-35px;transform:rotate(90deg)}
+.kitchen-note-cycle>ol>li:nth-child(3)>.kitchen-diagram-arrow{right:auto;left:-52px;transform:rotate(180deg)}
+.kitchen-cycle-return{display:flex;gap:18px;align-items:center;border-bottom:2px dashed var(--strong-ink);padding:20px 0;margin-top:10px}.kitchen-cycle-return>span{font:56px Kalam,cursive;color:var(--strong-ink)}.longform .kitchen-cycle-return p{font-size:17px;margin:0}.kitchen-cycle-return strong{display:block}
+.longform .kitchen-flow-start{padding:18px 22px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);font:23px Kalam,cursive;margin:0 0 36px;position:relative}
+.kitchen-flow-start::after{content:'↓';position:absolute;left:24px;bottom:-34px;color:var(--strong-ink)}
+.longform .kitchen-module-flow .kitchen-flow-main>ol{gap:32px}.kitchen-flow-main li{padding:18px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.kitchen-flow-main .kitchen-diagram-arrow{right:-29px;width:26px}.kitchen-flow-main li:last-child .kitchen-diagram-arrow{display:none}
+.longform .kitchen-flow-feedback{font:21px/1.5 Kalam,cursive;color:var(--strong-ink);margin:20px 0 28px}
+.kitchen-investment{display:flex;gap:18px;border-top:1px dashed var(--border);padding-top:24px}.kitchen-investment>span{font-size:36px;color:var(--primary)}.longform .kitchen-investment p{font-size:17px;margin:0 0 10px}.kitchen-investment small{display:block;color:var(--muted-foreground);font-size:14px;line-height:1.5}
+@media(max-width:600px){.longform .reader-visual.kitchen-note-cycle>ol,.longform .kitchen-module-flow .kitchen-flow-main>ol{grid-template-columns:1fr;gap:36px}.kitchen-note-cycle>ol>li{grid-area:auto!important;padding:0}.kitchen-flow-main li{padding:18px}.kitchen-note-cycle>ol>li>.kitchen-diagram-arrow,.kitchen-flow-main li>.kitchen-diagram-arrow{left:47%;right:auto;top:auto;bottom:-32px;transform:rotate(90deg);width:30px}.kitchen-note-cycle .kitchen-cycle-note{width:270px;max-width:100%}.kitchen-cycle-return{gap:10px}}

@@ -1,0 +1,16 @@
+.longform .change-sketch,.longform .change-journal{margin:3.5rem 0}
+.change-sketch img{display:block;width:100%;height:auto;clip-path:polygon(.5% .8%,33% 0,68% .4%,99.5% .6%,100% 98.9%,68% 99.6%,34% 99.2%,.4% 100%)}
+.longform .change-sketch figcaption{font-size:1rem;line-height:1.65;color:var(--muted-foreground);margin-top:1rem}
+.change-sketch figcaption strong{display:block;color:var(--foreground);font-size:1.2rem;margin-bottom:.35rem}
+.longform .change-journal>figcaption{font-size:clamp(1.6rem,3vw,2.3rem);line-height:1.2;font-weight:600;margin-bottom:2rem}
+.change-journal-pages{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.change-journal-pages section{background:var(--note-paper);color:var(--note-ink);padding:2rem;box-shadow:var(--elevation-1);border-radius:2px 5px 18px 3px;transform:rotate(-1deg)}
+.change-journal-pages section+section{transform:rotate(1deg)}
+.change-journal-pages span,.change-journal-pages em,.longform .change-journal-return{font-family:Kalam,cursive}
+.change-journal-pages span{font-size:1.2rem}
+.longform .change-journal h3{font-size:1.5rem;line-height:1.25;margin:1rem 0}
+.longform .change-journal-pages p{font-size:1.05rem;line-height:1.65;color:inherit}
+.change-journal-pages em{display:block;font-size:1.2rem;line-height:1.5;margin-top:1.5rem;padding-top:1rem;border-top:1px dashed currentColor}
+.longform .change-journal-return{font-size:1.5rem;line-height:1.5;color:var(--strong-ink);margin:2rem 0 1rem}
+.longform .change-journal-caption{font-size:1rem;line-height:1.65;color:var(--muted-foreground)}
+@media(max-width:600px){.change-journal-pages{grid-template-columns:1fr;gap:1.7rem}.change-journal-pages section{padding:1.5rem}.longform .change-sketch,.longform .change-journal{margin:2.5rem 0}}

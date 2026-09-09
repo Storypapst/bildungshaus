@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, BookOpen, Check, List, Shapes, ChevronDown } from 'lucide-react'
+import { ArrowUpRight, List, Shapes, ChevronDown } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import './ProblemGraph.css'
 import { Mindmap } from './Mindmap'
 import { networkById, networkFindings } from './networkFindings'
-export function ProblemGraph({content,selected,onSelect,saved,onSave}:{content:Content;selected:string;onSelect:(id:string)=>void;saved:string[];onSave:(id:string)=>void}) {
+export function ProblemGraph({content,selected,onSelect}:{content:Content;selected:string;onSelect:(id:string)=>void}) {
  const [perspective,setPerspective]=useState('home'),[networkSelected,setNetworkSelected]=useState(networkFindings[0].id)
  const [list,setList]=useState(()=>matchMedia('(max-width:700px)').matches)
  const [compact,setCompact]=useState(()=>matchMedia('(max-width:1000px)').matches),[mobileOpen,setMobileOpen]=useState(false),[tab,setTab]=useState('overview'),[moreBelow,setMoreBelow]=useState(false)
@@ -37,7 +37,7 @@ export function ProblemGraph({content,selected,onSelect,saved,onSave}:{content:C
     <TabsContent value="sources">{current.sources.length?<ul className="source-list">{current.sources.map(s=><li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.title} <ArrowUpRight aria-hidden="true"/></a>{s.year&&<p>Bezugsjahr: {s.year}</p>}{s.population&&<p>{s.population}</p>}{s.denominator&&<p>Bezugsgröße: {s.denominator}</p>}{s.location&&<small>Fundstelle: {s.location}</small>}</li>)}</ul>:<p>Dieser Aspekt beschreibt unser Konzept. Die vollständige Synthese erläutert seine Grundlagen und Grenzen.</p>}</TabsContent>
    </div>{moreBelow&&<button type="button" className="graph-scroll-cue" onClick={()=>{const el=paneScroll.current;if(el){el.scrollBy({top:el.clientHeight*.75,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});el.focus({preventScroll:true})}}}>Weiterlesen <ChevronDown aria-hidden="true"/></button>}
   </Tabs>
-  <div className="graph-pane-actions"><a className={buttonVariants({variant:'secondary'})} href={`#lesen/${current.documentId}`} onClick={navigate}>Befund vertiefen <ArrowUpRight data-icon="inline-end"/></a>{!networkActive&&<Button variant="outline" onClick={()=>onSave(current.id)} aria-pressed={saved.includes(current.id)}>{saved.includes(current.id)?<Check/>:<BookOpen/>}{saved.includes(current.id)?'Vorgemerkt':'Für Gespräch vormerken'}</Button>}</div>
+  <div className="graph-pane-actions"><a className={buttonVariants({variant:'secondary'})} href={`#lesen/${current.documentId}`} onClick={navigate}>Befund vertiefen <ArrowUpRight data-icon="inline-end"/></a></div>
  </>}
  return <div className="graph-workspace">
   <div className="graph-toolbar" aria-label="Ansicht der Zusammenhänge"><div className="flex flex-wrap gap-2"><Button variant={list?'outline':'secondary'} onClick={()=>setList(false)} aria-pressed={!list}><Shapes/>Mindmap</Button><Button variant={list?'secondary':'outline'} onClick={()=>setList(true)} aria-pressed={list}><List/>Alle Aspekte</Button></div></div>

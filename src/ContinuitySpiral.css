@@ -1,0 +1,15 @@
+.longform .continuity-spiral>figcaption{max-width:35ch}
+.longform .continuity-spiral .spiral-intro{font-size:17px;margin:0 0 26px;max-width:72ch}
+.longform .continuity-spiral .spiral-chain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 32px}
+.continuity-spiral .spiral-chain>li{padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--elevation-1)}
+.spiral-number{display:block;font-family:Kalam,cursive;font-size:24px;color:var(--strong-ink);margin-bottom:10px}
+.spiral-chain>li:nth-child(4){grid-area:2/3}.spiral-chain>li:nth-child(5){grid-area:2/2}.spiral-chain>li:nth-child(6){grid-area:2/1}
+.continuity-spiral .spiral-arrow{position:absolute;right:-30px;top:48%;width:28px;height:22px;fill:none;stroke:var(--strong-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.spiral-chain>li:nth-child(3) .spiral-arrow{right:45%;top:auto;bottom:-30px;transform:rotate(90deg)}
+.spiral-chain>li:nth-child(4) .spiral-arrow,.spiral-chain>li:nth-child(5) .spiral-arrow{right:auto;left:-30px;transform:rotate(180deg)}
+.spiral-return{display:flex;gap:18px;align-items:center;margin:25px 0 30px;padding:16px 0;border-bottom:2px dashed var(--strong-ink)}
+.spiral-return>svg{width:75px;flex-shrink:0;fill:none;stroke:var(--strong-ink);stroke-width:2;stroke-linecap:round}.longform .spiral-return p{font-size:16px;margin:0}.spiral-return strong{display:block}
+.longform .spiral-branch-label{font-family:Kalam,cursive;font-size:21px;margin:0 0 20px;color:var(--strong-ink)}
+.continuity-spiral .spiral-consequences li{padding:18px;border-top:3px solid var(--primary);background:var(--paper-orange)}
+.longform .continuity-spiral .spiral-exit{font-size:17px;margin:30px 0 0;padding-left:18px;border-left:3px solid var(--strong-ink)}
+@media(max-width:700px){.longform .continuity-spiral .spiral-chain,.longform .continuity-spiral .spiral-consequences ol{grid-template-columns:1fr;gap:32px}.continuity-spiral .spiral-chain>li{grid-area:auto;padding:18px 18px 18px 54px}.spiral-number{position:absolute;left:18px;top:14px}.continuity-spiral .spiral-chain .spiral-arrow,.continuity-spiral .spiral-consequences .spiral-arrow{left:22px;right:auto;top:auto;bottom:-28px;transform:rotate(90deg)}.spiral-return{gap:10px}.spiral-return>svg{width:46px}.continuity-spiral .spiral-consequences li{padding:18px}}

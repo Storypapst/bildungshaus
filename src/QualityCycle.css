@@ -1,0 +1,85 @@
+.quality-cycle .cycle-invitation{font-size:16px;color:var(--muted-foreground);margin-top:20px}
+.quality-cycle ol>li{padding:0;border:0;background:none}
+.quality-cycle .cycle-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;width:100%;height:100%;padding:22px;border:1px solid var(--border);border-radius:var(--radius);background:var(--palette-white);color:var(--palette-ink);box-shadow:var(--elevation-1);font:inherit;cursor:pointer}
+.quality-cycle .cycle-card>span{color:var(--palette-navy)}
+.quality-cycle .cycle-card small{font-size:13px;margin-top:20px;color:var(--palette-text-soft)}
+.cycle-card:hover{border-color:var(--primary);box-shadow:var(--elevation-2)}
+.cycle-card:focus-visible{outline:3px solid var(--ring);outline-offset:4px}
+[data-slot="dialog-content"].cycle-dialog{width:760px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;padding:36px;gap:16px;font-size:17px;line-height:1.55}
+.cycle-dialog .cycle-position{margin:0;color:var(--muted-foreground);font-size:14px}
+.cycle-dialog .cycle-title{font-size:clamp(27px,4vw,36px);line-height:1.12;padding-right:16px}
+.cycle-dialog .cycle-lead{font-size:18px;line-height:1.5;color:var(--foreground)}
+.cycle-example{display:grid;grid-template-columns:140px 1fr;gap:24px;align-items:center;margin:10px 0}
+.cycle-example p{margin:8px 0 0}.cycle-example b{font-size:15px}
+.cycle-doodle{width:100%;fill:none;stroke:var(--strong-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.cycle-doodle-echo{stroke:var(--primary);stroke-width:.65;opacity:.65}
+.cycle-mini-steps{display:flex;list-style:none;padding:18px 0;margin:0;border-block:1px solid var(--border);gap:24px;font-family:Kalam,cursive;font-size:19px}
+.cycle-mini-steps li{flex:1;position:relative}.cycle-mini-steps li:not(:last-child)::after{content:'↝';position:absolute;right:-19px;top:0;color:var(--primary)}
+.cycle-check{margin:0;font-size:16px}.cycle-check strong{display:block;margin-bottom:5px}
+.cycle-next{font-size:15px;color:var(--muted-foreground);margin:0}
+.cycle-dialog-actions{display:flex;justify-content:space-between;gap:12px;margin-top:10px}
+@media(max-width:600px){[data-slot="dialog-content"].cycle-dialog{padding:25px 20px;gap:14px}.cycle-example{grid-template-columns:1fr;gap:8px;margin:0}.cycle-doodle{width:125px;height:85px}.cycle-mini-steps{font-size:16px;gap:20px}.cycle-dialog-actions{flex-wrap:wrap}.cycle-dialog-actions button{flex:1;white-space:normal;height:auto;min-height:44px}.quality-cycle .cycle-card{padding:16px}}
+[data-slot="dialog-content"].cycle-dialog{width:1020px}
+.inner-cycle{margin:10px 0}.inner-cycle>figcaption{font-family:Kalam,cursive;font-size:22px;margin-bottom:16px;color:var(--strong-ink)}
+.inner-cycle-map{position:relative}.inner-cycle-map>svg{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:var(--strong-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}.inner-cycle-orbit{stroke-dasharray:4 9;opacity:.3}
+.inner-cycle-map ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr 1fr;column-gap:44px;row-gap:72px;list-style:none;padding:0;margin:0}
+.inner-cycle-map li{padding:18px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px 3px 12px 4px;position:relative;min-width:0}
+.inner-cycle-map li:nth-child(4){grid-column:3;grid-row:2}.inner-cycle-map li:nth-child(5){grid-column:2;grid-row:2}.inner-cycle-map li:nth-child(6){grid-column:1;grid-row:2}
+.inner-cycle-map li>span{font-family:Kalam,cursive;color:var(--primary);font-size:22px}.cycle-dialog .inner-cycle h3{font-size:19px;line-height:1.2;margin:4px 0 10px}.inner-cycle-map li p{font-size:15px;line-height:1.5;margin:0}
+.inner-cycle-feedback{font-family:Kalam,cursive;font-size:21px;line-height:1.5;color:var(--strong-ink);margin:22px 0 0}.cycle-technology{font-size:16px;margin:0;padding-top:18px;border-top:1px solid var(--border)}.cycle-technology strong{display:block;margin-bottom:6px}
+@media(max-width:700px){.inner-cycle-map>svg{display:none}.inner-cycle-map ol{grid-template-columns:1fr;grid-template-rows:auto;gap:28px;padding-left:18px;border-left:2px dashed var(--strong-ink)}.inner-cycle-map li:nth-child(n){grid-column:auto;grid-row:auto}.inner-cycle-map li:not(:last-child)::after{content:'↓';position:absolute;bottom:-29px;left:50%;color:var(--strong-ink);font-family:Kalam,cursive;font-size:23px}.inner-cycle-map li{padding:15px}.inner-cycle-feedback{font-size:19px}}
+.cycle-coupling{font-family:Kalam,cursive;font-size:21px;line-height:1.5;color:var(--strong-ink);padding:20px 0;margin:0;border-block:1px dashed var(--border)}.cycle-efficiency{padding:20px;border-left:3px solid var(--primary);background:var(--card);font-size:16px}.cycle-efficiency p{margin:10px 0}.cycle-efficiency small{font-size:14px;color:var(--muted-foreground)}
+/* The support is part of the circle, between the two rows of paper notes. */
+.inner-cycle-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px 44px;align-items:stretch}
+.inner-cycle-map ol{display:contents}
+.inner-cycle-map li:nth-child(1){grid-column:1;grid-row:1;transform:rotate(-.6deg)}
+.inner-cycle-map li:nth-child(2){grid-column:2;grid-row:1;transform:rotate(.5deg)}
+.inner-cycle-map li:nth-child(3){grid-column:3;grid-row:1;transform:rotate(-.35deg)}
+.inner-cycle-map li:nth-child(4){grid-column:3;grid-row:3;transform:rotate(.6deg)}
+.inner-cycle-map li:nth-child(5){grid-column:2;grid-row:3;transform:rotate(-.4deg)}
+.inner-cycle-map li:nth-child(6){grid-column:1;grid-row:3;transform:rotate(.45deg)}
+.inner-cycle-map li{box-shadow:var(--elevation-1);padding:22px 18px}
+.inner-cycle-map li::before{content:'';position:absolute;width:45px;height:13px;top:-6px;left:37%;background:var(--primary);opacity:.22;transform:rotate(-7deg)}
+.inner-cycle-map li:nth-child(even)::before{left:54%;transform:rotate(9deg)}
+.inner-cycle-scribble{width:100%;aspect-ratio:1;background-image:url('/bildungshaus/images/cycle-scribbles-v1.png');background-size:300% 200%;background-repeat:no-repeat;background-color:var(--palette-white);border-radius:4px;margin:4px 0 12px}
+.inner-cycle-scribble--0{background-position:0% 0%}.inner-cycle-scribble--1{background-position:50% 0%}.inner-cycle-scribble--2{background-position:100% 0%}.inner-cycle-scribble--3{background-position:0% 100%}.inner-cycle-scribble--4{background-position:50% 100%}.inner-cycle-scribble--5{background-position:100% 100%}
+.inner-cycle-support{grid-column:1/-1;grid-row:2;justify-self:center;width:76%;padding:25px 28px;background:var(--card);border:2px solid transparent;border-radius:43% 8% 38% 5% / 5% 35% 6% 27%;position:relative}
+.inner-cycle-support-label,.inner-cycle-support-return{display:block;font-family:Kalam,cursive;color:var(--strong-ink);font-size:19px}
+.cycle-dialog .inner-cycle-support h3{margin:6px 0 12px;font-size:23px}
+.inner-cycle-support p{font-size:16px;line-height:1.6;margin:0 0 14px}
+.inner-cycle-support-return{font-size:17px}
+@media(max-width:700px){.inner-cycle-map{grid-template-columns:1fr;gap:30px;padding-left:14px;border-left:2px dashed var(--strong-ink)}.inner-cycle-map li:nth-child(n){grid-column:1;grid-row:auto;transform:none}.inner-cycle-map li:nth-child(1){grid-row:1}.inner-cycle-map li:nth-child(2){grid-row:2}.inner-cycle-map li:nth-child(3){grid-row:3}.inner-cycle-map li:nth-child(4){grid-row:5}.inner-cycle-map li:nth-child(5){grid-row:6}.inner-cycle-map li:nth-child(6){grid-row:7}.inner-cycle-support{grid-column:1;grid-row:4;width:100%;padding:22px 18px}.inner-cycle-scribble{max-width:250px;margin:0 auto 14px}.inner-cycle-map li:not(:last-child)::after{bottom:-32px}}
+.transfer-chain{margin:8px 0}
+.transfer-chain figcaption{font-family:Kalam,cursive;font-size:23px;color:var(--strong-ink);margin:0 0 24px}
+.transfer-chain ol{list-style:none;padding:0 0 0 30px;margin:0;border-left:2px dashed var(--strong-ink);display:grid;gap:28px}
+.transfer-chain li{position:relative;display:flex;gap:20px;padding:22px 24px;background:var(--card);border:1px solid var(--border);border-radius:3px 9px 4px 12px;box-shadow:var(--elevation-1)}
+.transfer-chain li:nth-child(odd){transform:rotate(-.3deg)}
+.transfer-chain li:not(:last-child)::after{content:'↓';position:absolute;bottom:-29px;left:44px;font-family:Kalam,cursive;color:var(--strong-ink);font-size:25px}
+.transfer-chain-number{font-family:Kalam,cursive;font-size:30px;color:var(--primary);line-height:1.2}
+.cycle-dialog .transfer-chain h3{font-size:21px;margin:0 0 8px;line-height:1.25}
+.transfer-chain li p{font-size:16px;line-height:1.55;margin:0}
+.transfer-chain-return{display:flex;gap:18px;align-items:center;margin-top:20px;color:var(--strong-ink)}
+.transfer-chain-return>span{font-size:54px;font-family:Kalam,cursive}.transfer-chain-return p{margin:0;font-family:Kalam,cursive;font-size:21px}.transfer-chain-return strong{display:block}
+.transfer-chain-purpose{font-size:15px;line-height:1.6;margin:20px 0 0;padding:16px 20px;background:var(--card);border-left:3px solid var(--primary)}
+@media(max-width:600px){.transfer-chain ol{padding-left:14px}.transfer-chain li{padding:18px 14px;gap:12px}.cycle-dialog .transfer-chain h3{font-size:19px}.transfer-chain-return p{font-size:19px}}
+/* Six notes follow a hexagonal orbit around the shared support. */
+@media(min-width:701px){
+.inner-cycle-map{grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 22px;align-items:center}
+.inner-cycle-map li{padding:18px 14px;align-self:stretch}
+.inner-cycle-map li:nth-child(1){grid-column:2;grid-row:1}
+.inner-cycle-map li:nth-child(2){grid-column:3;grid-row:1}
+.inner-cycle-map li:nth-child(3){grid-column:4;grid-row:2}
+.inner-cycle-map li:nth-child(4){grid-column:3;grid-row:3}
+.inner-cycle-map li:nth-child(5){grid-column:2;grid-row:3}
+.inner-cycle-map li:nth-child(6){grid-column:1;grid-row:2}
+.inner-cycle-support{grid-column:2/4;grid-row:2;width:100%;padding:36px 25px;border-radius:48% 51% 46% 49% / 12% 15% 14% 16%;text-align:center;align-self:center}
+.cycle-dialog .inner-cycle h3{font-size:18px}.inner-cycle-map li p{font-size:14px}
+.inner-cycle-support p{font-size:15px;line-height:1.55}.cycle-dialog .inner-cycle-support h3{font-size:23px}
+}
+.inner-cycle-support{text-align:center}
+.transfer-scribble{width:125px;aspect-ratio:1;flex-shrink:0;background-image:url('/bildungshaus/images/cycle-transfer-scribbles-v1.png');background-size:200% 200%;background-repeat:no-repeat;border-radius:5px}
+.transfer-scribble--0{background-position:0% 0%}.transfer-scribble--1{background-position:100% 0%}.transfer-scribble--2{background-position:0% 100%}.transfer-scribble--3{background-position:100% 100%}
+.transfer-chain li{align-items:center}
+.transfer-chain li::before{content:'';position:absolute;top:-6px;left:42%;width:48px;height:13px;background:var(--primary);opacity:.22;transform:rotate(-8deg)}
+@media(max-width:700px){.transfer-chain li{flex-wrap:wrap}.transfer-scribble{width:130px;margin:auto}.transfer-chain li>div:last-child{flex-basis:100%}}
+@media(min-width:701px){.inner-cycle-support{border-radius:50%;padding:65px 35px}.inner-cycle-support-label,.inner-cycle-support-return{max-width:25ch;margin-inline:auto}}

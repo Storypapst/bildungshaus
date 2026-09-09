@@ -1,0 +1,11 @@
+.people-learning-map{margin:2rem 0}.people-learning-map img{width:100%;aspect-ratio:1;object-fit:contain;clip-path:polygon(1% 1%,24% .4%,60% .8%,99% .5%,99.5% 98%,72% 99%,34% 98.8%,.7% 99%)}.people-learning-map figcaption{font-size:.9rem;line-height:1.5;color:var(--muted-foreground);margin-top:.8rem}
+
+.people-grid .people-practice{align-self:end;padding-bottom:2rem}
+.people-practice>a{display:inline-flex;align-items:baseline;gap:.35rem;margin-top:2rem;font-size:.95rem}
+.people-practice>a svg{flex-shrink:0;width:1em;height:1em}
+@media(max-width:700px){.people-grid .people-practice{padding-bottom:0}.people-practice>a{margin-top:1.5rem}}
+
+.people-crayon-divider{display:block;width:100%;height:42px;margin:55px 0 -38px;fill:none;stroke:var(--strong-ink);stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;opacity:.38}
+.people-crayon-divider path:nth-child(2){stroke-width:1;opacity:.5}
+.people-crayon-divider path:nth-child(3){stroke:var(--primary);stroke-width:2;opacity:.85}
+@media(max-width:700px){.people-crayon-divider{height:30px;margin:36px 0 -20px}}

@@ -1,0 +1,15 @@
+.kitchen-sketch-path.kitchen-learning-path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:44px;list-style:none;padding:32px 36px 36px;margin:40px 0 0;border-radius:var(--radius)}
+.kitchen-sketch-path>li{position:relative;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.kitchen-sketch-path .kitchen-step-sketch{width:104px;height:96px;color:var(--strong-ink);transform:rotate(-4deg);flex-shrink:0}
+.kitchen-sketch-path>li:nth-child(even) .kitchen-step-sketch{transform:rotate(3deg)}
+.kitchen-sketch-accent{stroke:var(--primary)}
+.kitchen-sketch-path>li>span{font-size:18px;line-height:1.45;max-width:18ch}
+.kitchen-sketch-path .kitchen-step-arrow{position:absolute;width:44px;height:28px;right:-35px;top:40px;color:var(--strong-ink)}
+.kitchen-sketch-path>li:last-child .kitchen-step-arrow{display:none}
+@media(max-width:700px){
+ .kitchen-sketch-path.kitchen-learning-path{grid-template-columns:1fr;gap:38px;padding:28px}
+ .kitchen-sketch-path>li{flex-direction:row;align-items:center;gap:22px;padding-bottom:12px}
+ .kitchen-sketch-path .kitchen-step-sketch{width:80px;height:76px}
+ .kitchen-sketch-path>li>span{font-size:17px}
+ .kitchen-sketch-path .kitchen-step-arrow{top:auto;bottom:-27px;left:19px;right:auto;transform:rotate(90deg)}
+}

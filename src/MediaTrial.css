@@ -1,0 +1,7 @@
+.longform .media-trial{margin:1.5rem 0 3rem}
+.media-trial img{display:block;width:min(100%,800px);height:auto;margin:auto;clip-path:polygon(1% 1.5%,25% .4%,60% 1%,99% .7%,99.5% 98%,70% 99%,35% 98.7%,.7% 99%)}
+.longform .media-trial figcaption{margin-top:1.5rem;font-size:1rem;line-height:1.6;color:var(--muted-foreground)}
+.media-trial figcaption>strong{display:block;color:var(--foreground);font-size:1.25rem}
+.longform .media-trial figcaption ol{display:grid;grid-template-columns:1fr 1fr;gap:1rem 2rem;list-style:none;padding:0;margin:1.3rem 0}
+.media-trial li b{color:var(--foreground)}
+@media(max-width:600px){.longform .media-trial figcaption ol{grid-template-columns:1fr}.longform .media-trial{margin-top:1rem}}

@@ -31,7 +31,6 @@
 .graph-workspace .mindmap-node::before{display:none}
 .graph-workspace .mindmap-node span{flex:0;hyphens:none;overflow-wrap:normal}
 .graph-workspace .mindmap-node svg{width:25px;height:25px;flex:0 0 25px}
-.graph-workspace .mindmap-node.is-selected{outline:3px dashed var(--primary);outline-offset:3px}
 .graph-workspace .mindmap-house{top:30px;height:650px;width:290px;background:transparent;border:1px dashed var(--border);border-radius:50% 4% 3% 6% / 3% 4% 4% 5%}
 .graph-workspace .house-a{left:15px}.graph-workspace .house-b{left:815px}
 .map-flight{padding:60px 20px 65px;text-align:center}.map-flight img{width:100%;height:auto}.map-flight p{font-family:'Kalam',cursive;font-size:27px;transform:rotate(-3deg);margin:8px auto 0}
@@ -39,11 +38,15 @@
 
 .graph-workspace .mindmap-node:hover{box-shadow:none;filter:brightness(1.025)}
 
-/* Collected notes, rather than repeated stationery. */
+/* One roll of tape, with two occasional exceptions per canvas. */
+.graph-workspace .mindmap-node[data-paper="3"]{background-image:url('/images/postit-neon-tilted-v4.png')}
 .graph-workspace .mindmap-node[data-paper="1"]{background-image:url('/images/postit-coral-v2.png')}
 .graph-workspace .mindmap-node[data-paper="2"]{background-image:url('/images/postit-turquoise-v3.png')}
 .graph-workspace .mindmap-node.is-selected{outline:none}
-.graph-workspace .mindmap-node.is-selected::after{content:'';position:absolute;inset:8px 4px 3px;border:2.5px solid var(--primary);border-radius:4% 7% 3% 6% / 7% 3% 6% 4%;transform:rotate(-1.5deg);pointer-events:none}
+.graph-workspace .mindmap-node span{position:relative;isolation:isolate}
+
+
+@media(forced-colors:active){.graph-workspace .mindmap-node.is-selected{outline:3px solid Highlight}}
 .graph-workspace .mindmap-node:focus-visible{outline:3px solid var(--ring);outline-offset:5px}
 .graph-workspace .mindmap-house{border:2px dashed var(--graph-edge);border-radius:8% 5% 6% 4% / 3% 7% 4% 6%;transform:rotate(-1deg)}
 .graph-workspace .house-b{transform:rotate(1.3deg)}
@@ -64,3 +67,19 @@
 .graph-pane-actions .ui-button[data-variant=outline]{background:transparent;border-color:transparent}
 
 .graph-workspace .graph-finding.graph-detail-pane{border:1px solid var(--border)!important}
+
+/* A small working sketch introduces the reading library; a panorama opens it out. */
+
+.library-panorama{margin:36px 0 48px;width:100%}
+.library-panorama img{display:block;width:100%;height:auto;aspect-ratio:3/1;object-fit:cover}
+@media(max-width:700px){.library-panorama{margin:28px -12px 32px;width:calc(100% + 24px)}.library-panorama img{aspect-ratio:2/1;object-position:48% center}}
+
+/* Broad editorial surfaces are independent from blue interaction accents. */
+main > .everyday,main > .people-section{background:var(--surface-mist)}
+main > .approach{background:var(--surface-deep);--on-blue-soft:var(--palette-chalk);--on-blue-border:var(--palette-mist)}
+main .survey-invitation,main .kitchen-learning-path{background:var(--surface-stone)}
+
+.graph-workspace .mindmap-node[data-paper="4"]{background-image:url('/images/postit-neon-down-v5.png')}
+.graph-workspace .mindmap-node .note-edge-marker{display:none;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;fill:none;stroke:var(--marker-pink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.graph-workspace .mindmap-node.is-selected .note-edge-marker{display:block}
+.graph-workspace .mindmap-node[data-marker=yellow] .note-edge-marker{stroke:var(--marker-yellow)}

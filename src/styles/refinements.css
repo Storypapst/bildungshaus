@@ -19,3 +19,13 @@ html{scrollbar-color:var(--scrollbar-thumb) transparent;accent-color:var(--stron
 .chapter-nav a:hover .chapter-label,.chapter-nav a:focus-visible .chapter-label{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){[data-sc-in],[data-sc-stagger]>*{opacity:1!important;transform:none!important;transition:none!important}.chapter-dot{transition:none}}
 @media print{[data-sc-in],[data-sc-stagger]>*{opacity:1!important;transform:none!important}}
+
+/* Each chapter marker follows the surface directly behind it. */
+.chapter-nav a[data-over-dark="true"] .chapter-dot{background:var(--on-blue-soft)}
+.chapter-nav a.active[data-over-dark="true"] .chapter-dot{background:var(--on-blue)}
+
+/* The growing plants accompany the module list in the right column. */
+.module-details{min-width:0}
+.module-growth-art{width:260px;max-width:65%;margin:40px auto 0;mix-blend-mode:multiply}
+.dark .module-growth-art{mix-blend-mode:normal;border-radius:8px}
+@media(max-width:700px){.module-details{margin-top:32px}.module-growth-art{width:180px;margin:28px auto 0}}

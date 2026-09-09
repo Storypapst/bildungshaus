@@ -1,3 +1,4 @@
+import MediaTrial from './MediaTrial'
 import ReaderArtwork, {readerArtworkMap} from './ReaderArtwork'
 import Markdown from 'react-markdown'
 import {ReaderVisual, readerVisualFor} from './ReaderVisuals'
@@ -22,6 +23,6 @@ export default function Reader({id,returnHash='#bibliothek',fromGraph=false,sele
  p:({children,node})=>{const source=doc.body.slice(node?.position?.start.offset,node?.position?.end.offset);const visual=readerVisualFor(id,source);return <><p>{children}</p>{visual&&<ReaderVisual kind={visual}/>}</>},
  table:({children,node})=>{const before=doc.body.slice(0,node?.position?.start.offset);const heading=before.match(/^## (.+)$/gm)?.at(-1)?.replace(/^## /,'')||'Vergleich';return <figure className="reader-table"><figcaption>{heading}: im Vergleich</figcaption><p className="reader-table-hint">Die Spalten lassen sich auf kleinen Bildschirmen seitlich verschieben.</p><div className="reader-table-scroll" tabIndex={0} role="region" aria-label={`Vergleich: ${heading}`}><table>{children}</table></div></figure>},
  th:({children})=><th scope="col">{children}</th>,
- h2:({children})=><><h2>{children}</h2>{diagram&&String(children)===diagram.afterHeading&&<ArticleDiagram diagram={diagram}/>}</>
+ h2:({children})=><><h2>{children}</h2>{id==='P18'&&String(children)==='Was wir zuerst erproben'&&<MediaTrial/>}{diagram&&String(children)===diagram.afterHeading&&<ArticleDiagram diagram={diagram}/>}</>
  }}>{doc.body}</Markdown></article>{fromGraph&&related.length>0&&<aside className="reader-related"><h2>Angrenzende Gedanken</h2><ul>{related.map(n=><li key={n.id}><a href={`#lesen/${n.documentId}`}>{n.title} <ArrowUpRight aria-hidden="true"/></a><p>{n.summary}</p></li>)}</ul></aside>}<a href="#bibliothek">Alle Synthesen</a></main>
 }

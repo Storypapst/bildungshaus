@@ -1,0 +1,17 @@
+.longform .experience-flow{margin:3rem 0 4rem}
+.longform .experience-flow figcaption h3{margin:.5rem 0 1rem;font-size:clamp(1.5rem,3vw,2rem)}
+.longform .experience-flow figcaption p{margin:0 0 1.7rem}
+.experience-flow-art{display:block;width:min(100%,850px);margin:auto}
+.experience-flow-art img{display:block;width:100%;height:auto;border-radius:.2rem}
+.longform .experience-flow .experience-flow-hint{font-size:.875rem;color:var(--muted-foreground);text-align:center;margin:.6rem 0 1.5rem}
+.experience-flow-details{border-block:1px solid var(--border);padding:1rem 0}
+.experience-flow-details summary{cursor:pointer;font-weight:600;padding:.4rem 0}
+.longform .experience-flow-details ol{padding-left:1.8rem;margin:1.5rem 0}
+.longform .experience-flow-details li{padding-left:.4rem;margin:0 0 1.5rem}
+.longform .experience-flow-details h4{font-size:1.1rem;margin:0 0 .35rem}
+.longform .experience-flow-details p{font-size:1rem;margin:0;line-height:1.65}
+.experience-flow-return{padding:1.7rem 0 1rem}
+.experience-flow-return strong{font-family:Kalam,cursive;font-size:clamp(1.4rem,3vw,1.9rem);color:var(--foreground)}
+.longform .experience-flow-return p{font-size:1.1rem;margin:.7rem 0}
+.longform .experience-flow .experience-flow-note{font-size:.9rem;color:var(--muted-foreground);line-height:1.6}
+@media(max-width:600px){.longform .experience-flow{margin:2rem 0}.experience-flow-details summary{line-height:1.5}}

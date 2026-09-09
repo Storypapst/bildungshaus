@@ -12,9 +12,14 @@
  --palette-control:#7d8794; --palette-control-dark:#8f99a6;
  --palette-link-dark:#b7cce5; --palette-orange-paper:#fbf0e9; --palette-orange-night:#322720;
  --palette-note:#fff4cf; --palette-note-dark:#393428;
+ --marker-pink:rgb(255 69 139 / 28%); --marker-yellow:rgb(237 202 0 / 34%);
  --note-paper:var(--palette-note); --note-ink:var(--palette-ink);
  --palette-red:#b82b35; --palette-red-light:#ff9c9c;
- --background:var(--palette-canvas); --foreground:var(--palette-ink);
+ --palette-chalk:#eeede9; --palette-stone:#deded7; --palette-mist:#d6dcd9;
+ --palette-slate-surface:#3e4b4a; --palette-night-stone:#292b28; --palette-night-mist:#272e2c;
+ --surface-page:var(--palette-chalk); --surface-stone:var(--palette-stone); --surface-mist:var(--palette-mist);
+ --surface-deep:var(--palette-slate-surface);
+ --background:var(--surface-page); --foreground:var(--palette-ink);
  --card:var(--palette-white); --card-foreground:var(--foreground);
  --popover:var(--card); --popover-foreground:var(--foreground);
  --primary:var(--palette-action); --primary-foreground:var(--palette-white);
@@ -49,7 +54,8 @@
 }
 .dark {
  --note-paper:var(--palette-note-dark); --note-ink:var(--palette-night-text);
- --background:var(--palette-night); --foreground:var(--palette-night-text);
+ --surface-page:var(--palette-night); --surface-stone:var(--palette-night-stone); --surface-mist:var(--palette-night-mist);
+ --background:var(--surface-page); --foreground:var(--palette-night-text);
  --card:var(--palette-night-card); --secondary:var(--palette-navy-dark);
  --muted:var(--palette-night-muted); --muted-foreground:var(--palette-night-soft);
  --accent:var(--palette-blue-dark); --border:var(--palette-night-border);

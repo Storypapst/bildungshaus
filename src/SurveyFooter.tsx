@@ -1,0 +1,17 @@
+import {useState} from 'react'
+import {ArrowUpRight, ChevronDown, MessageCircle, ArrowRight} from 'lucide-react'
+import './SurveyFooter.css'
+import {Button} from './components/ui/button'
+const roles=[
+ {id:'cmtrf0rhf000d01n1o43zisns',name:'Eltern',description:'Betreuung und Zusammenarbeit aus Familiensicht.'},
+ {id:'cmtrf0s2i000e01n1uecyi500',name:'Fachkräfte',description:'Einarbeitung, Unterstützung und Mitgestaltung im Alltag.'},
+ {id:'cmtrf0so4000f01n1qep85los',name:'Geschäftsführung',description:'Verantwortung und Abläufe im Haus und beim Träger.'},
+ {id:'cmtrf0tsc000h01n1ynpsx74g',name:'Elternvorstand',description:'Aufgaben und Zusammenarbeit aus Vorstandssicht.'},
+ {id:'cmtrf0t8q000g01n1tov6vp4m',name:'Kinder-Perspektive',description:'Die Sicht der Kinder mit Begleitung durch Erwachsene.'},
+]
+export default function SurveyFooter(){
+ const [role,setRole]=useState(roles[0])
+ const [started,setStarted]=useState(false)
+ const url=`https://umfrage.dreambau.com/s/${role.id}`
+ return <section id="kontakt" className="survey-footer section-pad"><div className="page-width"><div className="survey-footer-grid"><div className="survey-footer-copy"><p className="eyebrow">Eure Erfahrung zählt</p><h2>Wie ist es<br/>bei euch?</h2><p>Was gelingt im Alltag? Wo fehlt Unterstützung? Wir wollen die Sicht von Familien, Teams und Trägern zusammenbringen. Wählt eure Perspektive für den passenden Fragebogen.</p><label htmlFor="survey-role">Aus welcher Perspektive antwortest du?</label><div className="survey-role-control"><select id="survey-role" value={role.id} onChange={e=>{setRole(roles.find(r=>r.id===e.target.value)!);setStarted(false)}}>{roles.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select><ChevronDown aria-hidden="true"/></div><p className="survey-role-description">{role.description}</p><a href={url} target="_blank" rel="noreferrer">Fragebogen in eigenem Fenster öffnen <ArrowUpRight aria-hidden="true"/></a></div><div className={`survey-frame${started?' is-started':''}`}>{!started?<div className="survey-welcome"><span className="survey-draft-label">Fragebogen · Testfassung</span><MessageCircle className="survey-welcome-icon" aria-hidden="true"/><h3>Deine Perspektive: {role.name}</h3><p>{role.description}</p><div className="survey-question-preview"><span>Darum geht es</span><p>Was läuft gut?<br/>Was macht den Alltag schwer?<br/>Was würde wirklich helfen?</p></div><p className="survey-test-note">Wir prüfen gerade die Fragen. Bitte verwende in dieser Testfassung nur erfundene Angaben. Antworten können bereits während des Ausfüllens gespeichert werden.</p><Button onClick={()=>setStarted(true)}>Testfragebogen öffnen <ArrowRight aria-hidden="true"/></Button></div>:<><div className="survey-frame-heading"><span>{role.name} · Testfassung</span><button type="button" onClick={()=>setStarted(false)}>Zur Übersicht</button></div><iframe key={role.id} src={url} title={`Fragebogen für ${role.name}`} loading="lazy" referrerPolicy="strict-origin-when-cross-origin"/></>}</div></div><details className="survey-data-contact"><summary>Datenverwaltung und Kontakt</summary><p>Technische Datenverwaltung: Greyt.IT UG (haftungsbeschränkt), Frank Gerhardt. Kontakt: <a href="mailto:fg@greyt.me">fg@greyt.me</a>.</p></details><footer className="survey-footer-bottom"><span>Bildungshaus weWeit</span><a href="#lesen/whitepaper">Das Konzept</a><a href="#lesen/original">Die erste Konzeptfassung</a></footer></div></section>
+}

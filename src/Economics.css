@@ -11,3 +11,16 @@
 }
 
 .dark .economics-layout [data-slot=slider-track] { background: var(--slider-track); }
+
+/* Read the premise, try the calculation, then explore its consequences. */
+.economic-section{background:var(--surface-stone)}
+.economic-heading{max-width:900px;margin-bottom:32px}
+.economic-heading h2{margin:0 0 20px}
+.economic-heading p{font-size:20px;max-width:56ch;color:var(--muted-foreground);margin:0}
+.economic-calculator{background:var(--card);border-radius:var(--radius);padding:32px 40px;box-shadow:var(--elevation-1)}
+.economic-calculator .economics-layout{padding:32px 0 0;gap:64px;align-items:start}
+.economic-calculator .economics-result output{font-size:clamp(44px,5vw,70px)}
+.economic-section .quality-cycle{margin-top:64px}
+@media(max-width:700px){.economic-heading p{font-size:18px}.economic-calculator{padding:24px 22px}.economic-calculator .economics-layout{gap:32px}.economic-heading h2{font-size:37px}}
+.economic-calculator .economics-result{border:0;border-left:1px solid var(--border);border-radius:0;box-shadow:none;background:transparent;padding:0 0 0 36px}
+@media(max-width:700px){.economic-calculator .economics-result{border-left:0;border-top:1px solid var(--border);padding:28px 0 0}}
