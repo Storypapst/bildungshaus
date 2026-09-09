@@ -5,6 +5,17 @@ Die redaktionelle Quelle ist der geroutete Bildungshaus Core. Originalkonzept un
 chronologische Eingaben bleiben dort unverändert. Dieses Repository enthält daraus
 abgeleitete Veröffentlichungstexte, keine vertraulichen Umfrageantworten.
 
+## Designsystem
+
+**[Zur Designsystem-Dokumentation](docs/DESIGN-SYSTEM.md)** — Farben, Typografie,
+Komponenten und Gestaltungsregeln für weWeit.
+
+Die interaktive **[Designbibliothek](http://127.0.0.1:5182/bildungshaus/design-system.html)**
+zeigt die echten Komponenten mit Hell-/Dunkelansicht und dem Rechner. Zum Öffnen
+zuerst den lokalen Entwicklungsserver starten (siehe unten). Ihr
+[HTML-Einstieg](design-system.html), die [Ansicht](src/DesignSystem.tsx) und alle
+Styles sind im Repository enthalten; GitHub selbst führt die React-Ansicht nicht aus.
+
 ## Auf einem anderen Computer bearbeiten
 
 Voraussetzungen: Git und Node.js 22.12 oder neuer. Das Repository ist der

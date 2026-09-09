@@ -1,5 +1,35 @@
 # weWeit Designsystem
 
+Diese Datei ist der Einstieg zur gemeinsamen Gestaltung. Die interaktive
+[Designbibliothek lokal öffnen](http://127.0.0.1:5182/bildungshaus/design-system.html)
+verwendet denselben Code wie die Website. Sie wird mit dem unten beschriebenen
+Entwicklungsserver gestartet; GitHub zeigt hier die Dokumentation und Quelldateien.
+
+## Dateien im Repository
+
+| Bestandteil | Quelle |
+| --- | --- |
+| Interaktive Bibliothek | [DesignSystem.tsx](../src/DesignSystem.tsx) · [HTML-Einstieg](../design-system.html) |
+| Farben, Abstände und Rollen | [tokens.css](../src/styles/tokens.css) |
+| Bibliothekslayout | [library.css](../src/styles/library.css) |
+| Gemeinsame Bedienelemente | [components/ui](../src/components/ui) |
+| Illustrationen | [public/images](../public/images) |
+| Browserprüfung | [verify-design-system.mjs](../scripts/verify-design-system.mjs) |
+
+## Visuelle Sprache
+
+Outfit trägt die Lesetexte, Kalam die handschriftlichen Hinweise. Ruhige Flächen
+lassen den Inhalt und die Zeichnungen wirken. Illustrationen dürfen naiv, schief
+und unterschiedlich kräftig gezeichnet sein: Buntstift, Kugelschreiber, Klebeband
+und unregelmäßige Zettel gehören zur Gestaltung. Sie erklären konkrete Situationen
+und Zusammenhänge. Text bleibt als lesbarer HTML-Inhalt zugänglich; kleine
+Bilddetails ersetzen keine notwendige Erklärung.
+
+Mobil wird die Anordnung an die Leserichtung angepasst: Zettel und Schritte
+folgen untereinander, statt einen großen Desktop-Kreis unlesbar klein zu skalieren.
+
+## Farbgrundlage
+
 Die Farbquelle ist [Amber Slate](https://21st.dev/community/themes/editor?from=amber-slate). Die tatsächlich gerenderten Referenzfarben wurden im Browser verglichen. Outfit und der Radius von 0,5 rem bleiben erhalten.
 
 ## Eine Quelle für Farben
