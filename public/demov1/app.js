@@ -397,7 +397,7 @@ function imgData(names, need){
 }
 
 const ICON = {
- gear:'<svg viewBox="0 0 30 30" aria-hidden="true"><g class="g"><path fill="currentColor" d="M13.6 3h2.8l.5 2.6 1.8.7 2.2-1.5 2 2-1.5 2.2.7 1.8 2.6.5v2.8l-2.6.5-.7 1.8 1.5 2.2-2 2-2.2-1.5-1.8.7-.5 2.6h-2.8l-.5-2.6-1.8-.7-2.2 1.5-2-2 1.5-2.2-.7-1.8L3 15.4v-2.8l2.6-.5.7-1.8-1.5-2.2 2-2 2.2 1.5 1.8-.7z"/><circle cx="15" cy="14" r="3.2" fill="var(--card)"/></g></svg>',
+ gear:'<svg viewBox="0 0 100 100" aria-hidden="true"><g class="g"><path fill="currentColor" d="m43.203 2.5234h13.598c0.67969 0 1.2422 0.51953 1.3047 1.1836l1.7305 11.613c2.7031 0.76563 5.2773 1.832 7.7344 3.2031l9.4922-7.0273c0.52734-0.39062 1.2539-0.32422 1.7031 0.125l9.6172 9.6133c0.48828 0.48828 0.50781 1.2773 0.058594 1.7891l-6.9648 9.4062c1.3633 2.4414 2.4453 5.0391 3.207 7.7305l11.676 1.7422c0.65234 0.09375 1.1211 0.65625 1.1211 1.293v13.598c0 0.67969-0.51953 1.2383-1.1836 1.3047l-11.613 1.7305c-0.76562 2.7031-1.832 5.2773-3.2031 7.7344l7.0273 9.4922c0.39063 0.52734 0.32422 1.2539-0.125 1.7031l-9.6133 9.6172c-0.48828 0.48828-1.2773 0.50781-1.7891 0.058594l-9.4062-6.9648c-2.4414 1.3633-5.0391 2.4453-7.7305 3.207l-1.7422 11.676c-0.09375 0.65234-0.65625 1.1211-1.293 1.1211h-13.598c-0.67969 0-1.2383-0.51953-1.3047-1.1836l-1.7305-11.613c-2.7031-0.76562-5.2773-1.832-7.7344-3.2031l-9.4922 7.0273c-0.52734 0.39062-1.2539 0.32422-1.7031-0.125l-9.6172-9.6133c-0.48828-0.48828-0.50781-1.2773-0.058594-1.7891l6.9648-9.4062c-1.3633-2.4414-2.4453-5.0391-3.207-7.7305l-11.676-1.7422c-0.65234-0.09375-1.1211-0.65625-1.1211-1.293v-13.598c0-0.67969 0.51953-1.2383 1.1836-1.3047l11.613-1.7305c0.76562-2.7031 1.8359-5.2773 3.207-7.7344l-7.0273-9.4922c-0.39062-0.52734-0.32422-1.2539 0.125-1.7031l9.6133-9.6172c0.48828-0.48828 1.2773-0.50781 1.7891-0.058594l9.4062 6.9648c2.4453-1.3672 5.0391-2.4453 7.7305-3.207l1.7422-11.676c0.09375-0.65234 0.65625-1.1211 1.293-1.1211zm6.7969 28.977c-10.223 0-18.504 8.2812-18.504 18.504s8.2812 18.504 18.504 18.504 18.504-8.2812 18.504-18.504-8.2812-18.504-18.504-18.504z"/></g></svg>',
  cloud:'<svg viewBox="0 0 30 30" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 22h15a5 5 0 0 0 .6-10 7 7 0 0 0-13.3-1.6A5.5 5.5 0 0 0 8 22z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M11 16h8M11 19h5"/></svg>',
  phone:'<svg viewBox="0 0 30 30" aria-hidden="true"><rect x="9" y="4" width="12" height="22" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 22h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
  house:'<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M5 26V12l10-7 10 7v14M3 26h24M12 26v-7h6v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>',
@@ -590,13 +590,47 @@ function buildVariants(list){
   return box;
 }
 
+/* Two gears that really mesh: same module m, pitch radii m*N/2, centre distance r1 + r2 plus a
+   little backlash. Gear 2 starts half a tooth off along the centre line, so teeth sit in the gaps,
+   and turns N1/N2 times as fast in the other direction (durations T and T*N2/N1). Checked offline:
+   no overlap over a full mesh cycle. */
+function gearPath(cx, cy, N, m, phase){
+  const rp = m*N/2, ro = rp + .8*m, rr = rp - .95*m, hole = rp*.4, step = 2*Math.PI/N;
+  const pt = (r, a) => (cx + r*Math.cos(a)).toFixed(2) + ' ' + (cy + r*Math.sin(a)).toFixed(2);
+  const arc = (r, a0, a1, n) => { const o = []; for (let i = 1; i <= n; i++) o.push(pt(r, a0 + (a1 - a0)*i/n)); return o; };
+  let d = 'M' + pt(rr, phase - step/2);
+  for (let k = 0; k < N; k++){
+    const c = phase + k*step;
+    d += ' L' + arc(rr, c - step/2, c - .30*step, 3).join(' L');
+    d += ' L' + pt(ro, c - .17*step) + ' L' + arc(ro, c - .17*step, c + .17*step, 4).join(' L');
+    d += ' L' + pt(rr, c + .30*step) + ' L' + arc(rr, c + .30*step, c + step/2, 3).join(' L');
+  }
+  d += ' Z M' + pt(hole, 0) + ' A' + hole + ' ' + hole + ' 0 1 0 ' + pt(hole, Math.PI) + ' A' + hole + ' ' + hole + ' 0 1 0 ' + pt(hole, 0) + ' Z';
+  return d;
+}
+function gearsSVG(){
+  const N1 = 12, N2 = 8, m = 3.4, T = 10, th = -38*Math.PI/180;
+  const c1 = [40, 57], dist = m*(N1 + N2)/2 + .8, c2 = [c1[0] + dist*Math.cos(th), c1[1] + dist*Math.sin(th)];
+  const g = (c, N, ph, cls, t) => `<g class="${cls}" style="transform-origin:${c[0].toFixed(2)}px ${c[1].toFixed(2)}px;animation-duration:${t.toFixed(3)}s"><path fill="currentColor" fill-rule="evenodd" d="${gearPath(c[0], c[1], N, m, ph)}"/></g>`;
+  return '<svg class="gears" viewBox="0 0 100 100" aria-hidden="true">' + g(c1, N1, th, 'gw1', T) + g(c2, N2, th + Math.PI + Math.PI/N2, 'gw2', T*N2/N1) + '</svg>';
+}
+ICON.gears = gearsSVG();
+
 /* ================================================================ x-ray: numbers on the image, texts in the list */
 function toggleXray(st, force){
   st.xray = force != null ? force : !st.xray;
   st.xbtn.setAttribute('aria-pressed', String(st.xray)); st.xlist.hidden = !st.xray; st.fig.classList.toggle('xray', st.xray);
   if (st.xray && st.open) closeDetail(st, true);
   drawXray(st); requestLayout();
-  if (st.xray){ const r = st.fig.getBoundingClientRect(); if (r.top < 60) scrollToY(scrollY + r.top - 70); }
+  if (st.xray) setTimeout(() => {
+    // Show the numbered list completely, but never push the top of the picture out of view.
+    if (!st.xray) return;
+    const f = st.fig.getBoundingClientRect(), l = st.xlist.getBoundingClientRect(), top = 70, bottom = innerHeight - 12;
+    let dy = 0;
+    if (f.top < top - 10) dy = f.top - top;
+    else if (l.bottom > bottom) dy = Math.min(l.bottom - bottom, f.top - top);
+    if (Math.abs(dy) > 4) scrollToY(scrollY + dy);
+  }, 60);
 }
 function markX(st, n, on){
   st.layer.querySelectorAll(`.xr[data-n="${n}"]`).forEach(e => e.classList.toggle('hl', on));
@@ -627,7 +661,7 @@ function drawXray(st){
     wire(p, hub, it.dir === 'out');
     if (it.n){ const n = el('div', 'xnode xr', String(it.n)); n.dataset.n = it.n; nodes.push(place(n, p)); }
   });
-  const hb = el('div', 'xicon xr', ICON.gear + (hubN ? `<span class="xn">${hubN}</span>` : '')); if (hubN) hb.dataset.n = hubN; icons.push(place(hb, hub));
+  const hb = el('div', 'xicon xr xgears', ICON.gears + (hubN ? `<span class="xn">${hubN}</span>` : '')); if (hubN) hb.dataset.n = hubN; icons.push(place(hb, hub));
   if (ext){ const eb = el('div', 'xicon xr', (ICON[X.ext.icon] || ICON.cloud) + (extN ? `<span class="xn">${extN}</span>` : '')); if (extN) eb.dataset.n = extN; icons.push(place(eb, ext)); }
   // numbers never overlap each other or the icons
   const placed = icons.map(n => inflate(rect(n), 2)); const fb = rect(st.fig);

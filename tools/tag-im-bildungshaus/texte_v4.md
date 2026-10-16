@@ -798,6 +798,15 @@ Kindersicherheit an motorisierten Fenstern. Zugluft in der Krippe. Kosten pro Ra
 - Frühe Versionen mit zugekaufter offener Hardware bauen, etwa von Pollen Robotics (Hugging Face): Reachy Mini hat Frank schon, dazu der neue Microduck (laut Gigazine 399 US-Dollar, SDK auf GitHub). Für das Lab zum Ausprobieren gut, im Gruppenraum gilt weiter: keine Kamera.
 - Sponsoren: Gut umgesetzt, kann das finanzstarke Sponsoren anziehen, die zeigen wollen, dass Technik sinnvolle Entwicklung möglich macht. Hugging Face selbst wäre ein naheliegender Gesprächspartner.
 
+**Schlussbild neu denken (Franks Notiz vom 16.10., für später, noch nicht umsetzen):**
+- Das Schlussbild zeigt das Prinzip noch nicht. Grundfrage, die es beantworten soll: Welche Kompromisse ist die Industriegesellschaft in der Bildung eingegangen? Ein Erwachsener für 24 Kinder ist ein ökonomisches Grundprinzip, kein pädagogisches.
+- Kernthese: von der Top-down-Hierarchie zur Bottom-up-Struktur, getragen von klugen Vernetzungswerkzeugen, die Wirkung messen. Kein Hippie-Gedanke, sondern das Modell für die weitere Bildung.
+- Neugier als Ressource: Peer-Kultur würgt Neugier ab (cool sein, nicht anecken, Fehler vermeiden). Frank erinnert ein Zitat, vermutlich Gordon Neufeld, dass Elite-Unis in den USA zunehmend Kinder aus dem Homeschooling aufnehmen, weil ihre Neugier höher ist. **Quelle und Wortlaut prüfen, bevor es auf die Seite kommt.** Es fehlt an Kontextualisieren und an Werkzeugen, mit denen Kinder und Erwachsene solche Signale teilen.
+- Zweites Paradigma: Malleable Software, also anpassbare Software. Beispiele: DHH mit Omarchy in kurzer Zeit; ein Projekt, das in wenigen Wochen die Adobe Suite nachbaut (**Projekt und Stand prüfen**). Software ist billig geworden, wertvoll ist, was sich anpassen lässt. Bezug zu ORISO für die Caritas: für morgen gebaut, anpassbar.
+- Eltern bestimmen mit, wie viel sie wollen: mehr Chatbot, mehr Einblick oder weniger, auf derselben Plattform, mit wenig Daten.
+- Decision Models: LLMs verstehen uns, sind aber keine guten Automatisierer (nicht deterministisch, erfinden Dinge). Mit offenen Werkzeugen für feste Entscheidungsregeln lässt sich jetzt verlässlich automatisieren.
+- Botschaft der Grafik: Das Härteste ist, kleinen Kindern etwas beizubringen; das Publikum ist ehrlich und sehr verschieden. Wer dort trägt, kann in Monaten statt Jahrzehnten skalieren: Pflege, Büros, Unternehmen. „Wohnen“ raus, das passt nicht. Große Träger wie die Caritas haben tausende Kitas.
+
 ---
 
 ## 15 Abgleich: Franks Punkte → wo umgesetzt
