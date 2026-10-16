@@ -404,7 +404,7 @@ function setHover(st, k, e){
 /* ================================================================ detail panel ("Nahaufnahme") */
 let openSt = null;
 function openDetail(st, k){
-  cancelAnimationFrame(pAnim);
+  clearTimeout(settleT); cancelAnimationFrame(pAnim);
   if (openSt && openSt !== st) closeDetail(openSt, true);
   const o = st.hots[k]; const h = o.h; const D = h.d ? DETAILS[h.d] : null;
   if (!h.note && !D) return;
@@ -814,7 +814,8 @@ function goNext(){
 $$('.play').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); goNext(); }));
 let nextRaf = 0;
 addEventListener('scroll', () => { if (!nextRaf) nextRaf = requestAnimationFrame(() => { nextRaf = 0; updateNextUI(); }); }, {passive:true});
-['wheel', 'touchstart'].forEach(ev => addEventListener(ev, () => cancelAnimationFrame(pAnim), {passive:true}));
+// Any own scrolling stops the Weiter animation and its late correction.
+['wheel', 'touchstart'].forEach(ev => addEventListener(ev, () => { clearTimeout(settleT); cancelAnimationFrame(pAnim); }, {passive:true}));
 addEventListener('keydown', e => { if (e.key === 'Escape' && openSt) closeDetail(openSt); });
 
 /* ================================================================ init */
