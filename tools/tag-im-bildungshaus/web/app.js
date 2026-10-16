@@ -262,9 +262,10 @@ function toggleXray(st, force){
     // Show the numbered list completely, but never push the top of the picture out of view.
     if (!st.xray) return;
     const f = st.fig.getBoundingClientRect(), l = st.xlist.getBoundingClientRect(), top = 70, bottom = innerHeight - 12;
+    const over = l.bottom - bottom;   // > 0: the list is cut off at the bottom
     let dy = 0;
-    if (f.top < top - 10) dy = f.top - top;
-    else if (l.bottom > bottom) dy = Math.min(l.bottom - bottom, f.top - top);
+    if (over > 0) dy = Math.min(over, Math.max(0, f.top));            // list first, picture top stays on screen
+    else if (f.top < top - 10) dy = Math.max(f.top - top, over);      // move up, but keep the list inside
     if (Math.abs(dy) > 4) scrollToY(scrollY + dy);
   }, 60);
 }
