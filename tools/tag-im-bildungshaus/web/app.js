@@ -404,7 +404,7 @@ function setHover(st, k, e){
 /* ================================================================ detail panel ("Nahaufnahme") */
 let openSt = null;
 function openDetail(st, k){
-  stop();
+  cancelAnimationFrame(pAnim);
   if (openSt && openSt !== st) closeDetail(openSt, true);
   const o = st.hots[k]; const h = o.h; const D = h.d ? DETAILS[h.d] : null;
   if (!h.note && !D) return;
@@ -434,11 +434,12 @@ function openDetail(st, k){
     nav.querySelector('.prev').addEventListener('click', () => showStep(st, st.open.step - 1));
     nav.querySelector('.next').addEventListener('click', () => { const n = D.steps.length; showStep(st, st.open.step + 1 < n ? st.open.step + 1 : 0); });
     nav.querySelector('.auto').addEventListener('click', e => toggleAuto(st, e.currentTarget));
-    det.addEventListener('keydown', e => {
+    // One handler per panel: det is reused, so assign instead of adding a listener on every open.
+    det.onkeydown = e => {
       if (!st.open || !st.open.stage) return;
       if (e.key === 'ArrowRight'){ e.preventDefault(); showStep(st, Math.min(st.open.step + 1, D.steps.length - 1)); }
       if (e.key === 'ArrowLeft'){ e.preventDefault(); showStep(st, Math.max(st.open.step - 1, 0)); }
-    });
+    };
     showStep(st, st.open.step, true);
   }
   openSt = st;
