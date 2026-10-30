@@ -2343,30 +2343,63 @@ WG_CACHE = {}
 
 
 def winter_glass(day="morgen"):
-    """Window picture for February, like garden_glass in lib: light snow, a bare hedge, bare trees, a pale sky."""
+    """Window picture for February, like garden_glass in lib: snow on the ground, a bare hedge, a pale far tree line
+    and two bare trees (trunk, two limbs, a twiggy crown) against a pale sky. Every pane gets its own tree positions."""
     if day in WG_CACHE:
         return WG_CACHE[day]
-    sky = {"morgen": (0.78, 0.84, 0.92), "nachmittag": (0.96, 0.82, 0.68)}[day]
+    sky_lo, sky_hi, far, hedge, bark = {
+        "morgen": ((0.93, 0.90, 0.86), (0.76, 0.83, 0.92), (0.74, 0.74, 0.78), (0.50, 0.45, 0.42), (0.34, 0.30, 0.28)),
+        "nachmittag": ((0.99, 0.87, 0.74), (0.84, 0.84, 0.90), (0.76, 0.72, 0.72), (0.50, 0.44, 0.40), (0.34, 0.29, 0.26)),
+        "abend": ((0.97, 0.72, 0.58), (0.64, 0.64, 0.78), (0.62, 0.56, 0.60), (0.40, 0.34, 0.34), (0.27, 0.22, 0.22))}[day]
     m = bpy.data.materials.new("Winterfenster")
     nb = NB(m)
+    M = nb.math
     gen = nb.coord("Generated")
     co = nb.sep(gen)
-    z = nb.math("ADD", co["Z"], nb.math("MULTIPLY", nb.math("SUBTRACT", nb.noise(gen, 3.2, 2.0, 0.4), 0.5), 0.28))
-    col = nb.ramp(z, [(0.0, (0.74, 0.79, 0.86)), (0.2, (0.93, 0.95, 0.97)), (0.27, (0.40, 0.36, 0.32)),
-                      (0.38, (0.52, 0.48, 0.44)), (0.48, (0.74, 0.76, 0.80)), (0.7, sky)])
-    # bare trees: wobbly trunks thinning upwards, a twiggy crown around each
-    xx = nb.math("ADD", co["X"], nb.math("MULTIPLY", nb.math("SUBTRACT", nb.noise(gen, 7.0, 3.0, 0.5), 0.5), 0.12))
-    fr = nb.math("ABSOLUTE", nb.math("SUBTRACT", nb.math("FRACT", nb.math("MULTIPLY", xx, 1.7)), 0.5))
-    trunk = nb.math("MULTIPLY", nb.math("LESS_THAN", fr, nb.math("MULTIPLY", nb.math("SUBTRACT", 1.15, co["Z"]), 0.05)),
-                    nb.math("LESS_THAN", co["Z"], 0.84))
-    band = nb.math("MULTIPLY", nb.math("GREATER_THAN", co["Z"], 0.46), nb.math("LESS_THAN", co["Z"], 0.9))
-    crown = nb.math("MULTIPLY", band, nb.math("LESS_THAN", fr, 0.3))
-    twig = nb.math("MULTIPLY", crown, nb.math("GREATER_THAN", nb.noise(gen, 24.0, 8.0, 0.75), 0.54))
-    tree = nb.math("MAXIMUM", trunk, nb.math("MULTIPLY", twig, 0.75))
-    out = nb.mix(tree, col, (0.27, 0.23, 0.20))
+    X, Z = co["X"], co["Z"]
+    rnd = nb.node("ShaderNodeObjectInfo").outputs["Random"]
+
+    def wave(scale, amp, base):
+        return M("ADD", base, M("MULTIPLY", M("SUBTRACT", nb.noise(gen, scale, 2.0, 0.5), 0.5), amp))
+
+    hz = wave(2.2, 0.05, 0.30)  # horizon
+    col = nb.ramp(Z, [(0.25, sky_lo), (1.0, sky_hi)])
+    col = nb.mix(M("LESS_THAN", Z, M("ADD", hz, wave(6.0, 0.10, 0.11))), col, far)
+    col = nb.mix(M("LESS_THAN", Z, M("ADD", hz, wave(16.0, 0.05, 0.035))), col, hedge)
+    snow = nb.ramp(Z, [(0.0, (0.82, 0.87, 0.94)), (0.3, (0.97, 0.97, 0.99))])
+    col = nb.mix(M("LESS_THAN", Z, M("SUBTRACT", hz, 0.004)), col, snow)
+    tree = None
+    for i, (x0, sgn) in enumerate(((0.26, 1.0), (0.73, -1.0))):
+        xc = M("ADD", x0, M("MULTIPLY", M("SUBTRACT", rnd, 0.5), 0.2 * sgn))
+        dx = M("SUBTRACT", M("SUBTRACT", X, xc), M("MULTIPLY", M("SINE", M("ADD", M("MULTIPLY", Z, 16.0), i * 2.0)), 0.008))
+        adx = M("ABSOLUTE", dx)
+        h = M("SUBTRACT", Z, hz)  # height above the horizon
+        trunk = M("MULTIPLY", M("LESS_THAN", adx, M("SUBTRACT", 0.02, M("MULTIPLY", h, 0.03))),
+                  M("MULTIPLY", M("GREATER_THAN", h, -0.03), M("LESS_THAN", h, 0.5)))
+        limbs = None
+        for k in (-1.0, 1.0):
+            off = M("SUBTRACT", dx, M("MULTIPLY", M("SUBTRACT", h, 0.22), 0.5 * k))
+            lm = M("MULTIPLY", M("LESS_THAN", M("ABSOLUTE", off), 0.009),
+                   M("MULTIPLY", M("GREATER_THAN", h, 0.22), M("LESS_THAN", h, 0.5)))
+            limbs = lm if limbs is None else M("MAXIMUM", limbs, lm)
+        # crown: a web of fine twigs (Voronoi cell edges, stretched upwards) inside an ellipse, thinning outwards
+        r2 = M("ADD", M("POWER", M("DIVIDE", dx, 0.21), 2.0), M("POWER", M("DIVIDE", M("SUBTRACT", h, 0.47), 0.33), 2.0))
+        cv = nb.node("ShaderNodeCombineXYZ")
+        nb._in(cv.inputs[0], M("ADD", M("MULTIPLY", X, 15.0), M("ADD", M("MULTIPLY", rnd, 9.0), i * 4.7)))
+        nb._in(cv.inputs[1], M("MULTIPLY", Z, 5.0))
+        vor = nb.node("ShaderNodeTexVoronoi", feature="DISTANCE_TO_EDGE")
+        nb.L.new(cv.outputs[0], vor.inputs["Vector"])
+        vor.inputs["Scale"].default_value = 1.0
+        twig = M("MULTIPLY", M("LESS_THAN", vor.outputs["Distance"], M("MULTIPLY", M("SUBTRACT", 1.0, r2), 0.045)),
+                 M("LESS_THAN", r2, 1.0))
+        # break the closed cells into loose twigs
+        twig = M("MULTIPLY", twig, M("GREATER_THAN", nb.noise(gen, 26.0 + i * 3.0, 1.0, 0.5), 0.47))
+        t = M("MAXIMUM", M("MAXIMUM", trunk, limbs), M("MULTIPLY", twig, 0.8))
+        tree = t if tree is None else M("MAXIMUM", tree, t)
+    out = nb.mix(tree, col, bark)
     nb.color(out)
     nb.L.new(out, nb.bsdf.inputs["Emission Color"])
-    nb.bsdf.inputs["Emission Strength"].default_value = 0.7
+    nb.bsdf.inputs["Emission Strength"].default_value = 0.5 if day == "abend" else 0.7
     nb.bsdf.inputs["Roughness"].default_value = 0.06
     nb.bsdf.inputs["Coat Weight"].default_value = 0.6
     WG_CACHE[day] = m
@@ -2459,7 +2492,7 @@ def piazza_room(v):
     late = key in ("1615", "abholung")
     open_ = v == "745"
     room_base(W, D)
-    wg = winter_glass("nachmittag" if late else "morgen")
+    wg = winter_glass("abend" if key == "1615" else ("nachmittag" if late else "morgen"))
     wins = [(0.75, 2.25), (3.05, 4.5)]
     z0w, z1w = 0.5, 2.36
     wall("x", D, 0.0, W, h=H, openings=[(a, b, z0w, z1w, "open") for a, b in wins], glass=wg)
@@ -2502,7 +2535,7 @@ def piazza_room(v):
     # the wish box hangs at adult height (it is for the parents), high enough to show above the end of the cabinets
     wb = wunschkasten(F, 3.80, 1.30)
     taf = magnettafel(F, 3.97, 4.79, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
-                      week=PIAZZA_WEEK[key], sosse=late, lamp=7.0 if key == "1615" else 0.0)
+                      week=PIAZZA_WEEK[key], sosse=late, lamp=4.0 if key == "1615" else 0.0)
     A("schrank_mila", *cab[1]["door"])
     A("mila_fach", *cab[1]["door"])
     A("planwuerfel", *cab[1]["plan"])
@@ -2517,7 +2550,7 @@ def piazza_room(v):
     # reading cave in the north-east corner, one plant on the floor (the other plants live in the entrance room)
     hoehle_ecke(4.62, 5.77, D, depth=1.0)
     plant(5.52, 1.62, 0, 1.1, pot="basket", kind="monstera", hid="pflanze")
-    bunting((0.03, 2.0, 2.42), (2.6, D - 0.02, 2.42), sag=0.3)
+    bunting((0.04, 0.95, 2.45), (0.04, 3.6, 2.45), sag=0.22)  # along the west wall, clear of windows and board
     # play corner at the front right
     rug_rect(4.35, 0.3, 5.6, 1.25, (0.86, 0.78, 0.64), (0.78, 0.70, 0.56), "spielecke", "Y", 6.0)
     for k in range(5):
@@ -2598,13 +2631,14 @@ def build_piazza(v):
         stool(sp.x, sp.y, 0.32, OCHRE, "maren")
         maren(sp.x, sp.y, 165 + 180, "sitc", seat=0.32, look=pm["head"])
     else:
-        # 16:15: the last children are gone; Maren at the magnet board speaks her note into the phone
-        time, lcfg = "nachmittag", dict(sun_el=8.0, strength=3.4)
-        mp = Vector((0.78, 4.22, 0.0))
-        fc = -35
+        # 16:15: the last children are gone. Maren leans against the wall right beside the magnet board and speaks
+        # her note into the phone. Low, warm evening light; the board's picture light is on.
+        time, lcfg = "nachmittag", dict(sun_el=7.0, strength=3.0, fill=0.32, world=0.2)
+        mp = Vector((0.5, 4.6, 0.0))
+        fc = -78
         f = fvec(fc)
-        hand = mp + f * 0.16 + f.cross(UP) * 0.05 + Vector((0, 0, 1.22))
-        maren(mp.x, mp.y, fc, "stand", acc=("phone",), arms={"r": hand}, look=(mp.x + 1.2, mp.y - 0.4, 1.2))
+        hand = mp + f * 0.16 + f.cross(UP) * 0.06 + Vector((0, 0, 1.22))
+        maren(mp.x, mp.y, fc, "stand", acc=("phone",), arms={"r": hand}, look=(1.6, 3.4, 1.25))
     # 745z: the CO2 box and the closed window before unlocking; 745: the open window with its chain drives
     fen = (dict(loc=(4.05, 2.75, 1.3), target=(3.35, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
            dict(loc=(3.2, 2.45, 1.42), target=(3.62, D, 1.64), lens=22, fstop=8.0))
