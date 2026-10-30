@@ -1815,7 +1815,7 @@ def build_abholung(v):
     pj = who("jonas", jp.x, jp.y, 300, "hold", hid="jonas", acc=("phone",), shoes=COVERS,
              look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
     # Lotte comes over from the school next door, through the entrance room
-    who("lotte", lp.x, lp.y, -10, "wave", hid="lotte", kind="teen14", shoes=(0.80, 0.80, 0.78), look=(2.0, 2.4, 1.0))
+    who("lotte", lp.x, lp.y, -10, "wave", hid="lotte", kind="teen14", shoes=SOCKS[3], look=(2.0, 2.4, 1.0))
     # Ayla posts a card into the wish box with her left hand and turns to her son; the box stays in view to her left
     wb = Vector(P_["wb"]["slot"])
     ap = Vector((0.62, 3.72, 0.0))
@@ -2652,7 +2652,7 @@ def build_piazza(v):
         "fenster": fen,
         "hubel": dict(loc=tuple(C + fvec(330) * 1.8 + Vector((0, 0, 1.0))), target=tuple(C + fvec(70) * 0.18 + Vector((0, 0, 0.37))),
                       lens=34, fstop=4.5),
-        "schrank": dict(loc=(2.0, 2.8, 1.12), target=(0.0, 3.22, 0.9), lens=20, fstop=6.0),
+        "schrank": dict(loc=(2.15, 3.3, 1.15), target=(0.0, 3.12, 0.92), lens=20, fstop=6.0),  # behind Maren's stool
         "offen": dict(loc=(1.9, 2.05, 1.0), target=(0.22, 2.56, 0.74), lens=21, fstop=5.6, name="schrank_offen"),
     }
     return dict(W=W, D=D, time=time, pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1), light=lcfg)
