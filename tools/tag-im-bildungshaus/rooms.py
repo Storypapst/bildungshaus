@@ -913,7 +913,7 @@ def garderobe(F, a0, kids, w=0.304, depth=0.48, h=1.55, hid="schrank", open_k=No
             out["fach_hoch"] = tuple(F.p(uc, depth * 0.45, 0.98))
             # treasure compartment at the top: a folded note and a small toy from home
             panel(*F.bx(ui0, 0.012, 1.30, ui1, depth - 0.01, 1.315), hid, name="Schatzfach")
-            panel(*F.bx(ui0, depth - 0.03, 1.315, ui1, depth - 0.01, 1.345), hid, name="Schatzfach")
+            panel(*F.bx(ui0, depth - 0.03, 1.315, ui1, depth - 0.01, 1.327), hid, name="Schatzfach")
             # a folded note standing like a little tent, a heart drawn on it, and a small wooden toy car from home
             for sd in (-1, 1):
                 nt = box(-0.045, -0.0012, -0.032, 0.045, 0.0012, 0.032, PAPER, hid, name="Zettel")
@@ -4206,7 +4206,7 @@ def build_piazza(v):
             pouf(p.x, p.y, 0.19, col, "kinder")
         ring = [(345, 8), (15, 1), (42, 2), (136, 4), (194, 0), (231, 5), (268, 7)]
         for k, (a, i) in enumerate(ring):
-            if SHOT == "hubel" and a == 345:  # would sit right in front of the close-up camera
+            if SHOT == "hubel" and a in (345, 15, 42, 231, 268):  # in front of or cut by the close-up frame
                 continue
             p = C + fvec(a) * 1.05
             pouf(p.x, p.y, 0.19, [SAGE, OCHRE, ROSE, SKY][k % 4], "kinder")
@@ -4243,10 +4243,10 @@ def build_piazza(v):
            dict(loc=(2.95, 2.45, 1.42), target=(3.37, D, 1.64), lens=22, fstop=8.0))
     shots = {
         "fenster": fen,
-        "hubel": dict(loc=tuple(C + fvec(330) * 1.8 + Vector((0, 0, 1.0))), target=tuple(C + fvec(70) * 0.18 + Vector((0, 0, 0.37))),
-                      lens=34, fstop=4.5),
+        "hubel": dict(loc=tuple(C + fvec(325) * 2.0 + Vector((0, 0, 1.05))),
+                      target=tuple(C + fvec(70) * 0.16 + Vector((0, 0, 0.34))), lens=36, fstop=5.0),
         "schrank": dict(loc=(2.15, 3.3, 1.15), target=(0.0, 3.12, 0.92), lens=20, fstop=6.0),  # behind Maren's stool
-        "offen": dict(loc=(1.9, 2.05, 1.0), target=(0.22, 2.56, 0.74), lens=21, fstop=5.6, name="schrank_offen"),
+        "offen": dict(loc=(1.75, 2.0, 1.32), target=(0.22, 2.53, 0.76), lens=19, fstop=5.6, name="schrank_offen"),
     }
     return dict(W=W, D=D, time=time, pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1), light=lcfg)
 
