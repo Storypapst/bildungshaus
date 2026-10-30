@@ -1797,36 +1797,39 @@ def build_abholung(v):
     P_ = piazza_room("abholung")
     W, D = P_["W"], P_["D"]
     m = P_["cab"][1]
-    # Mila pushes her fox cube back into the niche; her head turns to Lotte at the door
+    # Mila pushes her fox cube back into the niche (she stands at its right, so the niche stays in view); her head
+    # turns to Lotte at the door
     spot = Vector(m["cube_spot"])
     cp = spot + Vector((0.035, 0.0, 0.0))
     kiddo_cube(cp.x, cp.y, cp.z, "fuchs", None, "mila", face=0, s=0.075)
     A("mila_cube", cp.x, cp.y, cp.z + 0.04)
-    mp = Vector((0.66, 2.36, 0.0))
-    lp = Vector((0.42, 1.48, 0.0))
-    pm = who("mila", mp.x, mp.y, 205, "reach", hid="mila", look=(lp.x, lp.y, 1.0),
-             arms={"r": cp + Vector((0.06, 0.0, 0.04))}, shoes=SOCKS[1])
+    mp = Vector((0.66, spot.y + 0.17, 0.0))
+    lp = Vector((0.36, 1.42, 0.0))
+    pm = who("mila", mp.x, mp.y, 250, "reach", hid="mila", look=(lp.x, lp.y, 1.0),
+             arms={"r": cp + Vector((0.07, 0.01, 0.045))}, shoes=SOCKS[1])
     # Papa Jonas reads the day in the parent app
-    jp = Vector((1.05, 2.72, 0.0))
-    fj = fvec(-62)
-    who("jonas", jp.x, jp.y, -62, "hold", hid="jonas", acc=("phone",), shoes=COVERS,
-        look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
+    jp = Vector((1.5, 3.2, 0.0))
+    fj = fvec(300)
+    pj = who("jonas", jp.x, jp.y, 300, "hold", hid="jonas", acc=("phone",), shoes=COVERS,
+             look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
     # Lotte comes over from the school next door, through the entrance room
     who("lotte", lp.x, lp.y, -10, "wave", hid="lotte", kind="teen14", shoes=(0.80, 0.80, 0.78), look=(2.0, 2.4, 1.0))
-    # Ayla posts a card into the wish box (right shoulder to the wall, so the box stays in view); her son beside her
+    # Ayla posts a card into the wish box with her left hand and turns to her son; the box stays in view to her left
     wb = Vector(P_["wb"]["slot"])
     ap = Vector((0.62, 3.72, 0.0))
-    pa = who("ayla", ap.x, ap.y, 250, "reach", hid="ayla", shoes=COVERS, look=(wb.x, wb.y, wb.z),
-             arms={"r": (wb.x + 0.06, wb.y, wb.z + 0.03)})
-    hr = Vector(pa["hand_r"])
+    sp_ = Vector((1.1, 4.1, 0.0))
+    pa = who("ayla", ap.x, ap.y, 70, "stand", hid="ayla", shoes=COVERS, look=(sp_.x, sp_.y, 0.75),
+             arms={"l": (wb.x + 0.02, wb.y, wb.z + 0.04)})
+    hl = Vector(pa["hand_l"])
     o = box(-0.0015, -0.04, -0.03, 0.0015, 0.04, 0.03, mat(ROSE, 0.8), "ayla", name="Wunschkarte")
-    o.location = hr + Vector((-0.02, 0, 0.035))
-    kid(3, 0.98, 3.42, 150, "stand", hid="kinder", look=pa["head"], shoes=SOCKS[2], acc=("drawing",))
+    o.location = hl + Vector((-0.012, 0, 0.04))
+    A("wunsch_karte", *o.location)
+    kid(3, sp_.x, sp_.y, 215, "stand", hid="kinder", look=pa["head"], shoes=SOCKS[2], acc=("drawing",))
     # Maren plays with one of the last children in the play corner
     maren(4.85, 0.95, 140, "kneel", look=(4.65, 0.75, 0.3))
     kid(5, 4.95, 0.52, 100, "sit", hid="kinder", look=(4.65, 0.72, 0.4), shoes=SOCKS[4])
-    shots = {"faecher": dict(loc=(1.5, 1.95, 1.15), target=(0.3, 2.55, 0.95), lens=24, fstop=4.0),
-             "wunsch": dict(loc=(0.34, 4.62, 1.38), target=(0.4, 3.62, 1.12), lens=26, fstop=4.0)}
+    shots = {"faecher": dict(loc=(2.25, 2.1, 1.42), target=(0.3, 2.62, 1.06), lens=34, fstop=5.6),
+             "wunsch": dict(loc=(1.45, 4.45, 1.6), target=(0.2, 3.78, 1.33), lens=28, fstop=4.0)}
     return dict(W=W, D=D, time="nachmittag", pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1))
 
 
@@ -2495,9 +2498,10 @@ def piazza_room(v):
     if SHOT == "offen":
         cubes[1] = True
     kids_cfg = [dict(k, plan=plan[i], cube=cubes[i]) for i, k in enumerate(PIAZZA_KIDS)]
-    cab = garderobe(F, 2.05, kids_cfg, w=0.304, open_k=1 if SHOT == "offen" else None)
-    wb = wunschkasten(F, 3.765, 1.0)
-    taf = magnettafel(F, 3.95, 4.79, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
+    cab = garderobe(F, 2.0, kids_cfg, w=0.304, open_k=1 if SHOT == "offen" else None)
+    # the wish box hangs at adult height (it is for the parents), high enough to show above the end of the cabinets
+    wb = wunschkasten(F, 3.80, 1.30)
+    taf = magnettafel(F, 3.97, 4.79, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
                       week=PIAZZA_WEEK[key], sosse=late, lamp=7.0 if key == "1615" else 0.0)
     A("schrank_mila", *cab[1]["door"])
     A("mila_fach", *cab[1]["door"])
@@ -2574,7 +2578,7 @@ def build_piazza(v):
         place_group(objects[mark:], cb, Matrix.Rotation(R(38), 4, Vector((-dc.y, dc.x, 0.0))))
         A("mila_cube", cb.x, cb.y, cb.z + 0.01)
         A("mulde", *hol)
-        ad = am + 27
+        ad = am + 42
         dp = C + fvec(ad) * 0.84
         pd_ = who("defne", dp.x, dp.y, ad + 180, "hold", look=hub["cubes"]["malen"], shoes=SOCKS[6])
         mid = (Vector(pd_["hand_r"]) + Vector(pd_["hand_l"])) / 2
@@ -2582,7 +2586,7 @@ def build_piazza(v):
         for a, col in ((am, ROSE), (ad, SKY)):  # the poufs Mila and Defne just got up from
             p = C + fvec(a) * 1.13
             pouf(p.x, p.y, 0.19, col, "kinder")
-        ring = [(345, 8), (15, 1), (42, 2), (122, 4), (192, 0), (230, 5), (268, 7)]
+        ring = [(345, 8), (15, 1), (42, 2), (136, 4), (194, 0), (231, 5), (268, 7)]
         for k, (a, i) in enumerate(ring):
             if SHOT == "hubel" and a == 345:  # would sit right in front of the close-up camera
                 continue
@@ -2590,9 +2594,9 @@ def build_piazza(v):
             pouf(p.x, p.y, 0.19, [SAGE, OCHRE, ROSE, SKY][k % 4], "kinder")
             lk = (cb.x, cb.y, cb.z) if k % 2 == 0 else (cx, cy, 0.55)  # some watch Mila's cube
             kid(i, p.x, p.y, a + 180, "sit", hid="kinder", look=lk, z=0.1, shoes=SOCKS[k % len(SOCKS)])
-        sp = C + fvec(157) * 1.28
+        sp = C + fvec(165) * 1.28
         stool(sp.x, sp.y, 0.32, OCHRE, "maren")
-        maren(sp.x, sp.y, 157 + 180, "sitc", seat=0.32, look=pm["head"])
+        maren(sp.x, sp.y, 165 + 180, "sitc", seat=0.32, look=pm["head"])
     else:
         # 16:15: the last children are gone; Maren at the magnet board speaks her note into the phone
         time, lcfg = "nachmittag", dict(sun_el=8.0, strength=3.4)
@@ -2608,8 +2612,8 @@ def build_piazza(v):
         "fenster": fen,
         "hubel": dict(loc=tuple(C + fvec(330) * 1.8 + Vector((0, 0, 1.0))), target=tuple(C + fvec(70) * 0.18 + Vector((0, 0, 0.37))),
                       lens=34, fstop=4.5),
-        "schrank": dict(loc=(1.75, 2.85, 1.2), target=(0.0, 3.25, 1.02), lens=20, fstop=6.0),
-        "offen": dict(loc=(1.72, 2.12, 1.02), target=(0.22, 2.56, 0.78), lens=23, fstop=5.6, name="schrank_offen"),
+        "schrank": dict(loc=(2.0, 2.8, 1.12), target=(0.0, 3.22, 0.9), lens=20, fstop=6.0),
+        "offen": dict(loc=(1.9, 2.05, 1.0), target=(0.22, 2.56, 0.74), lens=21, fstop=5.6, name="schrank_offen"),
     }
     return dict(W=W, D=D, time=time, pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1), light=lcfg)
 
