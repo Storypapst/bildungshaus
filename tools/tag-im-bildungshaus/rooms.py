@@ -996,8 +996,8 @@ def magnettafel(F, u0, u1, z0, z1, hid="tafel", now=0, week=None, sosse=False, l
             line.append(tuple(L.p(u, fz + 0.002, v)))
         curve_tube(line, 0.0021, ink, hid, name="Gekritzel")
 
-    scribble(t + 0.05, t + 0.42, z0 + t + 0.075, 0.0)
-    pts["line"] = L.p(t + 0.23, fz, z0 + t + 0.075)
+    scribble(t + 0.05, t + 0.42, z0 + t + 0.13, 0.0)
+    pts["line"] = L.p(t + 0.23, fz, z0 + t + 0.13)
     # two drawings of the children held by magnets
     for (uu, zz, mo, rot_) in ((W_ - t - 0.33, z0 + t + 0.25, "sun", -4), (W_ - t - 0.13, z0 + t + 0.27, "flower", 5)):
         drawing(*L.p(uu, fz + 0.004, zz), -90 + rot_ * 0.0, 0.15, 0.12, hid, motif=mo, name="Bild")
@@ -1010,7 +1010,9 @@ def magnettafel(F, u0, u1, z0, z1, hid="tafel", now=0, week=None, sosse=False, l
         o.location = c
         o.rotation_euler = (R(90), 0, 0)
         bild_icon("sosse", c + L.n * 0.006, L.t, UP, L.n, 0.085, hid)
-        scribble(u - 0.33, u - 0.1, z0 + t + 0.07, 2.0)
+        ball(*L.p(u, fz + 0.012, z0 + t + 0.085 + 0.075), 0.011, mat((0.86, 0.22, 0.20), 0.3, coat=0.5), hid, seg=12,
+             name="Magnet")
+        scribble(u - 0.36, u - 0.09, z0 + t + 0.055, 2.0)  # its own short line, below the first one
         pts["sosse"] = c
     # small picture light above the board
     panel(*L.bx(0.18, 0.0, z1 + 0.07, W_ - 0.18, 0.02, z1 + 0.1), hid, name="Tafellampe")
@@ -1819,10 +1821,10 @@ def build_abholung(v):
     ap = Vector((0.62, 3.72, 0.0))
     sp_ = Vector((1.1, 4.1, 0.0))
     pa = who("ayla", ap.x, ap.y, 70, "stand", hid="ayla", shoes=COVERS, look=(sp_.x, sp_.y, 0.75),
-             arms={"l": (wb.x + 0.02, wb.y, wb.z + 0.04)})
+             arms={"l": (wb.x + 0.02, wb.y - 0.07, wb.z + 0.04)})
     hl = Vector(pa["hand_l"])
-    o = box(-0.0015, -0.04, -0.03, 0.0015, 0.04, 0.03, mat(ROSE, 0.8), "ayla", name="Wunschkarte")
-    o.location = hl + Vector((-0.012, 0, 0.04))
+    o = box(-0.0015, -0.05, -0.036, 0.0015, 0.05, 0.036, mat((0.97, 0.86, 0.45), 0.8), "ayla", name="Wunschkarte")
+    o.location = hl + Vector((-0.015, 0.02, 0.05))
     A("wunsch_karte", *o.location)
     kid(3, sp_.x, sp_.y, 215, "stand", hid="kinder", look=pa["head"], shoes=SOCKS[2], acc=("drawing",))
     # Maren plays with one of the last children in the play corner
@@ -2423,21 +2425,23 @@ def maren(x, y, face, pose="stand", hid="maren", acc=(), **kw):
     return person(x, y, face, pose=pose, hid=hid, key="maren", acc=a, **c)
 
 
-def schluessel(p, face, hid="maren"):
-    """Small brass key on a ring with a wooden fob, held in the hand at p."""
+def schluessel(p, face, hid="maren", k=1.6):
+    """Brass key on a ring with a wooden key tag, held up in the hand at p (k: size factor, readable in the room)."""
     brass = mat((0.86, 0.68, 0.30), 0.3, metal=0.8, name="Messing")
     f = fvec(face)
     s = f.cross(UP).normalized()
-    p = Vector(p) + f * 0.03
-    torus(*p, 0.016, 0.0035, brass, hid, rot=s.to_track_quat("Z", "Y").to_euler(), seg=20, name="Schlüsselring")
-    k0 = p + f * 0.02 + UP * 0.012
-    k1 = k0 + f * 0.045 + UP * 0.02
-    cyl(0, 0, -0.002, 0.002, 0.013, brass, hid, verts=16, rot=s.to_track_quat("Z", "Y").to_euler(),
-        name="Schlüssel").location = k0
-    capsule(k0, k1, 0.0035, brass, hid, name="Schlüssel")
-    box(-0.004, -0.002, -0.007, 0.004, 0.002, 0.007, brass, hid, rot=(0, 0, R(face - 90)),
-        name="Schlüssel").location = k1 - f * 0.012 - UP * 0.008
-    ball(*(p + UP * -0.03), 0.014, mat(OCHRE, 0.5, coat=0.3), hid, scale=(1, 1, 1.2), seg=12, name="Anhänger")
+    q = s.to_track_quat("Z", "Y").to_euler()
+    p = Vector(p) + f * 0.03 * k
+    torus(*p, 0.016 * k, 0.0035 * k, brass, hid, rot=q, seg=20, name="Schlüsselring")
+    k0 = p + f * 0.02 * k + UP * 0.012 * k
+    k1 = k0 + f * 0.045 * k + UP * 0.02 * k
+    cyl(0, 0, -0.002 * k, 0.002 * k, 0.013 * k, brass, hid, verts=16, rot=q, name="Schlüssel").location = k0
+    capsule(k0, k1, 0.0035 * k, brass, hid, name="Schlüssel")
+    box(-0.004 * k, -0.002 * k, -0.007 * k, 0.004 * k, 0.002 * k, 0.007 * k, brass, hid, rot=(0, 0, R(face - 90)),
+        name="Schlüssel").location = k1 - f * 0.012 * k - UP * 0.008 * k
+    # wooden key tag on a short string, painted berry, hanging below the ring
+    rbox(-0.022 * k, -0.005 * k, -0.034 * k, 0.022 * k, 0.005 * k, 0.0, mat(BERRY, 0.45, coat=0.3), hid, r=0.006 * k,
+         rot=(0, 0, R(face - 90)), name="Anhänger").location = p + UP * -0.018 * k
     return tuple(k1)
 
 
@@ -2588,10 +2592,12 @@ def build_piazza(v):
     time, lcfg = "morgen", {}
     if v in ("745", "745z"):
         # 7:45: Maren has just unlocked the door from the entrance room, the windows on both sides open wide
-        mp = Vector((0.55, 1.5, 0.0))
-        hand = mp + fvec(25) * 0.3 + fvec(25).cross(UP) * 0.12 + Vector((0, 0, 1.02))
-        pm = maren(mp.x, mp.y, 25, "stand", look=(3.9, D - 0.3, 1.7), arms={"r": hand})
-        A("schluessel", *schluessel(pm["hand_r"], 25))
+        # she has just stepped in from the entrance room, the key still raised in her hand, and looks into the room
+        mp = Vector((0.5, 1.45, 0.0))
+        fm = 350
+        hand = mp + fvec(fm) * 0.3 + fvec(fm).cross(UP) * 0.14 + Vector((0, 0, 1.12))
+        pm = maren(mp.x, mp.y, fm, "stand", look=(3.6, 1.3, 1.05), arms={"r": hand})
+        A("schluessel", *schluessel(pm["hand_r"], fm - 40))
     elif v == "800":
         # 8:00: morning circle. Mila stands at the back right of the Hubel and puts her fox cube into the last free
         # hollow at the Kaufladen; Defne beside her still holds hers and looks over to Malen. Maren sits on a stool at
