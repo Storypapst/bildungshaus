@@ -2225,9 +2225,10 @@ def ripe_tag(c, n, hid="tomaten"):
 
 
 def grow_bar(F, u0, u1, d, z, power=5.0, hid="licht"):
-    """Warm LED grow light under a shelf board (underside at z) with a soft area light pointing down."""
-    panel(*F.bx(u0, d - 0.03, z - 0.012, u1, d + 0.03, z), hid, name="Lichtleiste")
-    box(*F.bx(u0 + 0.01, d - 0.02, z - 0.016, u1 - 0.01, d + 0.02, z - 0.012), mat((1.0, 0.88, 0.74), 0.4, emission=GROW,
+    """Warm LED grow light: a slim birch batten under the front of a shelf board (underside at z) with the glowing
+    diffuser below it and a soft area light pointing down onto the plants. Its front face stays visible from the room."""
+    panel(*F.bx(u0, d - 0.022, z - 0.03, u1, d + 0.022, z), hid, name="Lichtleiste")
+    box(*F.bx(u0 + 0.008, d - 0.016, z - 0.035, u1 - 0.008, d + 0.024, z - 0.03), mat((1.0, 0.88, 0.74), 0.4, emission=GROW,
         strength=12.0, name="Pflanzenlicht"), hid, name="LED")
     ld = bpy.data.lights.new("Pflanzenlicht", "AREA")
     ld.shape = "RECTANGLE"
@@ -2237,10 +2238,10 @@ def grow_bar(F, u0, u1, d, z, power=5.0, hid="licht"):
     ld.color = GROW
     lo = bpy.data.objects.new("Pflanzenlicht", ld)
     scene.collection.objects.link(lo)
-    lo.location = F.p((u0 + u1) / 2, d, z - 0.02)
+    lo.location = F.p((u0 + u1) / 2, d, z - 0.04)
     lo.rotation_euler = (0, 0, 0 if F.axis == "x" else R(90))
     lo.visible_camera = False
-    return tuple(F.p((u0 + u1) / 2, d, z - 0.016))
+    return tuple(F.p((u0 + u1) / 2, d, z - 0.034))
 
 
 def plant_shelf(F, bays, depth=0.34, tall=(), hid="regal"):
@@ -2472,7 +2473,7 @@ def build_vorraum(v):
             if tag_ == "n" and i == 0:
                 continue  # dead corner behind the west shelf
             for z in boards[i][1:]:
-                lights[(tag_, i, z)] = grow_bar(F, u0 + 0.02, u1 - 0.02, dep * 0.5, z, power=3.0)
+                lights[(tag_, i, z)] = grow_bar(F, u0 + 0.02, u1 - 0.02, dep - 0.05, z, power=3.0)
     thirsty = {"800": {("n", 4, 0.94, 0), ("w", 1, 0.10, 1)},
                "1400": {("w", 0, 0.10, 1), ("n", 1, 1.36, 0), ("n", 4, 0.10, 1)},
                "nacht": {("n", 4, 0.10, 1), ("w", 1, 0.94, 0)}}.get(v, set())
