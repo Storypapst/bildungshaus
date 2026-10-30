@@ -3019,7 +3019,7 @@ FELT = [(0.90, 0.62, 0.55), (0.62, 0.72, 0.82), (0.93, 0.80, 0.50), (0.66, 0.76,
 VR_TIERS = (0.10, 0.52, 0.94, 1.36, 1.78)   # shelf boards; plants stand on the first four, the top one carries a light
 
 
-def winter_glass(night=False):
+def vr_winter_glass(night=False):
     """Pane that shows a February garden: light snow on the ground, bare shrubs and trunks, a pale winter sky with a
     few flakes (or the same at night in dark blue). Uses world height, so a door pane and a high window agree.
     Emissive like garden_glass(); the caller sets visible_shadow = False so the sun comes in."""
@@ -3462,7 +3462,7 @@ def build_vorraum(v):
     night = v == "nacht"
     random.seed(523)
     room_base(W, D, floor_m=tiles("X", (0.82, 0.72, 0.60), (0.90, 0.86, 0.79), 0.3, axis_v="Y"))
-    wg = winter_glass(night)
+    wg = vr_winter_glass(night)
     pz0, pz1 = 2.6, 3.45            # door to the Piazza (north wall)
     dy0, dy1 = 0.14, 1.04           # outside door (west wall)
     wall("x", D, 0.0, W, h=H, openings=[(0.3, 1.75, 2.0, 2.42, "window"), (pz0, pz1, 0.0, 2.1, "door")], glass=wg,
