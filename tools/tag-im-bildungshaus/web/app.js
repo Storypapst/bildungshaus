@@ -710,8 +710,23 @@ function setupWeg(){
 }
 
 /* ================================================================ thread */
-const flow = $('#flow'), thread = $('#thread');
-let TH = null;
+const flow = $('#flow'), thread = $('#thread'), nowT = $('#now-t'), nowL = $('#now-l'), prog = $('#prog');
+let TH = null, lastProg = '';
+// The dashed route and the knots live in #thread and are not touched while scrolling. Two more layers carry what moves:
+//  - .thread-clip: the coloured line, drawn once in full; scrolling only changes the height of its clip.
+//  - .thread-rail: a box as long as the route, with Mila in it. She is position:sticky at 58% of the viewport, so the browser keeps her
+//    there while it scrolls, on the compositor, whatever the main thread is doing. JS only slides her sideways (the detours into the rooms).
+const clip = el('div', 'thread-clip'), doneSvg = svg('svg', {class:'thread'}, clip);
+const rail = el('div', 'thread-rail'), headBox = el('div', 'thread-head'), headEl = svg('svg', {viewBox:'-16 -16 32 32'}, headBox);
+rail.appendChild(headBox); thread.after(clip); clip.after(rail); [clip, rail].forEach(e => e.setAttribute('aria-hidden', 'true'));
+{
+  const head = svg('g', {}, headEl);
+  svg('circle', {r:13, style:'fill:var(--card);stroke:var(--thread);stroke-width:2.5'}, head);
+  svg('circle', {r:4.2, cx:-11, cy:-3, fill:'#b98a52'}, head); svg('circle', {r:4.2, cx:11, cy:-3, fill:'#b98a52'}, head);
+  svg('circle', {r:8.5, fill:'#f3cfac'}, head); svg('path', {d:'M-8.5,-1 a8.5,8.5 0 0 1 17,0 q-8.5,-5 -17,0z', fill:'#b98a52'}, head);
+  svg('circle', {r:1.3, cx:-3, cy:1.5, fill:'#2a1d12'}, head); svg('circle', {r:1.3, cx:3, cy:1.5, fill:'#2a1d12'}, head);
+  svg('path', {d:'M-2.5,4.5 q2.5,2.2 5,0', fill:'none', stroke:'#8a3b2f', 'stroke-width':1.1, 'stroke-linecap':'round'}, head);
+}
 function railX(){ return mobile() ? 26 : Math.max(0, (flow.clientWidth - 1180)/2) + 16 + 30; }
 function offsetIn(node, anc){ let x = 0, y = 0, n = node; while (n && n !== anc){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return [x, y]; }
 function layoutThread(){
@@ -733,33 +748,45 @@ function layoutThread(){
     }
   });
   const end = $('#ziele'); const [, ey] = offsetIn(end, flow); pts.push([rx, ey + 30, 'r']);
-  const d = threadPath(pts);
-  thread.innerHTML = '';
-  svg('path', {d, class:'route'}, thread); const done = svg('path', {d, class:'done'}, thread);
-  const L = done.getTotalLength(); done.style.strokeDasharray = L; done.style.strokeDashoffset = L;
-  knots.forEach(([x, y, st]) => { st.knot = svg('circle', {cx:x, cy:y, r:7, class:'knot'}, thread); st.knotY = y; });
-  const head = svg('g', {class:'head'}, thread);
-  svg('circle', {r:13, style:'fill:var(--card);stroke:var(--thread);stroke-width:2.5'}, head);
-  svg('circle', {r:4.2, cx:-11, cy:-3, fill:'#b98a52'}, head); svg('circle', {r:4.2, cx:11, cy:-3, fill:'#b98a52'}, head);
-  svg('circle', {r:8.5, fill:'#f3cfac'}, head); svg('path', {d:'M-8.5,-1 a8.5,8.5 0 0 1 17,0 q-8.5,-5 -17,0z', fill:'#b98a52'}, head);
-  svg('circle', {r:1.3, cx:-3, cy:1.5, fill:'#2a1d12'}, head); svg('circle', {r:1.3, cx:3, cy:1.5, fill:'#2a1d12'}, head);
-  svg('path', {d:'M-2.5,4.5 q2.5,2.2 5,0', fill:'none', stroke:'#8a3b2f', 'stroke-width':1.1, 'stroke-linecap':'round'}, head);
-  const samples = []; const step = 10; let maxY = -1e9;
-  for (let l = 0; l <= L; l += step){ const p = done.getPointAtLength(l); maxY = Math.max(maxY, p.y); samples.push([l, maxY]); }
-  TH = {done, L, samples, head, knots};
+  const {d, S} = threadPath(pts);
+  thread.innerHTML = ''; doneSvg.innerHTML = '';
+  svg('path', {d, class:'route'}, thread); svg('path', {d, class:'done'}, doneSvg);
+  knots.forEach(([x, y, st]) => { st.knot = svg('circle', {cx:x, cy:y, r:7, class:'knot'}, thread); st.knotY = y; st.lit = false; });
+  const w = Math.ceil(Math.max(...S.map(s => s[1]))) + 8;   // the coloured line only needs the width of the route
+  doneSvg.setAttribute('viewBox', `0 0 ${w} ${H}`); doneSvg.style.width = w + 'px'; doneSvg.style.height = H + 'px';
+  const y0 = S[0][2], y1 = S[S.length - 1][2];
+  rail.style.top = (y0 - 16) + 'px'; rail.style.height = (y1 - y0 + 32) + 'px'; headBox.style.marginLeft = (S[0][1] - 16) + 'px'; TH = {S, H, knots, x0:S[0][1]};
+  rail.classList.toggle('still', reduce);
   onScroll();
 }
+// The route as an SVG path plus samples of the same route for the head: [running max of y, x, y], curves cut into 24 chords.
+// Computed here, not by asking the SVG (getPointAtLength x 2600 took 0.65 s per layout).
 function threadPath(p){
-  if (p.length < 2) return '';
-  const f = v => v.toFixed(1);
+  if (p.length < 2) return {d:'', S:[]};
+  const f = v => v.toFixed(1), q = v => +f(v);
   let d = `M${f(p[0][0])},${f(p[0][1])}`;
+  let px = q(p[0][0]), py = q(p[0][1]), maxY = py; const S = [[maxY, px, py]];
+  const add = (x, y) => { px = x; py = y; maxY = Math.max(maxY, y); S.push([maxY, x, y]); };
+  const curve = (c1x, c1y, c2x, c2y, x, y) => {
+    d += ` C${f(c1x)},${f(c1y)} ${f(c2x)},${f(c2y)} ${f(x)},${f(y)}`;
+    const x0 = px, y0 = py; c1x = q(c1x); c1y = q(c1y); c2x = q(c2x); c2y = q(c2y); x = q(x); y = q(y);
+    for (let k = 1; k <= 24; k++){ const t = k/24, u = 1 - t;
+      add(u*u*u*x0 + 3*u*u*t*c1x + 3*u*t*t*c2x + t*t*t*x, u*u*u*y0 + 3*u*u*t*c1y + 3*u*t*t*c2y + t*t*t*y); }
+  };
   for (let i = 0; i < p.length - 1; i++){
     const A = p[i], B = p[i + 1]; const dx = B[0] - A[0], dy = B[1] - A[1];
-    if (A[2] === 'r' && B[2] === 'i'){ d += ` C${f(A[0])},${f(A[1] + Math.max(30, dy*0.6))} ${f(B[0] - Math.max(30, Math.abs(dx)*0.7))},${f(B[1])} ${f(B[0])},${f(B[1])}`; }
-    else if (A[2] === 'o' && B[2] === 'r'){ d += ` C${f(A[0] - Math.max(24, Math.abs(dx)*0.6))},${f(A[1] + dy*0.15)} ${f(B[0])},${f(B[1] - Math.max(20, dy*0.6))} ${f(B[0])},${f(B[1])}`; }
-    else d += ` L${f(B[0])},${f(B[1])}`;
+    if (A[2] === 'r' && B[2] === 'i') curve(A[0], A[1] + Math.max(30, dy*0.6), B[0] - Math.max(30, Math.abs(dx)*0.7), B[1], B[0], B[1]);
+    else if (A[2] === 'o' && B[2] === 'r') curve(A[0] - Math.max(24, Math.abs(dx)*0.6), A[1] + dy*0.15, B[0], B[1] - Math.max(20, dy*0.6), B[0], B[1]);
+    else { d += ` L${f(B[0])},${f(B[1])}`; add(q(B[0]), q(B[1])); }
   }
-  return d;
+  return {d, S};
+}
+// [x, y] of the route where the scroll target (flow y) lies; between two samples it is interpolated.
+function headAt(S, target){
+  let lo = 0, hi = S.length - 1;
+  while (lo < hi){ const m = (lo + hi + 1) >> 1; if (S[m][0] <= target) lo = m; else hi = m - 1; }
+  const a = S[lo], b = S[Math.min(lo + 1, S.length - 1)], k = b[0] > a[0] ? clamp((target - a[0]) / (b[0] - a[0]), 0, 1) : 0;
+  return [a[1] + (b[1] - a[1])*k, a[2] + (b[2] - a[2])*k];
 }
 
 /* ================================================================ scroll, layout */
@@ -773,36 +800,40 @@ function layoutAll(){
   layoutThread();
 }
 function requestLayout(){ if (layoutPending) return; layoutPending = true; setTimeout(() => { layoutPending = false; layoutAll(); }, reduce ? 30 : 820); }
+// One scroll frame: read everything first, then write, and write only what changed (reads after writes forced a layout per station).
 function onScroll(){
   if (ticking) return; ticking = true;
   requestAnimationFrame(() => {
     ticking = false;
-    const vh = innerHeight, sy = scrollY;
-    ST.forEach(st => {
+    const vh = innerHeight, sy = scrollY, docH = document.documentElement.scrollHeight - vh;
+    const fy = TH ? flow.getBoundingClientRect().top + sy : 0;
+    const tops = reduce ? [] : ST.map(st => st.fig ? st.fig.getBoundingClientRect().top : 0);
+    ST.forEach((st, i) => {
       if (!st.fig || reduce) return;
-      const r = st.fig.getBoundingClientRect(); const top = r.top - (parseFloat(st.frame.dataset.off) || 0);
-      const p = clamp((vh - top) / (vh*0.5), 0, 1);
-      const off = (1 - p) * 70; st.frame.dataset.off = off;
-      st.frame.style.setProperty('--slide', `translateY(${off.toFixed(1)}px) scale(${(0.96 + 0.04*p).toFixed(3)})`);
-      st.frame.style.setProperty('--fade', (0.45 + 0.55*p).toFixed(3));
+      const p = clamp((vh - (tops[i] - (st.off || 0))) / (vh*0.5), 0, 1);
+      const off = (1 - p) * 70; st.off = off;
+      const slide = `translateY(${off.toFixed(1)}px) scale(${(0.96 + 0.04*p).toFixed(3)})`, fade = (0.45 + 0.55*p).toFixed(3);
+      if (slide !== st.slide){ st.slide = slide; st.frame.style.setProperty('--slide', slide); }
+      if (fade !== st.fade){ st.fade = fade; st.frame.style.setProperty('--fade', fade); }
     });
     if (TH){
-      const fy = flow.getBoundingClientRect().top + sy; const target = sy + vh*0.58 - fy;
-      const S = TH.samples; let lo = 0, hi = S.length - 1;
-      while (lo < hi){ const m = (lo + hi + 1) >> 1; if (S[m][1] <= target) lo = m; else hi = m - 1; }
-      const len = reduce ? TH.L : S[lo][0];
-      TH.done.style.strokeDashoffset = TH.L - len;
-      const hp = TH.done.getPointAtLength(len); TH.head.setAttribute('transform', `translate(${hp.x.toFixed(1)},${hp.y.toFixed(1)})`);
-      let cur = -1; TH.knots.forEach(([x, y, st], k) => { const on = y <= target + 2; st.knot.classList.toggle('on', on); if (on) cur = k; });
-      const st = cur >= 0 ? ST[cur] : null;
-      $('#now-t').textContent = st ? st.s.time : ''; $('#now-l').textContent = st ? st.s.label : 'Ein Dienstag im Februar';
+      const target = sy + vh*0.58 - fy;
+      const hp = reduce ? TH.S[TH.S.length - 1].slice(1) : headAt(TH.S, target);
+      const dpr = devicePixelRatio, r = v => Math.round(v*dpr)/dpr, h = reduce ? TH.H : hp[1] + 2, pos = `translate3d(${r(hp[0] - TH.x0)}px,0,0)`;
+      if (h !== TH.h){ TH.h = h; clip.style.height = h.toFixed(1) + 'px'; }
+      if (pos !== TH.pos){ TH.pos = pos; headEl.style.transform = pos; }
+      let cur = -1; TH.knots.forEach(([x, y, st], k) => { const on = y <= target + 2; if (on !== st.lit){ st.lit = on; st.knot.classList.toggle('on', on); } if (on) cur = k; });
+      if (cur !== TH.cur){ TH.cur = cur; const st = cur >= 0 ? ST[cur] : null;
+        nowT.textContent = st ? st.s.time : ''; nowL.textContent = st ? st.s.label : 'Ein Dienstag im Februar'; }
     }
-    const docH = document.documentElement.scrollHeight - vh; $('#prog').style.width = (docH > 0 ? sy/docH*100 : 0) + '%';
+    const pg = docH > 0 ? (sy/docH).toFixed(4) : '0'; if (pg !== lastProg){ lastProg = pg; prog.style.transform = `scaleX(${pg})`; }
   });
 }
 addEventListener('scroll', onScroll, {passive:true});
 let rw = innerWidth;
-addEventListener('resize', () => { if (Math.abs(innerWidth - rw) < 2 && openSt) return; rw = innerWidth; requestLayout(); });
+// A height-only resize (the browser toolbar folding in or out on phones) changes no layout, only where 58 % of the screen is:
+// redraw the thread for the new height, but skip the full relayout.
+addEventListener('resize', () => { if (Math.abs(innerWidth - rw) < 2){ onScroll(); return; } rw = innerWidth; requestLayout(); });
 
 /* ================================================================ Weiter: jump to the next stop */
 function scrollToY(y, dur){
@@ -830,8 +861,10 @@ function stopLabel(e){
 }
 function nextStop(){ const maxY = document.documentElement.scrollHeight - innerHeight; return stops().find(e => Math.min(stopY(e), maxY) > scrollY + 24) || null; }
 const ARROW_DOWN = '<path d="M6 11.2 1.4 6.6h3.1V.8h3v5.8h3.1z"/>', ARROW_UP = '<path d="M6 .8l4.6 4.6H7.5v5.8h-3V5.4H1.4z"/>';
+let nextKey = null;
 function updateNextUI(){
   const n = nextStop(), lbl = n ? stopLabel(n) : '';
+  if (nextKey === (n ? '1' : '0') + lbl) return; nextKey = (n ? '1' : '0') + lbl;
   $$('.play').forEach(b => {
     b.setAttribute('aria-label', n ? 'Weiter zu ' + lbl : 'Zurück nach oben');
     b.title = n ? 'Weiter: ' + lbl : 'Nach oben';
