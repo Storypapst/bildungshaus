@@ -1805,9 +1805,21 @@ def build_fachwand(v):
     return dict(W=W, D=D, time="vormittag", pts=pts, shots=shots, target=(W / 2, D / 2, 1))
 
 
+# ================================================================ v5: green entrance room (Vorraum)
+def build_vorraum(v):
+    """v5 green entrance room: variants 800 (arriving), 1400 (herb garden), nacht (grow lights at night). See CONTRACT_v5.md."""
+    raise NotImplementedError("build_vorraum: v5, not built yet")
+
+
+# ================================================================ v5: Piazza (replaces the Halle)
+def build_piazza(v):
+    """v5 Piazza: variants 745 / 745z / 800 / 1615, close-ups hubel / schrank / offen / fenster. See CONTRACT_v5.md."""
+    raise NotImplementedError("build_piazza: v5, not built yet")
+
+
 BUILDERS = {"halle": build_halle, "kaufladen": build_kaufladen, "waschraum": build_waschraum, "bistro": build_bistro,
             "abholung": build_abholung, "werkstatt": build_werkstatt, "aussen": build_aussen, "ausblick": build_ausblick,
-            "fachwand": build_fachwand}
+            "fachwand": build_fachwand, "piazza": build_piazza, "vorraum": build_vorraum}
 
 # ================================================================ run
 cfg = BUILDERS[SCENE](VAR)
