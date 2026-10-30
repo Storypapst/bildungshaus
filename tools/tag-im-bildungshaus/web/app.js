@@ -1,9 +1,10 @@
-/* app.js: page logic for Bildungshaus weWeit (demo v3). Content lives in story.js; build.py
+/* app.js: page logic for Bildungshaus weWeit (Kita page v5). Content lives in story.js; build.py
    concatenates story.js + app.js into site/app.js inside one IIFE. No inline script, no eval:
-   the page runs under script-src 'self'. Every anchor and image is optional. */
+   the page runs under script-src 'self'. Every render, KI image and anchor is optional:
+   a missing image becomes a placeholder, a missing anchor skips its dot or bubble. */
 
 const SD = (() => { try { return JSON.parse(document.getElementById('scenedata').textContent); } catch (e) { return {}; } })();
-SD.rooms = SD.rooms || {}; SD.shots = SD.shots || {};
+SD.rooms = SD.rooms || {}; SD.shots = SD.shots || {}; SD.ki = SD.ki || {};
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const NS = 'http://www.w3.org/2000/svg';
@@ -26,10 +27,22 @@ function anchorHit(data, names){
 }
 function anchor(data, names){ const h = anchorHit(data, names); return h ? h.p : null; }
 function onImage(p, m){ m = m == null ? .015 : m; return !!p && p[0] > m && p[0] < 1 - m && p[1] > m && p[1] < 1 - m; }
+/* One image record: a render (room or close-up), a KI image ('ki:name') or a placeholder. */
+function imgRec(n){
+  if (n.indexOf('ki:') === 0){
+    const k = n.slice(3), d = SD.ki[k], a = KI_ANCHORS[k] || {};
+    return d ? {name:n, data:Object.assign({anchors:a}, d), ki:true} : {name:n, data:{w:1536, h:1024, anchors:{}}, ph:true, ki:true, text:KI_PH[k] || 'Bild folgt'};
+  }
+  const room = !!SD.rooms[n], d = SD.shots[n] || SD.rooms[n];
+  if (!d) return null;
+  if (d.ph) return {name:n, data:{w:d.w, h:d.h, anchors:{}}, ph:true, room, text:'Rendering folgt'};
+  return {name:n, data:d, room};
+}
+/* first real image of the list (with need: the first that shows that anchor), else a placeholder */
 function imgData(names, need){
-  const all = arr(names).map(n => SD.shots[n] ? {name:n, data:SD.shots[n]} : (SD.rooms[n] ? {name:n, data:SD.rooms[n], room:true} : null)).filter(Boolean);
-  if (need){ const w = all.find(I => onImage(anchor(I.data, need), .02)); if (w) return w; }
-  return all[0] || null;
+  const all = arr(names).map(imgRec).filter(Boolean); const real = all.filter(I => !I.ph);
+  if (need){ const w = real.find(I => onImage(anchor(I.data, need), .02)); if (w) return w; }
+  return real[0] || all[0] || null;
 }
 
 const ICON = {
@@ -37,16 +50,21 @@ const ICON = {
  cloud:'<svg viewBox="0 0 30 30" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 22h15a5 5 0 0 0 .6-10 7 7 0 0 0-13.3-1.6A5.5 5.5 0 0 0 8 22z"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M11 16h8M11 19h5"/></svg>',
  phone:'<svg viewBox="0 0 30 30" aria-hidden="true"><rect x="9" y="4" width="12" height="22" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 22h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
  house:'<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M5 26V12l10-7 10 7v14M3 26h24M12 26v-7h6v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+ sun:'<svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 3v4M15 23v4M3 15h4M23 15h4M6.5 6.5l2.8 2.8M20.7 20.7l2.8 2.8M6.5 23.5l2.8-2.8M20.7 9.3l2.8-2.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
  bulb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>',
  kind:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 20c.8-4.2 3.3-6.5 6.5-6.5s5.7 2.3 6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
  lern:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c.6-3.8 2.8-6 6-6s5.4 2.2 6 6M15 3.5h6.5v6H15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  eltern:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="7.5" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 20c.6-3.6 2.7-5.6 5.5-5.6s4.9 2 5.5 5.6M13.5 15c.9-.6 1.9-.9 3-.9 2.4 0 4.1 1.7 4.6 4.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
  traeger:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V9l6-4 6 4v12M15 12h6v9M2 21h20M7 13h4M7 17h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  left:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
- right:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+ right:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ close:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+ cube:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5 41 14.5v19L24 43 7 33.5v-19z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 14.5 24 24l17-9.5M24 24v19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>',
+ train:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="11" y="6" width="26" height="28" rx="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M11 21h26M18 34l-5 8M30 34l5 8M16 39h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="18" cy="28" r="1.8" fill="currentColor"/><circle cx="30" cy="28" r="1.8" fill="currentColor"/></svg>',
+ image:'<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="2.4" fill="currentColor"/><path d="M5 23l7-6 5 4 4-3 6 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'
 };
 
-/* ================================================================ image tags (hero, house) */
+/* ================================================================ image tags (hero) */
 function addTags(parent, data, list){
   const out = [];
   list.forEach(L => {
@@ -93,54 +111,72 @@ function fitTags(fig, tags, obstacles){
   });
 }
 
-/* ================================================================ hero */
+/* placeholder figure: "Rendering folgt" for renders, "Bild folgt" for KI images */
+function phFig(text, sub, ki){
+  const f = el('div', 'ph-fig' + (ki ? ' ki' : ''));
+  f.innerHTML = (ki ? ICON.train : ICON.cube) + `<b>${text}</b>` + (sub ? `<small>${sub}</small>` : '');
+  f.setAttribute('role', 'img'); f.setAttribute('aria-label', text + (sub ? ': ' + sub : ''));
+  return f;
+}
+
+/* ================================================================ hero, teasers */
 const HERO = {tags:[]};
 function buildHero(){
-  const fig = $('#hero-fig'); const d = SD.rooms.aussen; if (!fig || !d) return;
+  const fig = $('#hero-fig'); const d = SD.rooms.aussen; if (!fig) return;
+  if (!d || d.ph){ fig.classList.add('is-ph'); fig.appendChild(phFig('Rendering folgt', 'Startbild: Kita, Lab und Schule nebenan')); return; }
   const img = el('img'); img.src = d.img; img.width = d.w; img.height = d.h; img.decoding = 'async';
   img.alt = 'Ein Tag im Bildungshaus weWeit: ' + HERO_LABELS.filter(L => anchor(d, L.a)).map(L => L.t).join(', ');
   fig.appendChild(img);
   HERO.fig = fig; HERO.tags = addTags(fig, d, HERO_LABELS);
 }
+/* teaser pictures: a crop of the hero around the Lab or the school */
+function buildTeasers(){
+  const d = SD.rooms.aussen;
+  $$('.t-img[data-anchor]').forEach(box => {
+    const p = d && !d.ph ? anchor(d, box.dataset.anchor) : null;
+    if (!p){ box.classList.add('ph'); box.innerHTML = ICON.image; return; }
+    const S = 2.4, r = d.h / d.w, c = 9/16;
+    const tx = clamp(.5 - S*p[0], 1 - S, 0), ty = clamp(c/2 - S*p[1]*r, c - S*r, 0);
+    const img = el('img'); img.src = d.img; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+    img.style.transform = `translate(${(tx*100).toFixed(2)}%, ${(ty/r*100).toFixed(2)}%) scale(${S})`;
+    box.appendChild(img);
+  });
+}
 
 /* ================================================================ stations */
 const ST = [];
 function buildStation(s, i){
-  const d = SD.rooms[s.room] || null;
   const sec = el('section', 'st-sec'); sec.id = s.id; sec.setAttribute('aria-labelledby', s.id + '-h');
-  const wrap = el('div', 'wrap railpad'); const inner = el('div', 'station' + (d ? '' : ' noimg'));
+  const wrap = el('div', 'wrap railpad'); const inner = el('div', 'station');
   const head = el('div', 'st-head');
   head.innerHTML = `<p class="kopf"><span class="time">${s.time}</span><span class="ort">${s.ort}</span></p><h2 id="${s.id}-h">${s.title}</h2>`
-    + (s.mila ? `<div class="mila"><span class="k">Mila-Moment</span><p>${s.mila}</p></div>` : '');
+    + (s.moment ? `<div class="mila"><span class="k">Moment</span><p>${s.moment}</p></div>` : '');
   const side = el('div', 'st-side');
   if (s.idee) side.appendChild(el('div', 'idee', `<h3 class="k">${ICON.bulb}Die Idee dahinter</h3><p>${s.idee}</p>`));
   if (s.bisher) side.appendChild(el('div', 'compare', `<div class="was"><b>Bisher oft</b><p>${s.bisher}</p></div><div class="neu"><b>Unsere Idee</b><p>${s.unsere}</p></div>`));
   const media = el('div', 'st-media');
-  const st = {s, i, sec, inner, head, side, media, d, hots:[], tags:[], open:null, xray:false};
+  const st = {s, i, sec, inner, head, side, media, stages:[], cur:0, chips:[]};
   inner.append(head);
-  if (d) safe('figure ' + s.id, () => buildFigure(st));
-  if (st.fig) inner.append(media);
-  inner.append(side);
+  safe('figure ' + s.id, () => buildFigure(st));
+  inner.append(media, side);
   const tools = el('div', 'st-tools');
-  // tap points as chips: same targets as the dots on the image, reachable by keyboard
-  if (st.hots.length){
+  // tap points as chips: same targets as the dots, reachable by keyboard, also when a dot has no anchor yet
+  if ((s.hots || []).length){
     const chips = el('div', 'chips', '<span>Tipp-Punkte</span>');
-    st.hots.forEach((o, k) => { const c = el('button', 'chip', `<i></i>${o.h.l}`); c.type = 'button'; c.setAttribute('aria-pressed', 'false'); c.addEventListener('click', () => openDetail(st, k)); chips.appendChild(c); o.chip = c; });
+    s.hots.forEach((h, hi) => {
+      const c = el('button', 'chip', `<i></i>${h.l}`); c.type = 'button';
+      if (h.note) c.setAttribute('aria-expanded', 'false'); else c.setAttribute('aria-haspopup', 'dialog');
+      c.addEventListener('click', () => { stopAuto(st); openHot(st, hi, c); });
+      chips.appendChild(c); st.chips[hi] = c;
+    });
     tools.appendChild(chips);
   }
-  if (s.xray && st.fig){
-    const xb = el('button', 'xbtn', ICON.gear + '<span>Was steckt dahinter?</span>'); xb.type = 'button'; xb.setAttribute('aria-pressed', 'false');
-    const xl = el('ol', 'xlist'); xl.hidden = true; xl.id = s.id + '-x'; xb.setAttribute('aria-controls', xl.id);
-    s.xray.items.filter(it => it.n).sort((a, b) => a.n - b.n).forEach(it => {
-      const li = el('li', '', `<span>${it.n}</span><div>${it.t}</div>`); li.dataset.n = it.n;
-      li.addEventListener('mouseenter', () => markX(st, it.n, true)); li.addEventListener('mouseleave', () => markX(st, it.n, false));
-      xl.appendChild(li);
-    });
-    xb.addEventListener('click', () => toggleXray(st));
-    tools.append(xb, xl); st.xbtn = xb; st.xlist = xl;
+  if (s.xray){
+    const xb = el('button', 'xbtn', ICON.gear + '<span>Was steckt dahinter?</span>'); xb.type = 'button'; xb.setAttribute('aria-haspopup', 'dialog');
+    xb.addEventListener('click', () => { stopAuto(st); openXray(st, xb); });
+    tools.appendChild(xb); st.xbtn = xb;
   }
-  if (tools.children.length) (st.fig ? media : side).appendChild(tools);
-  const det = el('div', 'detail'); det.hidden = true; st.det = det; inner.appendChild(det);
+  if (tools.children.length) media.appendChild(tools);
   const more = el('div', 'st-more');
   if (s.nutzen) more.appendChild(el('div', 'nutzen hy', `<h3 class="blk">Nutzen</h3><ul>${s.nutzen.map((t, j) => `<li><b>${ICON[NUTZEN_ICONS[j]]}${NUTZEN_ROLES[j]}</b><span>${t}</span></li>`).join('')}</ul>`));
   if (s.varianten && s.varianten.length) more.appendChild(buildVariants(s.varianten));
@@ -148,51 +184,124 @@ function buildStation(s, i){
     more.appendChild(el('details', 'more', `<summary><span>Mehr zur Idee</span><small>Daten und Einstellungen · Annahme und Test</small></summary>`
       + `<div class="more-body"><div><h4>Daten und Einstellungen</h4><p>${s.daten}</p></div><div><h4>Annahme und Test</h4><p>${s.annahme}</p></div></div>`));
   }
-  if (s.ausblick) more.appendChild(el('div', 'outlook', `<h3 class="blk">Ausblick</h3><p>${s.ausblick}</p><p class="question">${s.frage}</p>`));
   inner.appendChild(more);
   wrap.appendChild(inner); sec.appendChild(wrap);
   ST.push(st);
   return sec;
 }
 
+/* the station picture: one or more stages (crossfade, switch below), each a render, a KI image or a placeholder */
+function stageRec(spec){
+  if (spec.ki){
+    const d = SD.ki[spec.ki], a = KI_ANCHORS[spec.ki] || {};
+    if (d) return {kind:'ki', d:Object.assign({anchors:a}, d)};
+    return {kind:'ph', ki:true, d:{w:1536, h:1024, anchors:{in:a.in, out:a.out}}, text:KI_PH[spec.ki] || 'Bild folgt'};
+  }
+  const d = SD.rooms[spec.room];
+  if (d && !d.ph) return {kind:'room', d};
+  return {kind:'ph', d:{w:(d && d.w) || 1420, h:(d && d.h) || 1214, anchors:{}}, text:'Rendering folgt', sub:spec.ph};
+}
 function buildFigure(st){
-  const {s, d, i} = st;
-  const fig = el('figure', 'room');
-  const frame = el('div', 'frame'); const zoomer = el('div', 'zoomer');
-  const first = (s.mila || '').replace(/<[^>]+>/g, '').split(/(?<=[.!?])\s/)[0];
-  const img = el('img'); img.src = d.img; img.alt = s.title + (first ? ': ' + first : ''); img.width = d.w; img.height = d.h; img.loading = i < 2 ? 'eager' : 'lazy'; img.decoding = 'async';
-  const cv = el('canvas'); cv.width = d.mw || 10; cv.height = d.mh || 10;
-  const ov = svg('svg', {class:'ov', viewBox:`0 0 ${d.w} ${d.h}`, preserveAspectRatio:'none', 'aria-hidden':'true'});
-  const layer = el('div', 'layer');
-  zoomer.append(img, cv, ov, layer); frame.appendChild(zoomer); fig.appendChild(frame);
+  const {s, i} = st;
+  const fig = el('figure', 'room'); const frame = el('div', 'frame'); const box = el('div', 'box');
+  const recs = (s.stages || []).map(stageRec); if (!recs.length) return;
+  const R = Math.max(...recs.map(r => r.d.h / r.d.w));
+  box.style.aspectRatio = `1 / ${R.toFixed(4)}`;
+  const first = (s.moment || '').replace(/<[^>]+>/g, '').split(/(?<=[.!?])\s/)[0];
+  recs.forEach((r, k) => {
+    const sp = s.stages[k]; const sg = {k, r, d:r.d, kind:r.kind, hots:[]};
+    const layerEl = el('div', 'stage' + (k === 0 ? ' on' : '')); if (k) { layerEl.inert = true; layerEl.setAttribute('aria-hidden', 'true'); }
+    // stages fill the width; a flatter one is centred vertically in the box
+    const hf = (r.d.h / r.d.w) / R;
+    const zoomer = el('div', 'zoomer'); zoomer.style.height = (hf*100).toFixed(3) + '%'; zoomer.style.top = ((1 - hf)/2*100).toFixed(3) + '%';
+    const layer = el('div', 'layer');
+    if (r.kind === 'ph'){
+      zoomer.appendChild(phFig(r.text, r.sub, r.ki));
+    } else {
+      const img = el('img'); img.src = r.d.img; img.width = r.d.w; img.height = r.d.h; img.decoding = 'async'; img.loading = i < 2 ? 'eager' : 'lazy';
+      img.alt = s.title + (sp.l ? ' (' + sp.l + ')' : '') + (first ? ': ' + first : '');
+      zoomer.appendChild(img); sg.img = img;
+      if (r.d.mask){ const cv = el('canvas'); cv.width = r.d.mw || 10; cv.height = r.d.mh || 10; zoomer.appendChild(cv); sg.cv = cv; sg.ctx = cv.getContext('2d'); }
+    }
+    zoomer.appendChild(layer);
+    if (r.kind !== 'ph'){
+      (s.hots || []).forEach((h, hi) => {
+        if (h.st && !h.st.includes(k)) return;
+        const ah = anchorHit(r.d, h.a); if (!ah || !onImage(ah.p, .02)) return;
+        const p = ah.p;
+        const b = el('button', 'hot', `<i></i><span>${h.l}</span>`); b.type = 'button';
+        b.dataset.side = (h.side === 'left' || p[0] > .72) ? 'left' : 'right';
+        b.style.left = (p[0]*100) + '%'; b.style.top = (p[1]*100) + '%';
+        b.setAttribute('aria-label', h.l + (h.note ? ': Notiz' : ': Nahaufnahme'));
+        if (h.note) b.setAttribute('aria-expanded', 'false'); else b.setAttribute('aria-haspopup', 'dialog');
+        b.addEventListener('click', e => { e.stopPropagation(); stopAuto(st); openHot(st, hi, b); });
+        layer.appendChild(b); sg.hots.push({h, hi, b, p});
+      });
+      (s.bubbles || []).forEach((bu, bi) => {
+        if (bu.st && !bu.st.includes(k)) return;
+        const p = anchor(r.d, bu.a); if (!onImage(p, .02)) return;
+        const e = el('div', 'bubble' + (bi ? ' second' : ''), bu.t); e.setAttribute('aria-hidden', 'true');
+        e.style.left = (p[0]*100) + '%'; e.style.top = (p[1]*100) + '%';
+        layer.appendChild(e);
+      });
+      zoomer.addEventListener('pointermove', e => { if (e.pointerType === 'touch' || MODAL.open || st.cur !== k) return; hover(st, sg, e); });
+      zoomer.addEventListener('pointerleave', () => setHover(st, null));
+      zoomer.addEventListener('click', e => { if (st.cur !== k) return; const j = hitAt(sg, e); if (j != null){ stopAuto(st); openHot(st, sg.hots[j].hi, sg.hots[j].b); } });
+    }
+    layerEl.appendChild(zoomer); box.appendChild(layerEl);
+    Object.assign(sg, {el:layerEl, zoomer, layer}); st.stages.push(sg);
+  });
+  frame.appendChild(box); fig.appendChild(frame);
+  // 16:15: the phone mock is the main element, beside Maren rather than on top of her
+  if (s.phone && PHONES[s.phone] != null){
+    const mh = anchor(recs[0].d, ['maren_head', 'sanne_head']);
+    const ph = el('div', 'phone main' + (mh && mh[0] > .55 ? ' l' : ''), `<div class="scr">${PHONES[s.phone]}</div>`);
+    frame.appendChild(ph); st.phoneEl = ph;
+  }
   const tip = el('div', 'tip'); tip.hidden = true; fig.appendChild(tip);
-  Object.assign(st, {fig, frame, zoomer, img, cv, ctx:cv.getContext('2d'), ov, layer, tip});
-  (s.hots || []).forEach(h => {
-    const ah = anchorHit(d, h.a); if (!ah) return;
-    let p = ah.p; if (h.off && ah.name !== arr(h.a)[0]) p = [p[0] + h.off[0], p[1] + h.off[1]];
-    if (!onImage(p, .02)) return;
-    const k = st.hots.length;
-    const b = el('button', 'hot', `<i></i><span>${h.l}</span>`); b.type = 'button';
-    b.dataset.side = (h.side === 'left' || p[0] > .72) ? 'left' : 'right';
-    b.style.left = (p[0]*100) + '%'; b.style.top = (p[1]*100) + '%';
-    b.setAttribute('aria-label', h.l + (h.note ? ': Notiz' : ': Nahaufnahme'));
-    b.addEventListener('click', e => { e.stopPropagation(); openDetail(st, k); });
-    layer.appendChild(b); st.hots.push({h, b, p});
-  });
-  (s.bubbles || []).forEach((bu, bi) => {
-    const p = anchor(d, bu.a); if (!onImage(p, .02)) return;
-    const e = el('div', 'bubble' + (bi ? ' second' : ''), bu.t); e.setAttribute('aria-hidden', 'true');
-    e.style.left = (p[0]*100) + '%'; e.style.top = (p[1]*100) + '%';
-    layer.appendChild(e);
-  });
-  if (s.labels) st.tags = addTags(layer, d, s.labels);
+  Object.assign(st, {fig, frame, box, tip});
   st.media.appendChild(fig);
-  zoomer.addEventListener('pointermove', e => { if (e.pointerType === 'touch' || st.open) return; hover(st, e); });
-  zoomer.addEventListener('pointerleave', () => setHover(st, null));
-  zoomer.addEventListener('click', e => { if (st.open) return; const k = hitAt(st, e); if (k != null) openDetail(st, k); });
+  if (st.stages.length > 1) st.media.appendChild(buildSwitch(st));
 }
 
-/* ================================================================ swipe variants */
+/* ================================================================ stage switch (radio group) and auto-advance */
+function buildSwitch(st){
+  const n = st.stages.length; const labels = st.s.stages.map(sp => sp.l || '');
+  const sw = el('div', 'stage-switch'); sw.setAttribute('role', 'radiogroup'); sw.setAttribute('aria-label', 'Bild: ' + labels.join(', '));
+  const btns = labels.map((l, k) => {
+    const b = el('button', '', `<span>${l}</span>`); b.type = 'button'; b.setAttribute('role', 'radio');
+    b.setAttribute('aria-checked', String(k === 0)); b.tabIndex = k === 0 ? 0 : -1;
+    b.addEventListener('click', () => { stopAuto(st); setStage(st, k); });
+    sw.appendChild(b); return b;
+  });
+  sw.addEventListener('keydown', e => {
+    const m = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1}[e.key]; let k = null;
+    if (m) k = (st.cur + m + n) % n; else if (e.key === 'Home') k = 0; else if (e.key === 'End') k = n - 1;
+    if (k == null) return;
+    e.preventDefault(); stopAuto(st); setStage(st, k); btns[k].focus();
+  });
+  st.switchBtns = btns; st.switchEl = sw;
+  return sw;
+}
+function setStage(st, k){
+  k = clamp(k, 0, st.stages.length - 1); if (k === st.cur) return;
+  if (NOTE && NOTE.st === st) closeNote(true);
+  setHover(st, null);
+  st.stages.forEach((g, j) => { const on = j === k; g.el.classList.toggle('on', on); g.el.inert = !on; if (on) g.el.removeAttribute('aria-hidden'); else g.el.setAttribute('aria-hidden', 'true'); });
+  st.cur = k;
+  (st.switchBtns || []).forEach((b, j) => { b.setAttribute('aria-checked', String(j === k)); b.tabIndex = j === k ? 0 : -1; });
+}
+function startAuto(st){
+  if (reduce || st.autoDone || st.stages.length < 2) return;
+  st.autoDone = true; st.switchEl.classList.add('auto');
+  st.autoT = setInterval(() => {
+    if (MODAL.open || (NOTE && NOTE.st === st) || st.cur >= st.stages.length - 1){ stopAuto(st); return; }
+    setStage(st, st.cur + 1);
+  }, 2600);
+}
+function stopAuto(st){ if (!st) return; clearInterval(st.autoT); st.autoT = null; st.autoDone = true; if (st.switchEl) st.switchEl.classList.remove('auto'); }
+
+/* ================================================================ swipe variants with a picture slot */
 const VARS = [];
 function buildVariants(list){
   const box = el('div', 'var hy'); const id = 'v' + (VARS.length + 1);
@@ -200,7 +309,12 @@ function buildVariants(list){
     + `<button type="button" class="var-btn prev" aria-label="Vorherige Variante">${ICON.left}</button><button type="button" class="var-btn next" aria-label="Nächste Variante">${ICON.right}</button></div>`;
   const track = el('div', 'var-track'); track.tabIndex = 0; track.setAttribute('role', 'region'); track.setAttribute('aria-labelledby', id);
   const ul = el('ul');
-  list.forEach(([t, x]) => ul.appendChild(el('li', 'vcard' + (t === 'Inklusion' ? ' inkl' : ''), `<b>${t}</b><p>${x}</p>`)));
+  list.forEach(([t, x, img], j) => {
+    const k = img && SD.ki[img];
+    const pic = k ? `<span class="vimg"><img src="${k.img}" width="${k.w}" height="${k.h}" alt="" loading="lazy" decoding="async"></span>`
+                  : `<span class="vimg ph p${j % 5 + 1}">${ICON.image}<small>Bild folgt</small></span>`;
+    ul.appendChild(el('li', 'vcard' + (t === 'Inklusion' ? ' inkl' : ''), `${pic}<b>${t}</b><p>${x}</p>`));
+  });
   track.appendChild(ul); box.appendChild(track);
   const cards = Array.from(ul.children); const prev = $('.prev', box), next = $('.next', box), cnt = $('.var-count', box);
   const base = () => cards[0].offsetLeft;
@@ -252,80 +366,23 @@ function gearsSVG(){
 }
 ICON.gears = gearsSVG();
 
-/* ================================================================ x-ray: numbers on the image, texts in the list */
-function toggleXray(st, force){
-  st.xray = force != null ? force : !st.xray;
-  st.xbtn.setAttribute('aria-pressed', String(st.xray)); st.xlist.hidden = !st.xray; st.fig.classList.toggle('xray', st.xray);
-  if (st.xray && st.open) closeDetail(st, true);
-  drawXray(st); requestLayout();
-  if (st.xray) setTimeout(() => {
-    // Show the numbered list completely, but never push the top of the picture out of view.
-    if (!st.xray) return;
-    const f = st.fig.getBoundingClientRect(), l = st.xlist.getBoundingClientRect(), top = 70, bottom = innerHeight - 12;
-    const over = l.bottom - bottom;   // > 0: the list is cut off at the bottom
-    let dy = 0;
-    if (over > 0) dy = Math.min(over, Math.max(0, f.top));            // list first, picture top stays on screen
-    else if (f.top < top - 10) dy = Math.max(f.top - top, over);      // move up, but keep the list inside
-    if (Math.abs(dy) > 4) scrollToY(scrollY + dy);
-  }, 60);
-}
-function markX(st, n, on){
-  st.layer.querySelectorAll(`.xr[data-n="${n}"]`).forEach(e => e.classList.toggle('hl', on));
-  if (st.xlist) st.xlist.querySelectorAll(`li[data-n="${n}"]`).forEach(e => e.classList.toggle('hl', on));
-}
-function drawXray(st){
-  if (!st.ov) return;
-  st.ov.querySelectorAll('.xr').forEach(n => n.remove());
-  st.layer.querySelectorAll('.xr').forEach(n => n.remove());
-  if (!st.xray) return;
-  const {d, s} = st; const X = s.xray; const W = d.w, H = d.h;
-  const fw = st.zoomer.offsetWidth || 1, fh = st.zoomer.offsetHeight || 1;
-  const toFrac = f => [clamp(f[0]*fw, 30, fw - 30)/fw, clamp(f[1]*fh, 30, fh - 30)/fh];
-  const hub = toFrac(X.hub); const ext = X.ext ? toFrac(X.ext.at) : null;
-  const g = svg('g', {class:'xr'}, st.ov);
-  const wire = (a, b, out) => {
-    const ax = a[0]*W, ay = a[1]*H, bx = b[0]*W, by = b[1]*H; const mx = (ax + bx)/2, my = Math.min(ay, by) - H*.08;
-    const dd = `M${ax.toFixed(1)},${ay.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${bx.toFixed(1)},${by.toFixed(1)}`;
-    svg('path', {d:dd, class:'halo'}, g); svg('path', {d:dd, class:'wire' + (out ? ' out' : '')}, g);
-  };
-  const place = (n, f) => { n.style.left = (f[0]*100) + '%'; n.style.top = (f[1]*100) + '%'; st.layer.appendChild(n); return n; };
-  const icons = [], nodes = [];
-  let hubN = null, extN = null;
-  X.items.forEach(it => {
-    if (it.hub){ if (it.n) hubN = it.n; return; }
-    if (it.ext){ if (ext) wire(ext, hub, it.dir === 'out'); if (it.n) extN = it.n; return; }
-    const p = anchor(d, it.a); if (!onImage(p, 0)) return;
-    wire(p, hub, it.dir === 'out');
-    if (it.n){ const n = el('div', 'xnode xr', String(it.n)); n.dataset.n = it.n; nodes.push(place(n, p)); }
-  });
-  const hb = el('div', 'xicon xr xgears', ICON.gears + (hubN ? `<span class="xn">${hubN}</span>` : '')); if (hubN) hb.dataset.n = hubN; icons.push(place(hb, hub));
-  if (ext){ const eb = el('div', 'xicon xr', (ICON[X.ext.icon] || ICON.cloud) + (extN ? `<span class="xn">${extN}</span>` : '')); if (extN) eb.dataset.n = extN; icons.push(place(eb, ext)); }
-  // numbers never overlap each other or the icons
-  const placed = icons.map(n => inflate(rect(n), 2)); const fb = rect(st.fig);
-  nodes.forEach(n => {
-    const r0 = rect(n);
-    const C = [[0,0],[0,-30],[30,0],[-30,0],[0,30],[30,-30],[-30,-30],[30,30],[-30,30],[0,-60],[60,0],[-60,0]];
-    for (const [dx, dy] of C){
-      const r = shift(r0, dx, dy);
-      if (r.left < fb.left + 2 || r.right > fb.right - 2 || r.top < fb.top + 2 || r.bottom > fb.bottom - 2) continue;
-      if (placed.some(q => hit(inflate(q, 3), r))) continue;
-      if (dx || dy){ n.style.marginLeft = dx + 'px'; n.style.marginTop = dy + 'px'; }
-      placed.push(r); return;
-    }
-    placed.push(r0);
-  });
-}
-
 /* ================================================================ dots, labels and bubbles never overlap */
 function fitStation(st){
   if (!st.fig || !st.fig.offsetParent) return;
-  const fb = rect(st.fig);
   st.sec.classList.add('measuring');
   const live = st.sec.classList.contains('live'); if (!live) st.sec.classList.add('live');
   void st.sec.offsetWidth;
+  // the 16:15 phone covers part of the picture on wide screens: keep labels and bubbles off it
+  const phoneObs = st.phoneEl && getComputedStyle(st.phoneEl).position === 'absolute' ? [inflate(rect(st.phoneEl), 6)] : [];
+  st.stages.forEach(sg => { if (sg.kind !== 'ph') fitStage(sg, phoneObs); });
+  if (!live) st.sec.classList.remove('live');
+  void st.sec.offsetWidth; st.sec.classList.remove('measuring');
+}
+function fitStage(sg, extraObs){
+  const fb = rect(sg.zoomer);
   // 1. dots apart from each other (44px tap targets)
   const dots = [];
-  st.hots.forEach(o => {
+  sg.hots.forEach(o => {
     const b = o.b; b.style.marginLeft = ''; b.style.marginTop = '';
     const r0 = rect(b.querySelector('i'));
     const C = [[0,0],[0,34],[34,0],[-34,0],[0,-34],[30,30],[-30,30],[30,-30],[-30,-30],[0,60]];
@@ -338,10 +395,10 @@ function fitStation(st){
     }
     dots.push([(r0.left + r0.right)/2, (r0.top + r0.bottom)/2]);
   });
-  const dotRects = st.hots.map(o => inflate(rect(o.b.querySelector('i')), 7));
+  const dotRects = sg.hots.map(o => inflate(rect(o.b.querySelector('i')), 7));
   // 2. labels: right or left of the dot, inside the image, clear of dots and other labels; else hidden
   const labels = [];
-  st.hots.forEach((o, k) => {
+  sg.hots.forEach((o, k) => {
     const b = o.b; const sp = b.querySelector('span'); b.classList.remove('nolabel');
     if (!sp || getComputedStyle(sp).display === 'none'){ return; }
     const order = b.dataset.side === 'left' ? [true, false] : [false, true];
@@ -351,16 +408,14 @@ function fitStation(st){
       const r = rect(sp);
       if (r.left < fb.left + 4 || r.right > fb.right - 4 || r.top < fb.top + 2 || r.bottom > fb.bottom - 2) continue;
       if (dotRects.some((q, j) => j !== k && hit(q, r))) continue;
-      if (labels.some(q => hit(inflate(q, 3), r))) continue;
+      if (labels.some(q => hit(inflate(q, 3), r)) || extraObs.some(q => hit(q, r))) continue;
       labels.push(r); ok = true; break;
     }
     if (!ok) b.classList.add('nolabel');
   });
-  const obs = dotRects.concat(labels);
-  // 3. image tags (house labels)
-  if (st.tags.length){ fitTags(st.fig, st.tags, obs); st.tags.forEach(t => { if (!t.hidden) obs.push(inflate(rect(t), 3)); }); }
-  // 4. speech bubbles: first free spot near the speaker, otherwise hidden
-  st.layer.querySelectorAll('.bubble').forEach(n => {
+  const obs = dotRects.concat(labels, extraObs);
+  // 3. speech bubbles: first free spot near the speaker, otherwise hidden
+  sg.layer.querySelectorAll('.bubble').forEach(n => {
     n.classList.remove('nofit', 'below'); n.style.marginLeft = '0px'; n.style.marginTop = '0px'; n.style.removeProperty('--tail');
     if (getComputedStyle(n).display === 'none') return;
     let r0 = rect(n);
@@ -381,35 +436,33 @@ function fitStation(st){
     const bw = r0.right - r0.left; n.style.setProperty('--tail', clamp(bw/2 - dx, 16, bw - 16) + 'px');
     obs.push(inflate(r, 4));
   });
-  if (!live) st.sec.classList.remove('live');
-  void st.sec.offsetWidth; st.sec.classList.remove('measuring');
 }
 
-/* ================================================================ hover masks */
-function loadMask(st){
-  if (st.mask || !st.d.mask || !st.d.colors) return; st.mask = {ready:false};
+/* ================================================================ hover masks (one per stage) */
+function loadMask(sg){
+  if (sg.mask || !sg.d.mask || !sg.d.colors || !sg.ctx) return; sg.mask = {ready:false};
   const im = new Image();
   im.onload = () => {
-    const W = st.d.mw, H = st.d.mh; const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const W = sg.d.mw, H = sg.d.mh; const c = document.createElement('canvas'); c.width = W; c.height = H;
     const x = c.getContext('2d', {willReadFrequently:true}); x.drawImage(im, 0, 0, W, H);
     const px = x.getImageData(0, 0, W, H).data; const k2h = {}; const hidIdx = {}; const hids = [null];
-    Object.keys(st.d.colors).forEach(h => { const [r, g, b] = st.d.colors[h]; const i = hids.length; hids.push(h); hidIdx[h] = i; k2h[(r>>5) + 8*(g>>5) + 64*(b>>6)] = i; });
+    Object.keys(sg.d.colors).forEach(h => { const [r, g, b] = sg.d.colors[h]; const i = hids.length; hids.push(h); hidIdx[h] = i; k2h[(r>>5) + 8*(g>>5) + 64*(b>>6)] = i; });
     const lab = new Uint8Array(W*H);
     for (let p = 0, q = 0; p < lab.length; p++, q += 4){ if (px[q+3] < 128) continue; const i = k2h[(px[q]>>5) + 8*(px[q+1]>>5) + 64*(px[q+2]>>6)]; if (i) lab[p] = i; }
-    Object.assign(st.mask, {ready:true, lab, W, H, hids, hidIdx, cache:{}});
+    Object.assign(sg.mask, {ready:true, lab, W, H, hids, hidIdx, cache:{}});
   };
-  im.src = st.d.mask;
+  im.src = sg.d.mask;
 }
-function hitAt(st, e){
-  const m = st.mask; if (!m || !m.ready) return null;
-  const r = st.zoomer.getBoundingClientRect(); const u = (e.clientX - r.left)/r.width, v = (e.clientY - r.top)/r.height;
+function hitAt(sg, e){
+  const m = sg.mask; if (!m || !m.ready) return null;
+  const r = sg.zoomer.getBoundingClientRect(); const u = (e.clientX - r.left)/r.width, v = (e.clientY - r.top)/r.height;
   if (u < 0 || v < 0 || u >= 1 || v >= 1) return null;
   const hid = m.hids[m.lab[Math.floor(v*m.H)*m.W + Math.floor(u*m.W)]];
   if (!hid) return null;
-  const k = st.hots.findIndex(o => arr(o.h.hid).includes(hid)); return k >= 0 ? k : null;
+  const k = sg.hots.findIndex(o => arr(o.h.hid).includes(hid)); return k >= 0 ? k : null;
 }
-function outline(st, hid){
-  const m = st.mask; if (m.cache[hid]) return m.cache[hid];
+function outline(sg, hid){
+  const m = sg.mask; if (m.cache[hid]) return m.cache[hid];
   const k = m.hidIdx[hid], W = m.W, H = m.H, L = m.lab;
   const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d'); const img = x.createImageData(W, H); const d = img.data;
   const t = document.createElement('canvas').getContext('2d'); t.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--spot').trim() || '#c3405d'; t.fillRect(0, 0, 1, 1); const [R, G, B] = t.getImageData(0, 0, 1, 1).data;
@@ -421,125 +474,194 @@ function outline(st, hid){
   }
   x.putImageData(img, 0, 0); m.cache[hid] = c; return c;
 }
-function hover(st, e){ loadMask(st); setHover(st, hitAt(st, e), e); }
-function setHover(st, k, e){
+function hover(st, sg, e){ loadMask(sg); setHover(st, hitAt(sg, e), e, sg); }
+function setHover(st, k, e, sg){
   if (!st.fig) return;
-  if (k !== st.hk){
-    st.hk = k; st.ctx.clearRect(0, 0, st.cv.width, st.cv.height);
-    if (k != null && st.mask && st.mask.ready){ const hid = arr(st.hots[k].h.hid).find(h => h in st.mask.hidIdx); if (hid) st.ctx.drawImage(outline(st, hid), 0, 0); }
+  sg = sg || st.stages[st.cur];
+  const key = k == null ? null : sg.k + ':' + k;
+  if (key !== st.hk){
+    st.stages.forEach(g => { if (g.ctx) g.ctx.clearRect(0, 0, g.cv.width, g.cv.height); });
+    st.hk = key;
+    if (k != null && sg.mask && sg.mask.ready && sg.ctx){ const hid = arr(sg.hots[k].h.hid).find(h => h in sg.mask.hidIdx); if (hid) sg.ctx.drawImage(outline(sg, hid), 0, 0); }
     st.fig.classList.toggle('hovering', k != null);
   }
   if (k != null && e){
-    const r = st.fig.getBoundingClientRect(); const h = st.hots[k].h;
+    const r = st.fig.getBoundingClientRect(); const h = sg.hots[k].h;
     st.tip.innerHTML = h.l + `<small>${h.note ? 'Notiz' : 'Nahaufnahme'}</small>`;
     st.tip.style.left = (e.clientX - r.left) + 'px'; st.tip.style.top = (e.clientY - r.top) + 'px'; st.tip.hidden = false;
   } else st.tip.hidden = true;
 }
 
-/* ================================================================ detail panel ("Nahaufnahme") */
-let openSt = null;
-function openDetail(st, k){
-  clearTimeout(settleT); cancelAnimationFrame(pAnim);
-  if (openSt && openSt !== st) closeDetail(openSt, true);
-  const o = st.hots[k]; const h = o.h; const D = h.d ? DETAILS[h.d] : null;
-  if (!h.note && !D) return;
-  st.hots.forEach((x, j) => { x.b.classList.toggle('active', j === k); if (x.chip) x.chip.setAttribute('aria-pressed', String(j === k)); });
+/* ================================================================ tap points: notes pop up on the picture, close-ups open the modal */
+function openHot(st, hi, trigger){
+  const h = st.s.hots[hi]; if (!h) return;
+  if (h.note) openNote(st, hi, trigger); else if (h.d && DETAILS[h.d]) openCloseup(st, hi, trigger);
+}
+let NOTE = null;
+function openNote(st, hi, trigger){
+  const again = NOTE && NOTE.st === st && NOTE.hi === hi;
+  closeNote(true); if (again) return;   // a second tap on the same point closes it
+  const h = st.s.hots[hi];
+  let sg = st.stages[st.cur], o = sg.hots.find(x => x.hi === hi);
+  if (!o){ const k = st.stages.findIndex(g => g.hots.some(x => x.hi === hi)); if (k >= 0){ setStage(st, k); sg = st.stages[k]; o = sg.hots.find(x => x.hi === hi); } }
   setHover(st, null);
-  if (st.xray) toggleXray(st, false);
-  zoomTo(st, [o.p[0], o.p[1]], mobile() ? 1.9 : 2.2);
-  st.fig.classList.add('zoomed');
-  st.open = {k, d:h.d, step:h.step || 0};
-  const det = st.det; det.innerHTML = ''; det.hidden = false; det.classList.toggle('is-note', !!h.note);
-  det.setAttribute('role', 'region'); det.setAttribute('aria-label', (h.note ? 'Notiz: ' + h.l : 'Nahaufnahme: ' + D.title));
-  const head = el('div', 'd-head', `<span class="kicker">${h.note ? 'Notiz' : 'Nahaufnahme'}</span><h3>${h.note ? h.l : D.title}</h3>`);
-  const close = el('button', 'd-close', 'Schließen'); close.type = 'button'; close.addEventListener('click', () => closeDetail(st)); head.appendChild(close);
-  det.appendChild(head);
-  if (h.note){
-    det.appendChild(el('div', 'note-body', `<p>${h.note}</p>`));
-  } else {
-    const body = el('div', 'd-body');
-    const stage = el('div', 'd-stage'); const i1 = el('img', 'on'), i2 = el('img', 'off'); i1.alt = ''; i2.alt = '';
-    const sv = svg('svg', {class:'ov', viewBox:'0 0 1400 1008', preserveAspectRatio:'none', 'aria-hidden':'true'}); const lay = el('div', 'layer');
-    stage.append(i1, i2, sv, lay);
-    const steps = el('div', 'd-steps'); const dots = el('ol', 'd-dots'); const extra = el('div', 'd-extra'); const text = el('div', 'd-text'); text.setAttribute('aria-live', 'polite');
-    const nav = el('div', 'd-nav', '<button type="button" class="prev">Zurück</button><button type="button" class="next">Weiter</button><button type="button" class="auto" aria-pressed="false">Abspielen</button>');
-    D.steps.forEach((s, j) => { const li = el('li'); const b = el('button', '', String(j + 1)); b.type = 'button'; b.setAttribute('aria-label', 'Schritt ' + (j + 1)); b.addEventListener('click', () => showStep(st, j)); li.appendChild(b); dots.appendChild(li); });
-    steps.append(dots, extra, text, nav); body.append(stage, steps); det.appendChild(body);
-    Object.assign(st.open, {stage, imgs:[i1, i2], sv, lay, dots, extra, text, nav});
-    nav.querySelector('.prev').addEventListener('click', () => showStep(st, st.open.step - 1));
-    nav.querySelector('.next').addEventListener('click', () => { const n = D.steps.length; showStep(st, st.open.step + 1 < n ? st.open.step + 1 : 0); });
-    nav.querySelector('.auto').addEventListener('click', e => toggleAuto(st, e.currentTarget));
-    // One handler per panel: det is reused, so assign instead of adding a listener on every open.
-    det.onkeydown = e => {
-      if (!st.open || !st.open.stage) return;
-      if (e.key === 'ArrowRight'){ e.preventDefault(); showStep(st, Math.min(st.open.step + 1, D.steps.length - 1)); }
-      if (e.key === 'ArrowLeft'){ e.preventDefault(); showStep(st, Math.max(st.open.step - 1, 0)); }
-    };
-    showStep(st, st.open.step, true);
-  }
-  openSt = st;
-  requestLayout();
-  close.focus({preventScroll:true});
-  setTimeout(() => {
-    if (!st.open) return;
-    const r = det.getBoundingClientRect(); const top = 64, bottom = innerHeight - 12;
-    let dy = 0;
-    if (r.height > bottom - top || r.top < top) dy = r.top - top;
-    else if (r.bottom > bottom) dy = r.bottom - bottom;
-    if (Math.abs(dy) > 4) scrollToY(scrollY + dy);
-  }, reduce ? 0 : 420);
+  const id = st.s.id + '-n' + hi;
+  const pop = el('div', 'npop'); pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-labelledby', id);
+  pop.innerHTML = `<div class="np-head"><span class="kicker">Notiz</span><b id="${id}">${h.l}</b></div><p>${h.note}</p>`;
+  const x = el('button', 'np-close', ICON.close); x.type = 'button'; x.setAttribute('aria-label', 'Notiz schließen');
+  x.addEventListener('click', () => closeNote());
+  pop.querySelector('.np-head').appendChild(x);
+  st.fig.appendChild(pop);
+  NOTE = {st, hi, el:pop, trigger, dot:o ? o.b : null};
+  if (o) o.b.classList.add('active');
+  [st.chips[hi], o && o.b].forEach(b => { if (b){ b.classList.add('on'); b.setAttribute('aria-expanded', 'true'); } });
+  placeNote();
+  x.focus({preventScroll:true});
 }
-function closeDetail(st, quiet){
-  if (!st.open) return;
-  clearInterval(st.auto); st.auto = null;
-  const k = st.open.k;
-  st.open = null; st.det.hidden = true; st.det.innerHTML = '';
-  st.hots.forEach(x => { x.b.classList.remove('active'); if (x.chip) x.chip.setAttribute('aria-pressed', 'false'); });
-  st.fig.classList.remove('zoomed'); zoomTo(st, null, 1);
-  if (openSt === st) openSt = null;
-  requestLayout();
-  if (!quiet){
-    const r = st.fig.getBoundingClientRect(); if (r.top < 60 || r.bottom > innerHeight) scrollToY(scrollY + r.top - 80);
-    const o = st.hots[k]; if (o && o.chip) o.chip.focus({preventScroll:true});
-  }
+function placeNote(){
+  if (!NOTE) return;
+  const {st, el:pop, dot} = NOTE; const fr = rect(st.box || st.fig); const fw = fr.right - fr.left, fh = fr.bottom - fr.top;
+  const w = Math.min(320, fw - 16); pop.style.width = w + 'px';
+  const ph = pop.offsetHeight;
+  let cx = fw/2, cy = fh*.75, top;
+  if (dot){ const r = rect(dot); cx = (r.left + r.right)/2 - fr.left; cy = (r.top + r.bottom)/2 - fr.top; }
+  const left = clamp(cx - w/2, 8, Math.max(8, fw - w - 8));
+  if (!dot) top = fh - ph - 12;
+  else if (cy < fh*.55) top = cy + 28; else top = cy - 28 - ph;
+  top = clamp(top, 8, Math.max(8, fh - ph - 8));
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
 }
-function zoomTo(st, p, s){
-  if (!p || s <= 1){ st.zoomer.style.transform = ''; st.zoomer.style.setProperty('--zs', 1); return; }
-  let tx = .5 - p[0]*s, ty = .5 - p[1]*s;
-  tx = clamp(tx, 1 - s, 0); ty = clamp(ty, 1 - s, 0);
-  st.zoomer.style.transform = `translate(${tx*100}%, ${ty*100}%) scale(${s})`; st.zoomer.style.setProperty('--zs', s);
+function closeNote(quiet){
+  if (!NOTE) return;
+  const {st, hi, el:pop, trigger, dot} = NOTE; NOTE = null;
+  pop.remove(); if (dot) dot.classList.remove('active');
+  [st.chips[hi], dot].forEach(b => { if (b){ b.classList.remove('on'); b.setAttribute('aria-expanded', 'false'); } });
+  if (!quiet && trigger && document.contains(trigger)) trigger.focus({preventScroll:true});
 }
-function toggleAuto(st, btn){
-  if (st.auto){ clearInterval(st.auto); st.auto = null; btn.setAttribute('aria-pressed', 'false'); btn.textContent = 'Abspielen'; return; }
+document.addEventListener('pointerdown', e => { if (NOTE && !NOTE.el.contains(e.target) && !(NOTE.trigger && NOTE.trigger.contains(e.target))) closeNote(true); }, true);
+
+/* ================================================================ modal: close-ups, x-ray, tiles */
+const MODAL = {el:$('#modal'), dialog:$('#m-dialog'), kicker:$('#m-kicker'), title:$('#m-title'), body:$('#m-body'), close:$('#m-close'), open:false, token:0};
+function lockScroll(){
+  const de = document.documentElement, w0 = de.clientWidth;
+  de.classList.add('modal-open');
+  const dw = de.clientWidth - w0; if (dw > 0) document.body.style.paddingRight = dw + 'px';   // the scrollbar went away: keep the width
+}
+function unlockScroll(){ document.documentElement.classList.remove('modal-open'); document.body.style.paddingRight = ''; }
+function openModal(o){
+  const M = MODAL; if (!M.el) return;
+  if (M.open) closeModal(true);
+  closeNote(true);
+  M.trigger = o.trigger || document.activeElement; M.y = scrollY; M.onClose = o.onClose; M.onKey = o.onKey; M.token++;
+  lockScroll();
+  ['#top', '#flow'].forEach(s => { const n = $(s); if (n) n.inert = true; });
+  M.kicker.textContent = o.kicker || ''; M.title.innerHTML = o.title || '';
+  M.dialog.className = 'm-dialog' + (o.cls ? ' ' + o.cls : '');
+  M.body.innerHTML = ''; M.el.hidden = false; M.open = true;
+  o.build(M.body); M.body.scrollTop = 0;
+  void M.el.offsetWidth; M.el.classList.add('on');
+  M.close.focus({preventScroll:true});
+  if (o.after) requestAnimationFrame(() => { if (M.open) o.after(); });
+}
+function closeModal(quiet){
+  const M = MODAL; if (!M.open) return;
+  M.open = false; const tok = ++M.token;
+  safe('modal close', () => { if (M.onClose) M.onClose(); });
+  M.onClose = null; M.onKey = null;
+  M.el.classList.remove('on');
+  const done = () => { if (tok !== M.token || M.open) return; M.el.hidden = true; M.body.innerHTML = ''; };
+  if (reduce || quiet) done(); else setTimeout(done, 200);
+  ['#top', '#flow'].forEach(s => { const n = $(s); if (n) n.inert = false; });
+  unlockScroll();
+  if (Math.abs(scrollY - M.y) > 0.5) scrollTo(0, M.y);
+  if (!quiet && M.trigger && document.contains(M.trigger)) M.trigger.focus({preventScroll:true});
+}
+if (MODAL.el){
+  MODAL.close.addEventListener('click', () => closeModal());
+  // a click on the milky veil (not a drag that ended there) closes
+  let downOnVeil = false;
+  MODAL.el.addEventListener('pointerdown', e => { downOnVeil = !MODAL.dialog.contains(e.target); });
+  MODAL.el.addEventListener('click', e => { if (downOnVeil && !MODAL.dialog.contains(e.target)) closeModal(); downOnVeil = false; });
+  MODAL.el.addEventListener('keydown', e => {
+    if (e.key === 'Tab'){
+      const f = $$('a[href],button:not([disabled]),summary,input,select,textarea,[tabindex]:not([tabindex="-1"])', MODAL.dialog).filter(n => n.offsetParent !== null && !n.closest('[inert]'));
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1], a = document.activeElement;
+      if (e.shiftKey && (a === first || !MODAL.dialog.contains(a) || a === MODAL.dialog)){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && a === last){ e.preventDefault(); first.focus(); }
+      return;
+    }
+    if (MODAL.onKey) MODAL.onKey(e);
+  });
+}
+
+/* ---------------------------------------------------------------- close-up ("Nahaufnahme"), five steps */
+let CU = null;
+function openCloseup(st, hi, trigger){
+  const h = st.s.hots[hi]; const D = DETAILS[h.d]; if (!D) return;
+  openModal({kicker:'Nahaufnahme', title:D.title, cls:'m-detail', trigger,
+    build(body){
+      const wrap = el('div', 'd-body');
+      const stage = el('div', 'd-stage'); const i1 = el('img', 'off'), i2 = el('img', 'off'); i1.alt = ''; i2.alt = '';
+      const ph = el('div', 'd-ph'); ph.hidden = true;
+      const sv = svg('svg', {class:'ov', viewBox:'0 0 1400 1008', preserveAspectRatio:'none', 'aria-hidden':'true'}); const lay = el('div', 'layer');
+      stage.append(i1, i2, ph, sv, lay);
+      const steps = el('div', 'd-steps'); const dots = el('ol', 'd-dots'); const extra = el('div', 'd-extra'); const text = el('div', 'd-text'); text.setAttribute('aria-live', 'polite');
+      const nav = el('div', 'd-nav', '<button type="button" class="prev">Zurück</button><button type="button" class="next">Weiter</button><button type="button" class="auto" aria-pressed="false">Abspielen</button>');
+      D.steps.forEach((s, j) => { const li = el('li'); const b = el('button', '', String(j + 1)); b.type = 'button'; b.setAttribute('aria-label', 'Schritt ' + (j + 1)); b.addEventListener('click', () => showStep(CU, j)); li.appendChild(b); dots.appendChild(li); });
+      steps.append(dots, extra, text, nav); wrap.append(stage, steps); body.appendChild(wrap);
+      CU = {st, d:h.d, D, step:h.step || 0, stage, imgs:[i1, i2], cur:null, ph, sv, lay, dots, extra, text, nav, auto:null};
+      nav.querySelector('.prev').addEventListener('click', () => showStep(CU, CU.step - 1));
+      nav.querySelector('.next').addEventListener('click', () => { const n = D.steps.length; showStep(CU, CU.step + 1 < n ? CU.step + 1 : 0); });
+      nav.querySelector('.auto').addEventListener('click', e => toggleAuto(CU, e.currentTarget));
+      showStep(CU, CU.step, true);
+    },
+    onKey(e){
+      if (!CU || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === 'ArrowRight'){ e.preventDefault(); showStep(CU, Math.min(CU.step + 1, CU.D.steps.length - 1)); }
+      if (e.key === 'ArrowLeft'){ e.preventDefault(); showStep(CU, Math.max(CU.step - 1, 0)); }
+    },
+    after(){ if (CU) resolveStage(CU); },
+    onClose(){ if (CU) clearInterval(CU.auto); CU = null; }});
+}
+function toggleAuto(O, btn){
+  if (O.auto){ clearInterval(O.auto); O.auto = null; btn.setAttribute('aria-pressed', 'false'); btn.textContent = 'Abspielen'; return; }
   btn.setAttribute('aria-pressed', 'true'); btn.textContent = 'Pause';
-  st.auto = setInterval(() => {
-    if (!st.open){ clearInterval(st.auto); return; }
-    const n = DETAILS[st.open.d].steps.length;
-    if (st.open.step >= n - 1){ clearInterval(st.auto); st.auto = null; btn.setAttribute('aria-pressed', 'false'); btn.textContent = 'Abspielen'; return; }
-    showStep(st, st.open.step + 1);
+  O.auto = setInterval(() => {
+    if (CU !== O){ clearInterval(O.auto); return; }
+    const n = O.D.steps.length;
+    if (O.step >= n - 1){ clearInterval(O.auto); O.auto = null; btn.setAttribute('aria-pressed', 'false'); btn.textContent = 'Abspielen'; return; }
+    showStep(O, O.step + 1);
   }, 5600);
 }
-function showStep(st, j, first){
-  const O = st.open; const steps = DETAILS[O.d].steps; j = clamp(j, 0, steps.length - 1); O.step = j;
+function showStep(O, j, first){
+  if (!O) return;
+  const steps = O.D.steps; j = clamp(j, 0, steps.length - 1); O.step = j;
   const s = steps[j];
-  const I = imgData(s.img, s.need) || imgData(st.s.room); if (!I) return;
-  const data = I.data, src = data.img;
+  const I = imgData(s.img, s.need) || {data:{w:1400, h:1008, anchors:{}}, ph:true, text:'Rendering folgt'};
+  const data = I.data;
   let zoom = null;
   if (I.room && s.zoom){ const zp = anchor(data, s.zoom[0]); if (zp) zoom = [zp, s.zoom[1]]; }
-  const [a, b] = O.imgs; const curImg = a.classList.contains('on') ? a : b; const nxt = curImg === a ? b : a;
+  const [a, b] = O.imgs;
   const apply = im => {
     im.style.objectFit = I.room ? 'contain' : 'cover';
     if (zoom){ im.style.transformOrigin = `${zoom[0][0]*100}% ${zoom[0][1]*100}%`; im.style.transform = `scale(${zoom[1]})`; }
     else { im.style.transform = ''; im.style.transformOrigin = ''; }
   };
-  if (first){ curImg.src = src; apply(curImg); }
-  else if (curImg.getAttribute('src') !== src){ nxt.src = src; apply(nxt); nxt.classList.replace('off', 'on'); curImg.classList.replace('on', 'off'); }
-  else apply(curImg);
+  if (I.ph){
+    O.ph.innerHTML = ''; O.ph.appendChild(phFig(I.text, null, I.ki)); O.ph.hidden = false;
+    [a, b].forEach(im => im.classList.replace('on', 'off')); O.cur = null;
+  } else {
+    O.ph.hidden = true;
+    if (!O.cur){ const im = a; im.src = data.img; apply(im); im.classList.replace('off', 'on'); b.classList.replace('on', 'off'); O.cur = im; }
+    else if (O.cur.getAttribute('src') !== data.img){ const nxt = O.cur === a ? b : a; nxt.src = data.img; apply(nxt); nxt.classList.replace('off', 'on'); O.cur.classList.replace('on', 'off'); O.cur = nxt; }
+    else apply(O.cur);
+  }
   O.sv.setAttribute('viewBox', `0 0 ${data.w} ${data.h}`);
   O.stage.style.aspectRatio = `${data.w}/${data.h}`;
   O.dots.querySelectorAll('button').forEach((bt, k) => { bt.setAttribute('aria-current', String(k === j)); if (k <= j) bt.classList.add('seen'); });
   O.text.innerHTML = (s.ev ? '<span class="ev">Woran wir merken würden, ob es wirkt</span>' : '') + `<p>${s.t}</p>`
-    + (s.src ? `<p style="margin-top:8px"><a href="${s.src[1]}">Quelle: ${s.src[0]}</a></p>` : '');
+    + (s.src ? `<p class="d-src"><a href="${s.src[1]}">Quelle: ${s.src[0]}</a></p>` : '');
   O.nav.querySelector('.prev').disabled = j === 0;
   O.nav.querySelector('.next').textContent = j === steps.length - 1 ? 'Von vorn' : 'Weiter';
   // overlays
@@ -547,13 +669,12 @@ function showStep(st, j, first){
   const W = data.w, H = data.h;
   const P = names => { const p = anchor(data, names); if (!p) return null; const q = zoom ? [zoom[0][0] + (p[0] - zoom[0][0])*zoom[1], zoom[0][1] + (p[1] - zoom[0][1])*zoom[1]] : p; return onImage(q, 0) ? q : null; };
   const at = (e, p, dx, dy) => { e.style.left = `calc(${p[0]*100}% + ${dx || 0}px)`; e.style.top = `calc(${p[1]*100}% + ${dy || 0}px)`; };
-  const inline = mobile();
+  const inline = (O.stage.offsetWidth || 0) < 560;
   (s.ov || []).forEach(o => {
     if (o.pulse){ const p = P(o.pulse); if (p){ const e = el('div', 'pulse'); at(e, p); O.lay.appendChild(e); } }
-    else if (o.chip){ const p = P(o.chip); if (p){ const e = el('div', 'dchip' + (o.cls ? ' ' + o.cls : ''), o.t); e.dataset.side = o.side || ''; at(e, p, 0, o.dy); O.lay.appendChild(e); } }
+    else if (o.chip){ const p = P(o.chip) || o.at; if (p){ const e = el('div', 'dchip' + (o.cls ? ' ' + o.cls : ''), o.t); e.dataset.side = o.side || ''; at(e, p, 0, o.dy); O.lay.appendChild(e); } }
     else if (o.bubble){ const p = P(o.bubble); if (p){ const e = el('div', 'bubble', o.t); at(e, p); if (o.d) e.style.animationDelay = o.d + 's'; O.lay.appendChild(e); } }
-    else if (o.phone){ const e = el('div', 'phone', `<div class="scr">${PHONES[o.phone]}</div>`); (inline ? O.extra : O.lay).appendChild(e); }
-    else if (o.paper){ const e = el('div', 'paper', PAPERS[o.paper]); (inline ? O.extra : O.lay).appendChild(e); }
+    else if (o.phone != null && PHONES[o.phone] != null){ const e = el('div', 'phone' + (o.phone === 'aus' ? ' off' : ''), `<div class="scr">${PHONES[o.phone]}</div>`); (inline ? O.extra : O.lay).appendChild(e); }
     else if (o.cube){ const p = P(o.cube); if (p){ const e = el('div', 'pw' + (o.to === 'frage' ? ' still' : ''), '<i class="a">?</i><i class="b"></i>'); at(e, p, 0, o.dy == null ? -58 : o.dy); O.lay.appendChild(e); } }
     else if (o.air){
       // draught: wavy lines from the window across the room, sized to the image
@@ -573,16 +694,16 @@ function showStep(st, j, first){
     }
     else if (o.ring){ const pts = data.paths && data.paths[o.ring]; if (pts && !zoom){ ringAnim(O.sv, pts.map(p => [p[0]*W, p[1]*H]), o.dur || 5, o.done); } }
   });
-  requestAnimationFrame(() => resolveStage(O));
+  if (!first) requestAnimationFrame(() => resolveStage(O));
 }
 /* chips, bubbles, the cloud and the Planwürfel stay inside the image and apart; never overlap */
 function resolveStage(O, later){
   if (!O || !O.stage || !O.stage.offsetParent) return;
   // measure final sizes: right after a step change restart the pop-in, on later passes just finish it
-  $$('.dchip,.bubble,.xcloud,.pw,.phone,.paper', O.lay).forEach(n => { if (later) n.getAnimations().forEach(a => { if (a.animationName !== 'flipA' && a.animationName !== 'flipB') a.finish(); }); else n.style.animation = 'none'; });
+  $$('.dchip,.bubble,.xcloud,.pw,.phone', O.lay).forEach(n => { if (later) n.getAnimations().forEach(a => { if (a.animationName !== 'flipA' && a.animationName !== 'flipB') a.finish(); }); else n.style.animation = 'none'; });
   void O.stage.offsetWidth;
   const box = rect(O.stage);
-  const placed = $$('.phone,.paper', O.lay).map(n => inflate(rect(n), 4));
+  const placed = $$('.phone', O.lay).map(n => inflate(rect(n), 4));
   $$('.pulse', O.lay).forEach(n => placed.push(inflate(rect(n), -14)));
   $$('.xcloud,.pw,.dchip,.bubble', O.lay).forEach(n => {
     n.hidden = false; n.style.marginLeft = ''; n.style.marginTop = ''; n.classList.remove('below'); n.style.removeProperty('--tail');
@@ -608,7 +729,7 @@ function resolveStage(O, later){
     if (n.classList.contains('bubble')) n.style.setProperty('--tail', clamp(w/2 - dx, 16, w - 16) + 'px');
     placed.push(inflate(r, 4));
   });
-  if (!later) $$('.dchip,.bubble,.xcloud,.pw,.phone,.paper', O.lay).forEach(n => { n.style.animation = ''; });
+  if (!later) $$('.dchip,.bubble,.xcloud,.pw,.phone', O.lay).forEach(n => { n.style.animation = ''; });
 }
 function ringAnim(sv, pts, dur, done){
   const d = 'M' + pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join('L');
@@ -627,53 +748,103 @@ function ringAnim(sv, pts, dur, done){
   else bug.setAttribute('transform', `translate(${pts[pts.length - 1][0]},${pts[pts.length - 1][1]})`);
 }
 
-/* ================================================================ Fach und Cube figure */
-const FACH = {};
-function buildFach(){
-  const I = imgData(FACH_FIG.img); if (!I) return;
-  const box = $('#fach-fig'), fig = $('#fach-img'), legend = $('#fach-legend'); if (!box) return;
-  const img = el('img'); img.src = I.data.img; img.width = I.data.w; img.height = I.data.h; img.alt = FACH_FIG.alt; img.loading = 'lazy'; img.decoding = 'async';
-  fig.appendChild(img);
-  let n = 0; const dots = [];
-  FACH_FIG.items.forEach(it => {
-    if (it.only && it.only !== I.name) return;
-    const p = anchor(I.data, it.a); if (!onImage(p, .02)) return;
-    n++;
-    const dt = el('span', 'fdot', String(n)); dt.setAttribute('aria-hidden', 'true'); dt.style.left = (p[0]*100) + '%'; dt.style.top = (p[1]*100) + '%'; fig.appendChild(dt); dots.push(dt);
-    legend.appendChild(el('li', '', `<span aria-hidden="true">${n}</span>${it.t}`));
-  });
-  if (!n) legend.hidden = true;
-  if (n <= 3) box.classList.add('few');
-  box.hidden = false;
-  FACH.fig = fig; FACH.dots = dots;
+/* ---------------------------------------------------------------- x-ray ("Was steckt dahinter?"): numbers on the picture, texts beside it */
+let XR = null;
+function openXray(st, trigger){
+  const X = st.s.xray; if (!X) return;
+  const k = X.stage != null && st.stages[X.stage] ? X.stage : st.cur;
+  const sg = st.stages[k] || st.stages[0];
+  openModal({kicker:'Was steckt dahinter?', title:st.s.title, cls:'m-xray', trigger,
+    build(body){
+      const wrap = el('div', 'x-body');
+      const fig = el('figure', 'room xray x-fig'); const zoomer = el('div', 'zoomer');
+      const d = sg ? sg.d : {w:1420, h:1214, anchors:{}};
+      zoomer.style.aspectRatio = `${d.w}/${d.h}`;
+      if (!sg || sg.kind === 'ph') zoomer.appendChild(phFig(sg ? sg.r.text : 'Rendering folgt', sg && sg.r.sub, sg && sg.r.ki));
+      else { const img = el('img'); img.src = d.img; img.alt = ''; img.width = d.w; img.height = d.h; zoomer.appendChild(img); }
+      const ov = svg('svg', {class:'ov', viewBox:`0 0 ${d.w} ${d.h}`, preserveAspectRatio:'none', 'aria-hidden':'true'}); const layer = el('div', 'layer');
+      zoomer.append(ov, layer); fig.appendChild(zoomer);
+      const side = el('div', 'x-side');
+      const list = el('ol', 'xlist');
+      X.items.filter(it => it.n).sort((a, b) => a.n - b.n).forEach(it => {
+        const body = it.calc ? `<b>Rechnung</b><dl class="calc">${it.calc.map(r => `<div><dt>${r}</dt><dd>Wert folgt</dd></div>`).join('')}</dl>` : it.t;
+        const li = el('li', '', `<span>${it.n}</span><div>${body}</div>`); li.dataset.n = it.n;
+        li.addEventListener('mouseenter', () => markX(it.n, true)); li.addEventListener('mouseleave', () => markX(it.n, false));
+        list.appendChild(li);
+      });
+      side.appendChild(list); wrap.append(fig, side); body.appendChild(wrap);
+      XR = {st, X, d, fig, zoomer, ov, layer, list};
+    },
+    after(){ if (XR) drawXray(XR); },
+    onClose(){ XR = null; }});
 }
-function fitFach(){
-  if (!FACH.fig || !FACH.fig.offsetParent) return;
-  const placed = []; const fb = rect(FACH.fig);
-  FACH.dots.forEach(d => {
-    d.style.marginLeft = ''; d.style.marginTop = ''; const r0 = rect(d); const k = r0.right - r0.left + 3;
-    for (const [dx, dy] of [[0,0],[0,-k],[k,0],[-k,0],[0,k],[k,-k],[-k,-k],[k,k],[-k,k],[0,-2*k],[2*k,0],[-2*k,0],[0,2*k]]){
+function markX(n, on){
+  if (!XR) return;
+  XR.layer.querySelectorAll(`.xr[data-n="${n}"]`).forEach(e => e.classList.toggle('hl', on));
+  XR.list.querySelectorAll(`li[data-n="${n}"]`).forEach(e => e.classList.toggle('hl', on));
+}
+function drawXray(R){
+  if (!R || !R.zoomer.offsetWidth) return;
+  R.ov.querySelectorAll('.xr').forEach(n => n.remove());
+  R.layer.querySelectorAll('.xr').forEach(n => n.remove());
+  const {d, X} = R; const W = d.w, H = d.h;
+  const fw = R.zoomer.offsetWidth || 1, fh = R.zoomer.offsetHeight || 1;
+  const toFrac = f => [clamp(f[0]*fw, 30, fw - 30)/fw, clamp(f[1]*fh, 30, fh - 30)/fh];
+  const hub = toFrac(X.hub); const ext = X.ext ? toFrac(X.ext.at) : null;
+  const g = svg('g', {class:'xr'}, R.ov);
+  const wire = (a, b, out) => {
+    const ax = a[0]*W, ay = a[1]*H, bx = b[0]*W, by = b[1]*H; const mx = (ax + bx)/2, my = Math.min(ay, by) - H*.08;
+    const dd = `M${ax.toFixed(1)},${ay.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${bx.toFixed(1)},${by.toFixed(1)}`;
+    svg('path', {d:dd, class:'halo'}, g); svg('path', {d:dd, class:'wire' + (out ? ' out' : '')}, g);
+  };
+  const place = (n, f) => { n.style.left = (f[0]*100) + '%'; n.style.top = (f[1]*100) + '%'; R.layer.appendChild(n); return n; };
+  const icons = [], nodes = [];
+  let hubN = null, extN = null;
+  X.items.forEach(it => {
+    if (it.hub){ if (it.n) hubN = it.n; return; }
+    if (it.ext){ if (ext) wire(ext, hub, it.dir === 'out'); if (it.n) extN = it.n; return; }
+    if (it.calc) return;
+    const p = anchor(d, it.a); if (!onImage(p, 0)) return;
+    if (it.dir) wire(p, hub, it.dir === 'out');   // no direction: a property of the object, no data flow
+    if (it.n){ const n = el('div', 'xnode xr', String(it.n)); n.dataset.n = it.n; nodes.push(place(n, p)); }
+  });
+  const hb = el('div', 'xicon xr xgears', ICON.gears + (hubN ? `<span class="xn">${hubN}</span>` : '')); if (hubN) hb.dataset.n = hubN; icons.push(place(hb, hub));
+  if (ext){ const eb = el('div', 'xicon xr', (ICON[X.ext.icon] || ICON.cloud) + (extN ? `<span class="xn">${extN}</span>` : '')); if (extN) eb.dataset.n = extN; icons.push(place(eb, ext)); }
+  // numbers never overlap each other or the icons
+  const placed = icons.map(n => inflate(rect(n), 2)); const fb = rect(R.zoomer);
+  nodes.forEach(n => {
+    const r0 = rect(n);
+    const C = [[0,0],[0,-30],[30,0],[-30,0],[0,30],[30,-30],[-30,-30],[30,30],[-30,30],[0,-60],[60,0],[-60,0]];
+    for (const [dx, dy] of C){
       const r = shift(r0, dx, dy);
       if (r.left < fb.left + 2 || r.right > fb.right - 2 || r.top < fb.top + 2 || r.bottom > fb.bottom - 2) continue;
-      if (placed.some(q => hit(inflate(q, 2), r))) continue;
-      if (dx || dy){ d.style.marginLeft = dx + 'px'; d.style.marginTop = dy + 'px'; }
+      if (placed.some(q => hit(inflate(q, 3), r))) continue;
+      if (dx || dy){ n.style.marginLeft = dx + 'px'; n.style.marginTop = dy + 'px'; }
       placed.push(r); return;
     }
     placed.push(r0);
   });
 }
 
-/* ================================================================ card sets: the whole card opens "Mehr" */
+/* ---------------------------------------------------------------- tiles ("Hintergründe") */
+function openTile(id, trigger){
+  const node = document.getElementById('tile-' + id); if (!node) return;
+  const store = node.parentNode;
+  openModal({kicker:'Hintergrund', title:node.dataset.title || '', cls:'m-tile', trigger,
+    build(body){ body.appendChild(node); node.hidden = false; },
+    onClose(){ node.hidden = true; store.appendChild(node); }});
+}
+function setupTiles(){ $$('[data-tile]').forEach(b => b.addEventListener('click', () => openTile(b.dataset.tile, b))); }
+/* card sets: the whole card opens "Mehr" */
 function setupCards(){
   $$('.kcard').forEach(c => {
     const det = $('details.mehr', c); if (!det) return;
     c.classList.add('has-more');
     c.addEventListener('click', e => { if (e.target.closest('a, summary, button, details > div')) return; det.open = !det.open; });
   });
-  $$('details').forEach(d => d.addEventListener('toggle', () => requestLayout()));
+  $$('#flow details').forEach(d => d.addEventListener('toggle', () => requestLayout()));
 }
-
-/* ================================================================ Weg einer Idee: stepper */
+/* Weg einer Idee: stepper */
 function setupWeg(){
   const weg = $('#weg'); if (!weg) return;
   const track = $('.weg-track', weg), nav = $('.weg-nav', weg); const nodes = $$('.weg-node', weg), steps = $$('.weg-steps li', weg);
@@ -691,19 +862,19 @@ function setupWeg(){
     const roles = (steps[cur].dataset.roles || '').split(' ');
     roleCards.forEach(c => c.classList.toggle('lit', c.dataset.role.split(' ').some(r => roles.includes(r))));
   };
-  const stopAuto = () => { clearInterval(timer); timer = null; auto.setAttribute('aria-pressed', 'false'); auto.textContent = 'Abspielen'; };
-  nodes.forEach((n, j) => n.addEventListener('click', () => { stopAuto(); show(j); }));
-  prev.addEventListener('click', () => { stopAuto(); show(cur - 1); });
-  next.addEventListener('click', () => { stopAuto(); show(cur + 1 < steps.length ? cur + 1 : 0); });
+  const stopW = () => { clearInterval(timer); timer = null; auto.setAttribute('aria-pressed', 'false'); auto.textContent = 'Abspielen'; };
+  nodes.forEach((n, j) => n.addEventListener('click', () => { stopW(); show(j); }));
+  prev.addEventListener('click', () => { stopW(); show(cur - 1); });
+  next.addEventListener('click', () => { stopW(); show(cur + 1 < steps.length ? cur + 1 : 0); });
   auto.addEventListener('click', () => {
-    if (timer){ stopAuto(); return; }
+    if (timer){ stopW(); return; }
     auto.setAttribute('aria-pressed', 'true'); auto.textContent = 'Pause';
     if (cur === steps.length - 1) show(0);
-    timer = setInterval(() => { if (cur >= steps.length - 1){ stopAuto(); return; } show(cur + 1); }, 5200);
+    timer = setInterval(() => { if (cur >= steps.length - 1 || !weg.offsetParent){ stopW(); return; } show(cur + 1); }, 5200);
   });
   weg.addEventListener('keydown', e => {
     if (e.target.closest('.weg-track') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
-      e.preventDefault(); stopAuto(); show(cur + (e.key === 'ArrowRight' ? 1 : -1)); nodes[cur].focus();
+      e.preventDefault(); e.stopPropagation(); stopW(); show(cur + (e.key === 'ArrowRight' ? 1 : -1)); nodes[cur].focus();
     }
   });
   show(0);
@@ -736,18 +907,22 @@ function layoutThread(){
   ST.forEach(st => {
     const [, ty] = offsetIn(st.head.querySelector('.time') || st.head, flow);
     let ky = ty + 12;
-    if (!st.fig){ knots.push([rx, ky, st]); pts.push([rx, ky, 'r']); return; }
-    const [fx, fy] = offsetIn(st.fig, flow); const fw = st.fig.offsetWidth, fh = st.fig.offsetHeight;
-    if (!mobile()) ky = Math.min(ky, fy + 10);
-    knots.push([rx, ky, st]);
-    const pin = anchor(st.d, 'in'), pout = anchor(st.d, ['corner_l', 'out']);
-    pts.push([rx, ky, 'r']);
-    if (pin && pout){
-      pts.push([fx + pin[0]*fw, fy + pin[1]*fh, 'i']);
-      pts.push([fx + pout[0]*fw, fy + pout[1]*fh, 'o']); pts.push([rx, fy + pout[1]*fh + (mobile() ? 46 : 80), 'r']);
+    if (!st.box){ knots.push([rx, ky, st]); pts.push([rx, ky, 'r']); return; }
+    const [, by] = offsetIn(st.box, flow);
+    if (!mobile()) ky = Math.min(ky, by + 10);
+    knots.push([rx, ky, st]); pts.push([rx, ky, 'r']);
+    // with several stages the thread enters the first picture that has 'in' and leaves the last one that has 'out'
+    const gin = st.stages.find(g => anchor(g.d, 'in')), gout = st.stages.slice().reverse().find(g => anchor(g.d, ['corner_l', 'out']));
+    if (gin && gout){
+      const at = (g, p) => { const [zx, zy] = offsetIn(g.zoomer, flow); return [zx + p[0]*g.zoomer.offsetWidth, zy + p[1]*g.zoomer.offsetHeight]; };
+      const a = at(gin, anchor(gin.d, 'in')), b = at(gout, anchor(gout.d, ['corner_l', 'out']));
+      // an exit at the bottom edge (U-Bahn: "Mitte unten") returns along the edge, not across the tap points below
+      const pout = anchor(gout.d, ['corner_l', 'out']), [, gy] = offsetIn(gout.zoomer, flow);
+      const back = pout[1] > .9 ? gy + gout.zoomer.offsetHeight + 8 : b[1] + (mobile() ? 46 : 80);
+      pts.push([a[0], a[1], 'i']); pts.push([b[0], b[1], 'o']); pts.push([rx, back, 'r']);
     }
   });
-  const end = $('#ziele'); const [, ey] = offsetIn(end, flow); pts.push([rx, ey + 30, 'r']);
+  const end = $('#weiter'); const [, ey] = offsetIn(end, flow); pts.push([rx, ey + 30, 'r']);
   const {d, S} = threadPath(pts);
   thread.innerHTML = ''; doneSvg.innerHTML = '';
   svg('path', {d, class:'route'}, thread); svg('path', {d, class:'done'}, doneSvg);
@@ -793,9 +968,10 @@ function headAt(S, target){
 let ticking = false, layoutPending = false;
 function layoutAll(){
   if (HERO.fig) fitTags(HERO.fig, HERO.tags);
-  ST.forEach(st => { safe('fit ' + st.s.id, () => { fitStation(st); if (st.xray) drawXray(st); }); });
-  if (openSt && openSt.open && openSt.open.stage) resolveStage(openSt.open, true);
-  fitFach();
+  ST.forEach(st => { safe('fit ' + st.s.id, () => fitStation(st)); });
+  if (NOTE) safe('note', placeNote);
+  if (CU) resolveStage(CU, true);
+  if (XR) drawXray(XR);
   VARS.forEach(u => u());
   layoutThread();
 }
@@ -845,9 +1021,9 @@ function scrollToY(y, dur){
 }
 let pAnim = null;
 function stationY(st){ if (mobile() && st.head) return docTop(st.head) - 72; const r = (st.fig || st.head).getBoundingClientRect(); return scrollY + r.top - Math.max(70, (innerHeight - r.height)/2); }
-// All stops in document order: intro sections, the stations of the day, the sections after the day.
+// All stops in document order: the stations of the day and the sections after the day.
 function stops(){
-  return [...document.querySelectorAll('#flow > section.sec, #journey > section, #journey2 > section')]
+  return [...document.querySelectorAll('#flow > section.sec, #journey > section')]
     .filter(e => e.offsetParent !== null)
     .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1);
 }
@@ -884,21 +1060,32 @@ let nextRaf = 0;
 addEventListener('scroll', () => { if (!nextRaf) nextRaf = requestAnimationFrame(() => { nextRaf = 0; updateNextUI(); }); }, {passive:true});
 // Any own scrolling stops the Weiter animation and its late correction.
 ['wheel', 'touchstart'].forEach(ev => addEventListener(ev, () => { clearTimeout(settleT); cancelAnimationFrame(pAnim); }, {passive:true}));
-addEventListener('keydown', e => { if (e.key === 'Escape' && openSt) closeDetail(openSt); });
+addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (MODAL.open){ e.preventDefault(); closeModal(); }
+  else if (NOTE){ e.preventDefault(); closeNote(); }
+});
 
 /* ================================================================ init */
 safe('hero', buildHero);
 STATIONS.forEach((s, i) => { const sec = safe('station ' + s.id, () => buildStation(s, i)); if (sec) $('#journey').appendChild(sec); });
-STATIONS_AFTER.forEach((s, i) => { const sec = safe('station ' + s.id, () => buildStation(s, STATIONS.length + i)); if (sec) $('#journey2').appendChild(sec); });
-safe('fach', buildFach);
+safe('teasers', buildTeasers);
+safe('tiles', setupTiles);
 safe('cards', setupCards);
 safe('weg', setupWeg);
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('live'); }), {rootMargin:'0px 0px -25% 0px'});
 ST.forEach(st => io.observe(st.sec));
+// stations with several pictures run through them once when they come into view (not with reduced motion)
+const stageIO = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting || e.intersectionRatio < .5) return;
+  const st = ST.find(x => x.box === e.target); stageIO.unobserve(e.target); if (st) setTimeout(() => startAuto(st), 900);
+}), {threshold:[.5]});
+if (!reduce) ST.forEach(st => { if (st.box && st.stages.length > 1) stageIO.observe(st.box); });
 if ('ResizeObserver' in window){ const ro = new ResizeObserver(() => requestLayout()); ro.observe(flow); }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { requestLayout(); updateNextUI(); });
 setTimeout(updateNextUI, 400);
 addEventListener('load', () => requestLayout());
 layoutThread(); requestLayout();
-/* test hook: lets the smoke test wait for the debounced layout */
+/* test hooks: lets the smoke test wait for the debounced layout and read the station state */
 window.__bhLayout = () => { layoutAll(); return true; };
+window.__bhState = () => ({stations:ST.map(st => ({id:st.s.id, stages:st.stages.map(g => g.kind), cur:st.cur, dots:st.stages.map(g => g.hots.length), auto:!!st.autoT})), modal:MODAL.open, note:!!NOTE});

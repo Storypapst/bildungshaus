@@ -1,18 +1,26 @@
-"""Build the Bildungshaus weWeit scroll journey (demo v3) from the Blender renders.
+"""Build the Bildungshaus weWeit scroll journey (Kita page v5) from the Blender renders.
 
-Usage: python3 build.py [RENDER_DIR]          (env BH_SITE overrides the output folder)
+Usage: python3 build.py [RENDER_DIR] [KI_DIR]     (env BH_SITE overrides the output folder)
 
 Writes site/:
   index.html       artifact flavour (no document skeleton)
-  standalone.html  full document for own hosting (served as index.html at /bildungshaus/demov1/)
+  standalone.html  full document for own hosting
   app.js           web/story.js + web/app.js in one IIFE (the page has no inline script: CSP script-src 'self')
   fonts/           self-hosted woff2 + fonts.css + licences
   *.webp, *_id.png images and hover masks
+  ki/*.webp        KI images (U-Bahn, variant cards), if a KI folder exists
 All paths are relative, so the folder works under any URL prefix.
 
-Every render is optional. Logical names fall back to older renders (halle_745_fenster ->
-halle_745_oberlicht, halle_915 -> halle_800, ...), and a render missing in RENDER_DIR is taken from
-RENDER_DIR/v2_backup if it exists there. New renders are picked up automatically on the next build.
+Render names follow CONTRACT_v5.md. Every render is optional:
+  - While a v5 render is missing, FALLBACK names an older render that stands in for it
+    (piazza_800 -> halle_800, ...). The fallback keeps its own anchors, so some tap points are missing.
+  - With neither, the page shows a placeholder figure ("Rendering folgt") of the right aspect ratio.
+  - A render missing in RENDER_DIR is also looked up in RENDER_DIR/v2_backup.
+New renders are picked up automatically on the next build with the same command.
+
+KI images: PNG/JPG/WebP files in KI_DIR (default: RENDER_DIR/ki, else the folder ki/ next to
+RENDER_DIR) are converted to WebP in site/ki/ (variant cards max 900 px wide, ubahn max 1600 px).
+The page only references files listed in the scene data, so missing images never cause a 404.
 """
 
 import hashlib
@@ -26,35 +34,34 @@ from PIL import Image, ImageEnhance
 
 ROOT = Path(__file__).parent
 SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "renders"
+KI_ARG = Path(sys.argv[2]) if len(sys.argv) > 2 else None
 SITE = Path(os.environ.get("BH_SITE", ROOT / "site"))
 WEB = ROOT / "web"
 
-# logical name -> candidate renders, newest first
-ROOMS = {
-    "aussen": ["aussen"],
-    "halle_745": ["halle_745"],
-    "halle_800": ["halle_800"],
-    "halle_915": ["halle_915", "halle_800"],
-    "kaufladen": ["kaufladen"],
-    "waschraum_1145": ["waschraum_1145"],
-    "bistro": ["bistro"],
-    "abholung": ["abholung"],
-    "werkstatt": ["werkstatt"],
-    "ausblick": ["ausblick"],
+# v5 render names (CONTRACT_v5.md). Logical name -> renders that may stand in while it is missing.
+# The v5 name itself is always tried first; the fallback is used ONLY while the v5 render is missing.
+ROOMS = ["aussen", "piazza_745", "vorraum_800", "piazza_800", "kaufladen", "kaufladen_umbau",
+         "kaufladen_kochen", "waschraum_1145", "vorraum_1400", "abholung", "piazza_1615"]
+SHOTS = ["piazza_745z_fenster", "piazza_745_fenster", "piazza_800_hubel", "piazza_800_schrank",
+         "schrank_offen", "kaufladen_kasse", "schrankwand_offen", "vorraum_nacht",
+         "waschraum_aus_becken", "waschraum_1145_becken", "abholung_faecher", "abholung_wunsch"]
+FALLBACK = {
+    "piazza_745": ["halle_745"],
+    "piazza_745z_fenster": ["halle_745z_fenster", "halle_745z_oberlicht"],
+    "piazza_745_fenster": ["halle_745_fenster", "halle_745_oberlicht"],
+    "piazza_800": ["halle_800"],
+    "piazza_800_hubel": ["halle_800_obelisk"],
+    "piazza_800_schrank": ["fachwand"],
+    "schrank_offen": ["fachwand"],
+    "piazza_1615": ["abholung"],
+    # vorraum_*, kaufladen_umbau, kaufladen_kochen, schrankwand_offen: placeholder until rendered
 }
-SHOTS = {
-    "halle_745z_fenster": ["halle_745z_fenster", "halle_745z_oberlicht"],
-    "halle_745_fenster": ["halle_745_fenster", "halle_745_oberlicht"],
-    "halle_800_obelisk": ["halle_800_obelisk"],
-    "fachwand": ["fachwand"],
-    "kaufladen_kasse": ["kaufladen_kasse"],
-    "waschraum_aus_becken": ["waschraum_aus_becken"],
-    "waschraum_1145_becken": ["waschraum_1145_becken"],
-    "bistro_daumen": ["bistro_daumen"],
-    "abholung_faecher": ["abholung_faecher"],
-    "abholung_wunsch": ["abholung_wunsch"],
-    "werkstatt_kaestchen": ["werkstatt_kaestchen"],
-}
+# Placeholder size while nothing is rendered: rooms like the alpha-cropped v3 rooms, close-ups 1400 x 1008.
+PH_ROOM = (1420, 1214)
+PH_SHOT = (1400, 1008)
+KI_MAXW = {"ubahn": 1600}
+KI_MAXW_DEFAULT = 900
+KI_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 def grade(im, sat=1.12, con=1.05):
@@ -99,13 +106,13 @@ def load(name):
     return None
 
 
-def busted(name):
+def busted(rel):
     """file name plus a short content hash, so browsers reload re-rendered images (the server ignores the query)."""
-    return f"{name}?v={hashlib.sha1((SITE / name).read_bytes()).hexdigest()[:8]}"
+    return f"{rel}?v={hashlib.sha1((SITE / rel).read_bytes()).hexdigest()[:8]}"
 
 
 def fresh(out, src):
-    """True if the output image exists and is newer than its source render (skip re-encoding)."""
+    """True if the output image exists and is newer than its source (skip re-encoding)."""
     if os.environ.get("BH_FORCE"):
         return False
     return out.exists() and out.stat().st_mtime >= src.stat().st_mtime
@@ -145,10 +152,10 @@ def build_shot(name, d, meta, im):
             "paths": meta.get("paths", {})}
 
 
-def collect(table, builder, report):
+def collect(names, builder, ph, report):
     out, done = {}, {}
-    for logical, cands in table.items():
-        for cand in cands:
+    for logical in names:
+        for cand in [logical] + FALLBACK.get(logical, []):
             if cand in done:
                 entry = done[cand]
             else:
@@ -165,17 +172,74 @@ def collect(table, builder, report):
                 report.append(f"{logical}: fallback {cand}")
             break
         else:
-            report.append(f"{logical}: missing")
+            # nothing rendered yet: the page draws a placeholder of this size
+            out[logical] = {"ph": True, "w": ph[0], "h": ph[1], "src": None}
+            report.append(f"{logical}: placeholder")
     return out
+
+
+def ki_source():
+    if KI_ARG:
+        return KI_ARG if KI_ARG.is_dir() else None
+    for d in (SRC / "ki", SRC.parent / "ki"):
+        if d.is_dir() and any(f.suffix.lower() in KI_EXT for f in d.iterdir()):
+            return d
+    return None
+
+
+def build_ki(report):
+    """Convert KI images to WebP in site/ki/ and list what exists (name -> img, w, h)."""
+    out_dir = SITE / "ki"
+    src = ki_source()
+    if src:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        names = set()
+        # prefer PNG over JPG over WebP when several files share a name
+        for f in sorted(src.iterdir(), key=lambda p: (p.stem, [".png", ".jpg", ".jpeg", ".webp"].index(p.suffix.lower()) if p.suffix.lower() in KI_EXT else 9)):
+            if not f.is_file() or f.suffix.lower() not in KI_EXT or f.stem in names:
+                continue
+            names.add(f.stem)
+            target = out_dir / f"{f.stem}.webp"
+            if fresh(target, f):
+                continue
+            try:
+                im = Image.open(f)
+                im.load()
+                alpha = im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info)
+                im = im.convert("RGBA" if alpha else "RGB")
+                maxw = KI_MAXW.get(f.stem, KI_MAXW_DEFAULT)
+                if im.width > maxw:
+                    im = im.resize((maxw, round(im.height * maxw / im.width)), Image.LANCZOS)
+                im.save(target, "WEBP", quality=82, method=6)
+            except Exception as e:
+                print(f"  ki {f.name}: {e}")
+        # drop WebPs whose source is gone
+        for f in out_dir.glob("*.webp"):
+            if f.stem not in names:
+                f.unlink()
+        report.append(f"ki: {len(names)} image(s) from {src}")
+    ki = {}
+    if out_dir.is_dir():
+        for f in sorted(out_dir.glob("*.webp")):
+            try:
+                with Image.open(f) as im:
+                    w, h = im.size
+            except Exception as e:
+                print(f"  ki {f.name}: {e}")
+                continue
+            ki[f.stem] = {"img": busted(f"ki/{f.name}"), "w": w, "h": h}
+    return ki
 
 
 def main():
     SITE.mkdir(parents=True, exist_ok=True)
     report = []
-    data = {"rooms": collect(ROOMS, build_room, report), "shots": collect(SHOTS, build_shot, report)}
+    data = {"rooms": collect(ROOMS, build_room, PH_ROOM, report),
+            "shots": collect(SHOTS, build_shot, PH_SHOT, report),
+            "ki": build_ki(report)}
 
     js = WEB / "story.js", WEB / "app.js"
-    app = '/* Bildungshaus weWeit, demo v3. Built by build.py from web/story.js and web/app.js. */\n(function(){\n"use strict";\n' \
+    app = '/* Bildungshaus weWeit, Kita page v5. Built by build.py from web/story.js and web/app.js. */\n(function(){\n"use strict";\n' \
           + "\n".join(p.read_text(encoding="utf-8") for p in js) + "\n})();\n"
     (SITE / "app.js").write_text(app, encoding="utf-8")
 
@@ -196,7 +260,7 @@ def main():
     (SITE / "standalone.html").write_text(standalone, encoding="utf-8")
 
     # drop images from earlier builds that the page no longer references
-    used = {e[k].split("?")[0] for g in data.values() for e in g.values() for k in ("img", "mask") if k in e}
+    used = {e[k].split("?")[0] for g in (data["rooms"], data["shots"]) for e in g.values() for k in ("img", "mask") if k in e}
     for f in SITE.iterdir():
         if f.is_file() and (f.suffix == ".webp" or f.name.endswith("_id.png")) and f.name not in used:
             f.unlink()
