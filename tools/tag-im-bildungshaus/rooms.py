@@ -1501,8 +1501,8 @@ def green_entrance(ex0, ey0, ex1, ey1, eh):
                 vb("cyl", hid, TERRA if k % 3 else mat(CREAM, 0.5), c.x, c.y, c.z, c.z + 0.1, 0.06, 0.07, seg=14)
                 for j in range(4):
                     a = j * 1.7 + k
-                    vb("ball", hid, leaf[(j + k) % 3], (c.x + math.cos(a) * 0.04, c.y + math.sin(a) * 0.04, c.z + 0.16 + (j % 2) * 0.05),
-                       0.065, scale=(1, 1, 0.8), seg=10)
+                    vb("ball", hid, leaf[(j + k) % 3], (c.x + math.cos(a) * 0.05, c.y + math.sin(a) * 0.05, c.z + 0.17 + (j % 2) * 0.06),
+                       0.09, scale=(1, 1, 0.8), seg=10)
                 if F.axis == "x" and z < 0.2 and k in (2, 3):   # tomatoes in the low tier
                     for j in range(5):
                         vb("ball", hid, leaf[j % 2], tuple(c + Vector((math.cos(j * 2.4) * 0.07, 0.0, 0.25 + j * 0.06))), 0.07, seg=10)
@@ -1564,11 +1564,12 @@ def school_next_door():
     for k in range(6):
         ball(-0.95 + random.uniform(-0.15, 0.15), 0.8 + k * 1.1, 0.4, random.uniform(0.32, 0.42), random.choice([LEAF, LEAF2]),
              hid, seg=14, name="Hecke")
-    body = mat((0.93, 0.86, 0.78), 0.85, name="Putz Schule")
+    body = mat((0.86, 0.85, 0.82), 0.85, name="Putz Schule")
     box(sx0, sy0, 0.0, sx1, sy1, sh, body, hid, name="Schule")
+    band = mat((0.78, 0.77, 0.74), 0.85, name="Putz Schule Band")
     for z in (3.6, 7.2):
-        box(sx1, sy0 - 0.04, z - 0.15, sx1 + 0.04, sy1, z + 0.15, larch("Y"), hid, name="Geschossband")
-        box(sx0, sy0 - 0.04, z - 0.15, sx1 + 0.04, sy0, z + 0.15, larch("X"), hid, name="Geschossband")
+        box(sx1, sy0 - 0.04, z - 0.12, sx1 + 0.04, sy1, z + 0.12, band, hid, name="Geschossband")
+        box(sx0, sy0 - 0.04, z - 0.12, sx1 + 0.04, sy0, z + 0.12, band, hid, name="Geschossband")
     panel(sx0 - 0.1, sy0 - 0.1, sh, sx1 + 0.1, sy1 + 0.1, sh + 0.3, hid, freq=40.0, name="Dachrand")
     box(sx0 + 0.1, sy0 + 0.1, sh + 0.3, sx1 - 0.1, sy1 - 0.1, sh + 0.34, mat((0.55, 0.62, 0.36), 0.9, noise=0.25, nscale=4.0),
         hid, name="Gründach")
@@ -1576,7 +1577,7 @@ def school_next_door():
         p = box(-0.8, -0.5, -0.02, 0.8, 0.5, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), hid, name="Solar")
         p.location = (-3.6 - j * 2.0, 4.0, sh + 0.7)
         p.rotation_euler = (R(-25), 0, 0)
-    win = mat((0.84, 0.90, 0.94), 0.25, emission=(0.80, 0.88, 0.95), strength=1.1, name="Fenster Schule")
+    win = mat((0.70, 0.78, 0.84), 0.2, coat=0.5, emission=(0.80, 0.88, 0.95), strength=0.35, name="Fenster Schule")
     for zl in (0.9, 4.5, 8.1):
         zh = zl + 1.9
         for yw in [sy0 + 0.9 + k * 1.8 for k in range(6)]:
@@ -1610,82 +1611,81 @@ def build_aussen(v):
     bx0, by0, bx1, by1, bh = 0.6, 6.6, 10.0, 11.8, 6.4
     hx0, hx1, hd, hh = 8.35, 9.95, 1.7, 3.0          # hall bay open to the south (seen through its glass front)
     body = mat((0.78, 0.60, 0.42), 0.7)
-    box(bx0, by0, 0, hx0, by1, bh, body, "haus", name="Haus")
-    box(hx1, by0, 0, bx1, by1, bh, body, "haus", name="Haus")
-    box(hx0, by0 + hd, 0, hx1, by1, bh, body, "haus", name="Haus")
-    box(hx0, by0, hh, hx1, by0 + hd, bh, body, "haus", name="Haus")
-    box(bx0, by0 - 0.03, 0, hx0, by0, bh, larch("X"), "haus", name="Fassade Süd")
-    box(hx1, by0 - 0.03, 0, bx1, by0, bh, larch("X"), "haus", name="Fassade Süd")
-    box(hx0, by0 - 0.03, hh, hx1, by0, bh, larch("X"), "haus", name="Fassade Süd")
-    box(bx1, by0, 0, bx1 + 0.03, by1, bh, larch("Y"), "haus", name="Fassade Ost")
+    zf = 3.2                                          # floor line: groups downstairs ("haus"), upstairs ("og")
+    for (z0, z1, h) in ((0, zf, "haus"), (zf, bh, "og")):
+        box(bx0, by0, z0, hx0, by1, z1, body, h, name="Haus")
+        box(hx1, by0, z0, bx1, by1, z1, body, h, name="Haus")
+        box(hx0, by0 + hd, z0, hx1, by1, z1, body, h, name="Haus")
+        box(bx0, by0 - 0.03, z0, hx0, by0, z1, larch("X"), h, name="Fassade Süd")
+        box(hx1, by0 - 0.03, z0, bx1, by0, z1, larch("X"), h, name="Fassade Süd")
+        box(bx1, by0, z0, bx1 + 0.03, by1, z1, larch("Y"), h, name="Fassade Ost")
+    box(hx0, by0, hh, hx1, by0 + hd, zf, body, "haus", name="Haus")
+    box(hx0, by0, zf, hx1, by0 + hd, bh, body, "og", name="Haus")
+    box(hx0, by0 - 0.03, hh, hx1, by0, zf, larch("X"), "haus", name="Fassade Süd")
+    box(hx0, by0 - 0.03, zf, hx1, by0, bh, larch("X"), "og", name="Fassade Süd")
     glow = mat((1.0, 0.86, 0.62), 0.4, emission=(1.0, 0.78, 0.50), strength=3.0, name="Fensterlicht")
     for fl, (zl, zh) in enumerate(((0.45, 2.7), (3.75, 5.75))):
-        fm = None
+        h = ("haus", "og")[fl]
         for xw in (1.1, 3.6, 6.1):
-            box(xw, by0 - 0.06, zl, xw + 2.1, by0 - 0.02, zh, glow, "haus", name="Fenster")
+            box(xw, by0 - 0.06, zl, xw + 2.1, by0 - 0.02, zh, glow, h, name="Fenster")
             for (a0, a1, c0, c1) in ((xw - 0.07, xw + 2.17, zh, zh + 0.08), (xw - 0.07, xw + 2.17, zl - 0.08, zl),
                                      (xw - 0.07, xw, zl, zh), (xw + 2.1, xw + 2.17, zl, zh), (xw + 1.02, xw + 1.08, zl, zh)):
-                if fm:
-                    box(a0, by0 - 0.09, c0, a1, by0 - 0.02, c1, fm, "haus", name="Rahmen")
-                else:
-                    panel(a0, by0 - 0.09, c0, a1, by0 - 0.02, c1, "haus", name="Rahmen")
+                panel(a0, by0 - 0.09, c0, a1, by0 - 0.02, c1, h, name="Rahmen")
         for yw in (8.8, 10.4):
             if fl == 0 and yw > 8.6:
                 continue  # ground floor east side is covered by the Lab wing
-            box(bx1 + 0.02, yw, zl, bx1 + 0.06, yw + 1.1, zh, glow, "haus", name="Fenster")
+            box(bx1 + 0.02, yw, zl, bx1 + 0.06, yw + 1.1, zh, glow, h, name="Fenster")
             for (a0, a1, c0, c1) in ((yw - 0.07, yw + 1.17, zh, zh + 0.08), (yw - 0.07, yw + 1.17, zl - 0.08, zl),
                                      (yw - 0.07, yw, zl, zh), (yw + 1.1, yw + 1.17, zl, zh)):
-                if fm:
-                    box(bx1 + 0.02, a0, c0, bx1 + 0.09, a1, c1, fm, "haus", name="Rahmen")
-                else:
-                    panel(bx1 + 0.02, a0, c0, bx1 + 0.09, a1, c1, "haus", name="Rahmen")
+                panel(bx1 + 0.02, a0, c0, bx1 + 0.09, a1, c1, h, name="Rahmen")
     # a band between the floors
-    panel(bx0 - 0.05, by0 - 0.1, 3.12, bx1 + 0.1, by0 - 0.0, 3.3, "haus", freq=40.0, name="Geschossband")
-    panel(bx1, by0, 3.12, bx1 + 0.1, by1, 3.3, "haus", freq=40.0, name="Geschossband")
+    panel(bx0 - 0.05, by0 - 0.1, 3.12, bx1 + 0.1, by0 - 0.0, 3.3, "og", freq=40.0, name="Geschossband")
+    panel(bx1, by0, 3.12, bx1 + 0.1, by1, 3.3, "og", freq=40.0, name="Geschossband")
     # kids' drawings in the group rooms on both floors
     for k, (xw, zd) in enumerate(((1.4, 1.4), (2.3, 1.4), (3.9, 1.4), (6.6, 1.4), (7.4, 1.4), (1.6, 4.55), (2.45, 4.55),
                                   (4.1, 4.55), (4.9, 4.55))):
-        box(xw, by0 - 0.07, zd, xw + 0.45, by0 - 0.065, zd + 0.35, PAPER, "haus", name="Bild im Fenster")
-        ball(xw + 0.22, by0 - 0.075, zd + 0.18, 0.08, mat(CLOTH[k % len(CLOTH)], 0.8), "haus", scale=(1, 0.2, 1))
+        h = "og" if zd > zf else "haus"
+        box(xw, by0 - 0.07, zd, xw + 0.45, by0 - 0.065, zd + 0.35, PAPER, h, name="Bild im Fenster")
+        ball(xw + 0.22, by0 - 0.075, zd + 0.18, 0.08, mat(CLOTH[k % len(CLOTH)], 0.8), h, scale=(1, 0.2, 1))
     # bunting across the upper group windows
     for xw in (1.1, 3.6):
         for j in range(7):
-            cone(xw + 0.15 + j * 0.3, by0 - 0.075, 5.42, 0.07, 0.0, 0.13, mat(CLOTH[(j + 2) % len(CLOTH)], 0.8), "haus",
+            cone(xw + 0.15 + j * 0.3, by0 - 0.075, 5.42, 0.07, 0.0, 0.13, mat(CLOTH[(j + 2) % len(CLOTH)], 0.8), "og",
                  rot=(R(180), 0, 0), verts=3, name="Wimpel")
     # the team room upstairs on the right: a long table, a pendant lamp, a big plant
-    box(6.35, by0 - 0.075, 4.35, 7.95, by0 - 0.07, 4.42, mat((0.70, 0.52, 0.34), 0.6), "haus", name="Teamtisch")
+    box(6.35, by0 - 0.075, 4.35, 7.95, by0 - 0.07, 4.42, mat((0.70, 0.52, 0.34), 0.6), "og", name="Teamtisch")
     for xx in (6.6, 7.1, 7.6):
-        ball(xx, by0 - 0.08, 4.55, 0.1, mat(random.choice([SAGE, ROSE, PETROL]), 0.8), "haus", scale=(1, 0.25, 1.2),
+        ball(xx, by0 - 0.08, 4.55, 0.1, mat(random.choice([SAGE, ROSE, PETROL]), 0.8), "og", scale=(1, 0.25, 1.2),
              name="Kopf im Teamraum")
-    ball(7.1, by0 - 0.08, 5.3, 0.09, mat((1.0, 0.95, 0.8), 0.4, emission=(1.0, 0.85, 0.6), strength=6.0), "haus",
+    ball(7.1, by0 - 0.08, 5.3, 0.09, mat((1.0, 0.95, 0.8), 0.4, emission=(1.0, 0.85, 0.6), strength=6.0), "og",
          scale=(1.3, 0.3, 0.7), name="Pendelleuchte")
     for k in range(5):
-        ball(7.85 + random.uniform(-0.1, 0.1), by0 - 0.08, 4.3 + k * 0.2, 0.14, LEAF, "haus", scale=(1, 0.25, 1), name="Pflanze")
+        ball(7.85 + random.uniform(-0.1, 0.1), by0 - 0.08, 4.3 + k * 0.2, 0.14, LEAF, "og", scale=(1, 0.25, 1), name="Pflanze")
     A("og", 4.65, by0 - 0.05, 4.75)
     A("teamraum", 7.1, by0 - 0.05, 4.75)
     # the hall behind a glass front: floor, rug and the obelisk, the heart of the house
-    box(hx0, by0, 0.0, hx1, by0 + hd, 0.04, planks(), "halle", name="Hallenboden")
-    box(hx0 + 0.01, by0 + hd - 0.02, 0.04, hx1 - 0.01, by0 + hd, hh, mat((0.70, 0.78, 0.64), 0.8), "halle", name="Hallenwand")
+    box(hx0, by0, 0.0, hx1, by0 + hd, 0.04, planks(), "piazza", name="Hallenboden")
+    box(hx0 + 0.01, by0 + hd - 0.02, 0.04, hx1 - 0.01, by0 + hd, hh, mat((0.70, 0.78, 0.64), 0.8), "piazza", name="Hallenwand")
     for xx in (hx0, hx1 - 0.02):
-        box(xx, by0, 0.04, xx + 0.02, by0 + hd, hh, mat((0.93, 0.86, 0.76), 0.8), "halle", name="Hallenwand")
-    box(hx0, by0, hh - 0.02, hx1, by0 + hd, hh, mat(CREAM, 0.8), "halle", name="Hallendecke")
+        box(xx, by0, 0.04, xx + 0.02, by0 + hd, hh, mat((0.93, 0.86, 0.76), 0.8), "piazza", name="Hallenwand")
+    box(hx0, by0, hh - 0.02, hx1, by0 + hd, hh, mat(CREAM, 0.8), "piazza", name="Hallendecke")
     ox_, oy_ = (hx0 + hx1) / 2, by0 + 1.0
-    cyl(ox_, oy_, 0.04, 0.06, 0.74, fabric(ROSE, 0.5, 0.95, 0.12), "halle", verts=48, name="Teppich")
+    cyl(ox_, oy_, 0.04, 0.06, 0.74, fabric(ROSE, 0.5, 0.95, 0.12), "piazza", verts=48, name="Teppich")
     # the Hubel: a low round wooden hump with a padded rim and three picture cubes on top
-    cyl(ox_, oy_, 0.06, 0.3, 0.45, multiplex("Z", 100.0), "halle", verts=48, name="Hubel")
-    ball(ox_, oy_, 0.3, 0.45, multiplex("Z", 100.0), "halle", scale=(1, 1, 0.22), seg=40, name="Hubel")
-    torus(ox_, oy_, 0.26, 0.46, 0.045, fabric(SAGE), "halle", seg=48, name="Polster")
+    cyl(ox_, oy_, 0.06, 0.3, 0.45, multiplex("Z", 100.0), "piazza", verts=48, name="Hubel")
+    ball(ox_, oy_, 0.3, 0.45, multiplex("Z", 100.0), "piazza", scale=(1, 1, 0.22), seg=40, name="Hubel")
+    torus(ox_, oy_, 0.26, 0.46, 0.045, fabric(SAGE), "piazza", seg=48, name="Polster")
     for k, c in enumerate([(0.97, 0.74, 0.16), (0.28, 0.54, 0.88), (0.90, 0.52, 0.62)]):
         a = R(-90 + (k - 1) * 45)
-        rbox(-0.06, -0.06, 0.0, 0.06, 0.06, 0.12, mat(c, 0.45, coat=0.3), "halle", r=0.012, rot=(0, 0, a),
+        rbox(-0.06, -0.06, 0.0, 0.06, 0.06, 0.12, mat(c, 0.45, coat=0.3), "piazza", r=0.012, rot=(0, 0, a),
              name="Bildwürfel").location = (ox_ + math.cos(a) * 0.2, oy_ + math.sin(a) * 0.2, 0.36)
     lantern(ox_ + 0.45, oy_ + 0.3, hh - 0.35, 0.12)
-    kid(4, ox_ - 0.52, oy_ - 0.5, 45, "sit", hid="halle", z=0.06, look=(ox_, oy_, 0.4))
-    kid(7, ox_ + 0.52, oy_ - 0.5, 135, "sit", hid="halle", z=0.06, look=(ox_, oy_, 0.4))
+    kid(4, ox_ - 0.52, oy_ - 0.5, 45, "sit", hid="piazza", z=0.06, look=(ox_, oy_, 0.4))
+    kid(7, ox_ + 0.52, oy_ - 0.5, 135, "sit", hid="piazza", z=0.06, look=(ox_, oy_, 0.4))
     post_m = mat((0.90, 0.78, 0.58), 0.5, noise=0.05, name="Pfosten")
     for xx in (hx0 + 0.02, (hx0 + hx1) / 2 - 0.025, hx1 - 0.07):
-        box(xx, by0 - 0.09, 0.0, xx + 0.05, by0 - 0.02, hh - 0.08, post_m, "halle", name="Pfosten")
-    box(hx0, by0 - 0.09, hh - 0.08, hx1, by0 - 0.02, hh, post_m, "halle", name="Riegel")
+        box(xx, by0 - 0.09, 0.0, xx + 0.05, by0 - 0.02, hh - 0.08, post_m, "piazza", name="Pfosten")
+    box(hx0, by0 - 0.09, hh - 0.08, hx1, by0 - 0.02, hh, post_m, "piazza", name="Riegel")
     A("halle", ox_, by0 + 0.3, 1.5)
     A("piazza", ox_, by0 + 0.3, 1.5)
     lx0, ly0, lx1, ly1, lh = bx1, 8.7, 13.4, by1, 3.3
@@ -1716,17 +1716,17 @@ def build_aussen(v):
     A("lab", 12.75, ly0 - 0.05, 1.7)
     panel(12.4, 8.2, 0.0, 13.3, 8.55, 0.42, "lab", name="Bank")
     # green roof with a parapet and solar panels
-    panel(bx0 - 0.1, by0 - 0.1, bh, bx1 + 0.1, by1 + 0.1, bh + 0.25, "haus", freq=40.0, name="Dachrand")
+    panel(bx0 - 0.1, by0 - 0.1, bh, bx1 + 0.1, by1 + 0.1, bh + 0.25, "dach", freq=40.0, name="Dachrand")
     box(bx0 + 0.1, by0 + 0.1, bh + 0.25, bx1 - 0.1, by1 - 0.1, bh + 0.32, mat((0.55, 0.62, 0.36), 0.9, noise=0.25, nscale=4.0),
-        "haus", name="Gründach")
+        "dach", name="Gründach")
     for k in range(3):
         for j in range(4):
-            p = box(-0.8, -0.5, -0.02, 0.8, 0.5, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), "haus", name="Solar")
+            p = box(-0.8, -0.5, -0.02, 0.8, 0.5, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), "dach", name="Solar")
             p.location = (2.0 + j * 2.0, 8.6 + k * 1.15, bh + 0.65)
             p.rotation_euler = (R(-25), 0, 0)
     for k in range(10):
         ball(random.uniform(1, 9.5), random.uniform(7, 11.4), bh + 0.32, random.uniform(0.15, 0.3),
-             mat(random.choice([(0.85, 0.75, 0.4), (0.75, 0.5, 0.55), (0.6, 0.7, 0.4)]), 0.9), "haus", scale=(1, 1, 0.4), seg=12)
+             mat(random.choice([(0.85, 0.75, 0.4), (0.75, 0.5, 0.55), (0.6, 0.7, 0.4)]), 0.9), "dach", scale=(1, 1, 0.4), seg=12)
     A("dach", 5.3, 9.2, bh + 0.6)
     A("kita", 4.65, by0 - 0.05, 1.6)
     # garden: sandbox, apple tree, raised beds, play tower, fence
@@ -1772,12 +1772,13 @@ def build_aussen(v):
         ball(0.25 + random.uniform(0, 0.3), 0.7 + k * 0.62, 0.45, random.uniform(0.35, 0.5), random.choice([LEAF, LEAF2]), "zaun",
              seg=14)
     for k, c in enumerate([BERRY, SKY, OCHRE]):
-        balance_bike(12.75 + k * 0.42, 6.75 + k * 0.1, 80, c, "eingang")
+        balance_bike(12.75 + k * 0.42, 6.75 + k * 0.1, 80, c, "garten")
     # Papa and Mila on the way in, Maren waves at the door of the green entrance room
     meet = Vector((11.08, 3.5, 0.72))
     who("jonas", 11.25, 3.35, 85, "walk", hid="jonas", arms={"l": meet}, look=(10.9, 6.3, 1.6))
     who("mila", 10.85, 3.45, 85, "walk", hid="mila", arms={"r": meet}, look=(10.9, 6.3, 1.2), acc=("beanie",))
-    who("sanne", 11.75, 5.95, -115, "wave", hid="sanne", look=(11, 3.4, 1.0))
+    mr = who("sanne", 11.75, 5.95, -115, "wave", hid="maren", look=(11, 3.4, 1.0))
+    A("maren_head", *mr["head"])
     plant(9.4, 6.2, 0, 1.0, pot="terra", kind="bush")
     tree(14.45, 10.9, 3.5, 0.95, hid="baum2")
     A("kita_window", 4.6, by0 - 0.05, 1.6)
@@ -1787,7 +1788,7 @@ def build_aussen(v):
     school_next_door()
     # the camera fits the Kita plot only; the school stays cut off at the frame edge
     pts = box_corners(-0.2, 0, -SLAB, W, D + 0.2, 0.3) + box_corners(bx0, by0, 0, bx1 + 1.7, by1, bh + 1.0) + [(14.45, 10.9, 4.6)]
-    return dict(W=W, D=D, time="aussen", pts=pts, shots={}, target=(W / 2, D / 2, 1), aspect=0.8)
+    return dict(W=W, D=D, time="aussen", pts=pts, shots={}, target=(W / 2, D / 2, 1), aspect=0.8, exposure=-0.85)
 
 
 def build_ausblick(v):
@@ -1978,16 +1979,16 @@ def winter_glass(night=False):
         snow, bush, lo, hi, flake, trunk = ((0.36, 0.42, 0.60), (0.07, 0.08, 0.13), (0.09, 0.12, 0.25), (0.03, 0.05, 0.13),
                                             (0.70, 0.76, 0.92), (0.05, 0.05, 0.09))
     else:
-        snow, bush, lo, hi, flake, trunk = ((0.96, 0.97, 0.99), (0.55, 0.51, 0.49), (0.87, 0.90, 0.94), (0.76, 0.83, 0.92),
-                                            (1.0, 1.0, 1.0), (0.44, 0.39, 0.37))
+        snow, bush, lo, hi, flake, trunk = ((0.96, 0.97, 0.99), (0.34, 0.31, 0.30), (0.80, 0.86, 0.93), (0.60, 0.72, 0.87),
+                                            (1.0, 1.0, 1.0), (0.30, 0.27, 0.26))
     col = nb.ramp(z, [(0.0, snow), (0.43, snow), (0.46, bush), (0.54, bush), (0.58, lo), (1.0, hi)])
     # bare trunks and twigs: noise stretched upwards, between the snow line and the upper sky
     mp = nb.node("ShaderNodeMapping")
     nb.L.new(pos, mp.inputs["Vector"])
-    mp.inputs["Scale"].default_value = (7.0, 7.0, 1.3)
+    mp.inputs["Scale"].default_value = (4.5, 4.5, 1.3)
     tn = nb.noise(mp.outputs[0], 1.0, 3.0, 0.55)
     band = nb.math("MULTIPLY", nb.math("GREATER_THAN", co["Z"], 1.1), nb.math("LESS_THAN", co["Z"], 2.55))
-    iso = nb.math("LESS_THAN", nb.math("ABSOLUTE", nb.math("SUBTRACT", tn, 0.5)), 0.022)
+    iso = nb.math("LESS_THAN", nb.math("ABSOLUTE", nb.math("SUBTRACT", tn, 0.5)), 0.017)
     col = nb.mix(nb.math("MULTIPLY", iso, band), col, trunk)
     # light snowfall: small round flakes above the snow line
     vo = nb.node("ShaderNodeTexVoronoi")
@@ -2085,7 +2086,7 @@ def moisture_stick(x, y, soil, thirsty=False, hid="stab", h=0.225, lean=(0.0, 0.
     top = (x + lean[0], y + lean[1], soil + h)
     vb("tube", hid, WOOD, (x, y, soil - 0.02), top, 0.004, seg=8)
     if thirsty:
-        lm = mat((0.30, 0.55, 1.0), 0.3, emission=(0.22, 0.50, 1.0), strength=9.0, name="Durst")
+        lm = mat((0.30, 0.55, 1.0), 0.3, emission=(0.18, 0.45, 1.0), strength=4.0, name="Durst")
     else:
         lm = mat((0.84, 0.82, 0.77), 0.35, coat=0.4, name="Lämpchen aus")
     c = (top[0], top[1], top[2] + 0.018)
@@ -2517,7 +2518,7 @@ def build_vorraum(v):
     moisture_stick(*(Fn.p(1.03, dep * 0.5 + 0.08, 0) + Fn.t * 0.05).xy, ts1, False, "tomaten")
     ts2, tips2, sk2 = tomato_plant(Fn, 1.49, dep * 0.5, VR_TIERS[0] + 0.022, ["rrrr", "rro", "ogg"])
     moisture_stick(*(Fn.p(1.49, dep * 0.5 + 0.08, 0) - Fn.t * 0.05).xy, ts2, v == "nacht", "tomaten")
-    tag_c = Fn.p(1.49 + 0.07, dep * 0.5 + 0.19, ts2 + 0.42)
+    tag_c = Fn.p(1.49 + 0.1, dep * 0.5 + 0.18, ts2 + 0.6)
     ripe_tag(tag_c, Fn.n)
     A("reif", *tag_c)
     A("tomaten", *tips2[0])
