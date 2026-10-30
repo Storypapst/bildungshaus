@@ -1310,121 +1310,653 @@ def cup(x, y, z, color=SKY, hid=None):
     cyl(x, y, z, z + 0.08, 0.035, mat(color, 0.4, coat=0.4), hid, verts=20, name="Becher")
 
 
-# ================================================================ Kaufladen 10:00
+# ================================================================ Kaufladen 10:00 / 11:15 (v5: Schrankwand, Umbau, Kochen)
+# Floor-to-ceiling birch storage wall along the north wall (left of the window). Front grid of six columns:
+#   col 0      : Plattenfach (six table tops upright, side by side)
+#   col 1-2    : round hideout cave (Versteckhöhle) at child height, games drawer below
+#   col 3-5    : shop bay: crate shelf + rolling counter with the till live here, closed by pocket doors
+# Lower zone up to KL_LOW is for children. Above the sage rail the adult zone: drawers, doors, and over
+# cols 0-1 the small compartment with the combination lock (hot plate, knives, cleaning agents).
+KL_SWY = 4.10  # front face of the Schrankwand (room side); it is 0.70 deep, back against the north wall
+KL_SWX = 3.42  # right end of the Schrankwand, the window starts at 3.5
+KL_COLS = [0.0, 0.57, 1.14, 1.71, 2.28, 2.85, 3.42]
+KL_LOW, KL_RAIL, KL_DRAW, KL_DOOR, KL_TOP = 1.30, 1.38, 1.62, 2.12, 2.60
+KL_PL = (1.2, 0.6, 0.025)  # table top: length, width, thickness
+KL_PLCOL = [SAGE, ROSE, OCHRE, SKY, CLAY, PLUM]
+KL_TH = 0.48  # island height (children's table, figures are toy scale)
+KL_SLOT = [0.045 + i * 0.085 for i in range(6)]  # x of each stored top's face (legs fold towards +x)
+KL_GAP = mat((0.28, 0.20, 0.14), 0.85, name="Fuge")
+
+
+def kl_winter_glass():
+    """Window pane for February: pale sky, a row of bare trees over a hedge, light snow on the ground."""
+    m = bpy.data.materials.new("Winterfenster")
+    nb = NB(m)
+    gen = nb.coord("Generated")
+    co = nb.sep(gen)
+    n = nb.noise(gen, 3.0, 2.0, 0.45)
+    z = nb.math("ADD", co["Z"], nb.math("MULTIPLY", nb.math("SUBTRACT", n, 0.5), 0.12))
+    sky = (0.84, 0.88, 0.92)
+    base = nb.ramp(z, [(0.0, (0.96, 0.96, 0.97)), (0.20, (0.91, 0.92, 0.94)), (0.235, (0.50, 0.48, 0.45)),
+                       (0.33, (0.58, 0.56, 0.53)), (0.36, sky), (1.0, (0.78, 0.84, 0.91))])
+    # crowns: twig noise inside a wavy band above the hedge
+    tw = nb.noise(gen, 30.0, 6.0, 0.7)
+    top = nb.math("ADD", 0.68, nb.math("MULTIPLY", nb.math("SUBTRACT", nb.noise(gen, 2.2, 1.0, 0.5), 0.5), 0.5))
+    band = nb.math("MULTIPLY", nb.math("GREATER_THAN", co["Z"], 0.3), nb.math("LESS_THAN", co["Z"], top))
+    crown = nb.math("MULTIPLY", nb.math("GREATER_THAN", tw, 0.53), band)
+    # trunks: thin vertical lines, slightly bent by noise
+    xs = nb.math("ADD", co["X"], nb.math("MULTIPLY", nb.math("SUBTRACT", n, 0.5), 0.08))
+    tr = nb.math("LESS_THAN", nb.math("FRACT", nb.math("MULTIPLY", xs, 3.3)), 0.035)
+    trunk = nb.math("MULTIPLY", tr, nb.math("MULTIPLY", nb.math("GREATER_THAN", co["Z"], 0.2),
+                                             nb.math("LESS_THAN", co["Z"], nb.math("SUBTRACT", top, 0.08))))
+    fac = nb.math("MAXIMUM", crown, trunk)
+    col = nb.mix(fac, base, (0.33, 0.29, 0.27))
+    nb.color(col)
+    nb.L.new(col, nb.bsdf.inputs["Emission Color"])
+    nb.bsdf.inputs["Emission Strength"].default_value = 0.85
+    nb.bsdf.inputs["Roughness"].default_value = 0.06
+    nb.bsdf.inputs["Coat Weight"].default_value = 0.6
+    return m
+
+
+def kl_assemble(n0, loc, rot=(0, 0, 0), name="Gruppe"):
+    """Parent everything created since objects[n0] (built around the origin) to an empty at loc/rot (degrees)."""
+    e = bpy.data.objects.new(name, None)
+    scene.collection.objects.link(e)
+    e.location = loc
+    e.rotation_euler = tuple(R(a) for a in rot)
+    for o in objects[n0:]:
+        if o.parent is None:
+            o.parent = e
+    bpy.context.view_layer.update()
+    return e
+
+
+def kl_disc(x, y, z, r, depth, m, hid=None, axis="y", verts=24, name="Scheibe"):
+    rot = (R(90), 0, 0) if axis == "y" else ((0, R(90), 0) if axis == "x" else None)
+    o = cyl(0, 0, -depth / 2, depth / 2, r, m, hid, verts=verts, rot=rot, name=name)
+    o.location = (x, y, z)
+    return o
+
+
+def kl_tube(x, y, z0, z1, r, m, hid=None, wall=0.006, verts=40, name="Rohr"):
+    """Open cylinder wall (pots)."""
+    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=z1 - z0, location=(x, y, (z0 + z1) / 2), vertices=verts,
+                                        end_fill_type="NOTHING")
+    o = bpy.context.active_object
+    o.modifiers.new("s", "SOLIDIFY").thickness = wall
+    for p in o.data.polygons:
+        p.use_smooth = True
+    o.data.materials.append(m)
+    o.name = name
+    return tag(o, hid)
+
+
+def kl_front(x0, x1, z0, z1, hid="schrankwand", grip="top", name="Front", icon=None):
+    """Flush birch front with a shadow gap all round; a round finger hole (grip: top | left | right | None)."""
+    g = 0.004
+    y = KL_SWY
+    box(x0, y + 0.019, z0, x1, y + 0.024, z1, KL_GAP, hid, name="Fuge")
+    o = panel(x0 + g, y, z0 + g, x1 - g, y + 0.019, z1 - g, hid, name=name)
+    if grip:
+        gx = {"top": (x0 + x1) / 2, "left": x0 + 0.05, "right": x1 - 0.05}[grip]
+        gz = z1 - 0.06 if grip == "top" else (z0 + z1) / 2
+        if z1 - z0 < 0.3:
+            gz = (z0 + z1) / 2
+        kl_disc(gx, y - 0.0005, gz, 0.022, 0.004, KL_GAP, hid, name="Griffloch")
+    if icon:  # picture tile so children know what lives behind the front
+        ix, iz, kind = icon
+        kl_disc(ix, y - 0.002, iz, 0.06, 0.006, mat(CREAM, 0.5, coat=0.3), hid, verts=32, name="Bildmarke")
+        if kind == "apfel":
+            ball(ix, y - 0.008, iz - 0.004, 0.03, mat((0.82, 0.22, 0.18), 0.4, coat=0.3), hid, scale=(1, 0.35, 1),
+                 seg=14, name="Symbol")
+            ball(ix + 0.012, y - 0.008, iz + 0.034, 0.012, LEAF, hid, scale=(1.4, 0.3, 0.7), seg=8, name="Symbol")
+        elif kind == "wuerfel":
+            for (dx, dz) in ((-0.022, 0.022), (0, 0), (0.022, -0.022)):
+                kl_disc(ix + dx, y - 0.006, iz + dz, 0.008, 0.003, mat(BERRY, 0.5), hid, verts=12, name="Symbol")
+    return o
+
+
+def kl_platte(loc, rot, col, legs="fold", h=KL_TH, hid="insel", loop=True):
+    """One table top (1.2 x 0.6 m birch multiplex) with four folding legs and a coloured edge band (local -y edge).
+    Built around the centre of its top face, then placed at loc with rot (degrees). legs: 'out' (standing) | 'fold'."""
+    L, B, t = KL_PL
+    n0 = len(objects)
+    panel(-L / 2, -B / 2, -t, L / 2, B / 2, 0, hid, name="Tischplatte")
+    box(-L / 2 + 0.03, -B / 2 - 0.003, -t + 0.006, L / 2 - 0.03, -B / 2 + 0.001, -0.006, mat(col, 0.5, coat=0.3), hid,
+        name="Kantenband")
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            lx, ly = sx * (L / 2 - 0.07), sy * (B / 2 - 0.07)
+            box(lx - 0.04, ly - 0.022, -t - 0.01, lx + 0.04, ly + 0.022, -t, STEEL, hid, name="Klappbeschlag")
+            if legs == "out":
+                rbox(lx - 0.018, ly - 0.018, -h + 0.01, lx + 0.018, ly + 0.018, -t - 0.004, WOOD, hid, r=0.005,
+                     name="Klappbein")
+                capsule((lx, ly, -h * 0.55), (lx - sx * 0.2, ly, -t - 0.012), 0.005, STEEL, hid, name="Strebe")
+                cyl(lx, ly, -h, -h + 0.012, 0.021, mat((0.35, 0.33, 0.30), 0.6), hid, verts=12, name="Gleiter")
+            else:
+                rbox(lx, ly - 0.018, -t - 0.046, lx - sx * (h - t - 0.02), ly + 0.018, -t - 0.01, WOOD, hid, r=0.005,
+                     name="Klappbein")
+    if loop:  # fabric pull loop on the band edge
+        curve_tube([(L / 2 - 0.34, -B / 2 - 0.001, -t / 2), (L / 2 - 0.31, -B / 2 - 0.045, -t / 2),
+                    (L / 2 - 0.28, -B / 2 - 0.001, -t / 2)], 0.007, fabric(col), hid, name="Zuglasche")
+    return kl_assemble(n0, loc, rot, name="Platte")
+
+
+def kl_stored(i, col, dy=0.0, hid="schrankwand"):
+    """Table top standing upright in the Plattenfach (slot i), pulled out by dy (negative = towards the room)."""
+    L, B, t = KL_PL
+    return kl_platte((KL_SLOT[i], KL_SWY + 0.33 + dy, 0.03 + L / 2), (0, -90, 0), col, "fold", hid=hid)
+
+
+def kl_verbinder(x, y, z, ang, hid="insel", edge=None):
+    """Click connector across the seam of two table tops: an ochre bow-tie on top (long axis across the seam,
+    direction ang), optional lever clip on the outer edge face (edge = (x, y, nx, ny) of the face)."""
+    m = mat(SAGE_D, 0.4, coat=0.4)
+    f = fvec(ang)
+    o = rbox(-0.06, -0.018, -0.004, 0.06, 0.018, 0.004, m, hid, r=0.004, name="Verbinder")
+    o.location = (x, y, z + 0.004)
+    o.rotation_euler = (0, 0, R(ang))
+    for sd in (-1, 1):
+        cyl(x + f.x * sd * 0.055, y + f.y * sd * 0.055, z, z + 0.01, 0.028, m, hid, verts=24, name="Verbinder")
+    if edge:
+        ex, ey, nx, ny = edge
+        c = rbox(-0.05, -0.007, -0.022, 0.05, 0.007, 0.0, m, hid, r=0.004, name="Verbinder Hebel")
+        c.location = (ex + nx * 0.006, ey + ny * 0.006, z - 0.004)
+        c.rotation_euler = (0, 0, math.atan2(ny, nx) - math.pi / 2)
+
+
+def kl_kochplatte(loc, rot=0, on=False, hid="kochplatte", tilt=0):
+    """Small induction hot plate (29 x 36 cm): cream body, black glass, one cooking zone, control strip with LED."""
+    n0 = len(objects)
+    rbox(-0.145, -0.18, 0, 0.145, 0.18, 0.05, mat(CREAM, 0.4, coat=0.3), hid, r=0.012, name="Kochplatte")
+    rbox(-0.133, -0.168, 0.046, 0.133, 0.168, 0.055, mat((0.05, 0.05, 0.06), 0.12, coat=0.9), hid, r=0.004,
+         name="Kochfeld")
+    torus(0, 0.03, 0.0555, 0.09, 0.003, mat((0.62, 0.62, 0.64), 0.3), hid, seg=48, name="Kochzone")
+    torus(0, 0.03, 0.0555, 0.05, 0.002, mat((0.45, 0.45, 0.47), 0.3), hid, seg=36, name="Kochzone")
+    rbox(-0.08, -0.16, 0.0555, 0.08, -0.13, 0.057, mat((0.22, 0.22, 0.24), 0.3), hid, r=0.002, name="Bedienfeld")
+    led = (1.0, 0.35, 0.12) if on else (0.25, 0.25, 0.25)
+    ball(0.06, -0.145, 0.057, 0.006, mat(led, 0.3, emission=led if on else None, strength=12.0 if on else 0.0), hid, seg=10,
+         name="LED")
+    return kl_assemble(n0, loc, (tilt, 0, rot), name="Kochplatte")
+
+
+def kl_topf(x, y, z, hid="kochplatte"):
+    """Steel pot with tomato sauce and a few basil leaves."""
+    st = mat((0.84, 0.84, 0.82), 0.25, metal=0.8)
+    cyl(x, y, z, z + 0.012, 0.112, st, hid, verts=40, name="Topfboden")
+    kl_tube(x, y, z, z + 0.12, 0.115, st, hid, wall=0.004, name="Topf")
+    torus(x, y, z + 0.12, 0.115, 0.004, st, hid, seg=40, name="Topfrand")
+    cyl(x, y, z + 0.01, z + 0.095, 0.112, mat((0.74, 0.16, 0.09), 0.35, coat=0.5, noise=0.12), hid, verts=40, name="Tomatensoße")
+    for sd in (-1, 1):
+        capsule((x, y + sd * 0.115, z + 0.1), (x, y + sd * 0.15, z + 0.1), 0.01, st, hid, name="Topfgriff")
+    for k in range(4):
+        a = k * 1.7
+        ball(x + math.cos(a) * 0.05, y + math.sin(a) * 0.05, z + 0.097, 0.013, LEAF2, hid, scale=(1.5, 0.8, 0.25), seg=8,
+             name="Basilikum")
+
+
+def kl_loeffel(p0, p1, hid=None):
+    """Wooden spoon from the hand p0 to the bowl p1."""
+    capsule(p0, p1, 0.006, WOOD, hid, name="Kochlöffel")
+    ball(*p1, 0.02, WOOD, hid, scale=(1.3, 1.0, 0.4), seg=12, name="Kochlöffel")
+
+
+def kl_zahlenschloss(x, y, z, hid="schloss", open_=False, k=1.3):
+    """Small combination lock: brass body, four number wheels, steel shackle (raised when open). (x, y, z) is the
+    top centre of the body's front; k scales it."""
+    brass = mat((0.88, 0.68, 0.32), 0.3, metal=0.6, coat=0.2)
+    rbox(x - 0.032 * k, y - 0.024 * k, z - 0.055 * k, x + 0.032 * k, y, z + 0.015 * k, brass, hid, r=0.008 * k, name="Zahlenschloss")
+    for j in range(4):
+        w = cyl(0, 0, -0.006 * k, 0.006 * k, 0.012 * k, mat(CREAM if j % 2 else (0.25, 0.22, 0.20), 0.4), hid, verts=16,
+                rot=(0, R(90), 0), name="Zahlenrad")
+        w.location = (x + (-0.021 + j * 0.014) * k, y - 0.026 * k, z - 0.025 * k)
+    dz = 0.022 * k if open_ else 0.0
+    zt, ys, rr = z + 0.015 * k, y - 0.012 * k, 0.02 * k
+    torus(x, ys, zt + dz, rr, 0.0045 * k, STEEL, hid, rot=(R(90), 0, 0), half=True, name="Bügel")
+    for sd in (-1, 1):
+        capsule((x + sd * rr, ys, zt), (x + sd * rr, ys, zt + dz), 0.0045 * k, STEEL, hid, name="Bügel")
+
+
+def kl_wagen(x0, y0, x1, y1, hid="wagen"):
+    """Caterer trolley: steel frame with two trays and castors; closed insulated food boxes (pasta, rice, vegetables)."""
+    st = mat((0.80, 0.81, 0.82), 0.3, metal=0.75)
+    h = 0.80
+    for px in (x0 + 0.02, x1 - 0.02):
+        for py in (y0 + 0.02, y1 - 0.02):
+            capsule((px, py, 0.1), (px, py, h), 0.012, st, hid, name="Wagenrohr")
+            box(px - 0.012, py - 0.02, 0.06, px + 0.012, py + 0.02, 0.1, st, hid, name="Rollengabel")
+            cyl(0, 0, -0.012, 0.012, 0.04, mat((0.25, 0.25, 0.27), 0.5), hid, verts=16, rot=(0, R(90), 0),
+                name="Rolle").location = (px, py, 0.04)
+    for zt in (0.26, h - 0.02):
+        rbox(x0, y0, zt, x1, y1, zt + 0.02, st, hid, r=0.006, name="Wagenboden")
+        for (a0, b0, a1, b1) in ((x0, y0, x1, y0 + 0.01), (x0, y1 - 0.01, x1, y1), (x0, y0, x0 + 0.01, y1), (x1 - 0.01, y0, x1, y1)):
+            box(a0, b0, zt + 0.02, a1, b1, zt + 0.05, st, hid, name="Wagenrand")
+    # push handle at the -y end
+    curve_tube([(x0 + 0.04, y0 + 0.02, h), (x0 + 0.04, y0 - 0.08, h + 0.12), (x1 - 0.04, y0 - 0.08, h + 0.12),
+                (x1 - 0.04, y0 + 0.02, h)], 0.012, st, hid, smooth=False, name="Schiebegriff")
+    boxes = [((y0 + 0.03, (y0 + y1) / 2 - 0.01), h + 0.0, "Nudeln", SAGE), (((y0 + y1) / 2 + 0.01, y1 - 0.03), h + 0.0, "Reis", CREAM),
+             ((y0 + 0.08, y1 - 0.08), 0.28, "Gemüse", (0.93, 0.80, 0.62))]
+    for (b0, b1), zb, word, col in boxes:
+        bh = 0.22 if zb > 0.5 else 0.2
+        rbox(x0 + 0.04, b0, zb, x1 - 0.04, b1, zb + bh, mat(col, 0.45, coat=0.3), hid, r=0.025, name="Thermobox")
+        rbox(x0 + 0.035, b0 - 0.005, zb + bh - 0.05, x1 - 0.035, b1 + 0.005, zb + bh - 0.035, mat(tuple(c * 0.8 for c in col), 0.5),
+             hid, r=0.006, name="Deckelfuge")
+        for sd in (-1, 1):
+            box(x1 - 0.045, (b0 + b1) / 2 + sd * (b1 - b0) * 0.3 - 0.015, zb + bh - 0.075, x1 - 0.03,
+                (b0 + b1) / 2 + sd * (b1 - b0) * 0.3 + 0.015, zb + bh - 0.03, mat((0.35, 0.35, 0.37), 0.4), hid, name="Verschluss")
+        yc, zc = (b0 + b1) / 2, zb + bh * 0.42
+        panel(x1 - 0.042, yc - 0.1, zc - 0.035, x1 - 0.036, yc + 0.1, zc + 0.035, hid, face=(0.98, 0.96, 0.92), name="Etikett")
+        text3d(word, x1 - 0.034, yc, zc, 0.045, DARK, hid, rot=(R(90), 0, R(90)), extrude=0.001, name="Etikett")
+    A("wagen", (x0 + x1) / 2, (y0 + y1) / 2, h + 0.26)
+
+
+def kl_kistenregal(x0, x1, y0, hid="laden"):
+    """Shop crate shelf (0.30 deep) standing in the open shop bay, front flush with the cabinet."""
+    d = 0.30
+    for xp in (x0, x1 - 0.02):
+        panel(xp, y0, 0.0, xp + 0.02, y0 + d, 1.12, hid, name="Kistenregal")
+    kinds = [("kartoffel", "kuerbis", "salat"), ("paprika", "karotte", "gurke"), ("apfel", "zitrone", "kirsche")]
+    n = 3
+    cw = (x1 - x0 - 0.04) / n
+    for t_, zz in enumerate((0.04, 0.42, 0.80)):
+        panel(x0 + 0.02, y0, zz - 0.02, x1 - 0.02, y0 + d, zz, hid, name="Kistenregal")
+        for j in range(n):
+            ca, cb = x0 + 0.02 + j * cw + 0.015, x0 + 0.02 + (j + 1) * cw - 0.015
+            crate(ca, y0 + 0.02, cb, y0 + d - 0.02, zz, kinds[t_][j], hid)
+            tg = Vector(((ca + cb) / 2, y0 - 0.004, zz - 0.035))
+            panel(tg.x - 0.04, tg.y - 0.003, tg.z - 0.022, tg.x + 0.04, tg.y + 0.003, tg.z + 0.022, hid, face=(0.97, 0.95, 0.9),
+                  name="Preisschild")
+            text3d(str((j + t_) % 3 + 1), tg.x, tg.y - 0.0045, tg.z, 0.035, mat(BERRY, 0.5), hid, extrude=0.001, name="Preis")
+    panel(x0, y0, 1.12, x1, y0 + d, 1.14, hid, name="Kistenregal")
+
+
+def kl_theke(x0, x1, y0, y1, h=0.52, hid="laden"):
+    """Rolling shop counter (parks in the shop bay): pastel fields towards the customer, castors."""
+    cz = 0.07
+    panel(x0, y0, cz, x1, y0 + 0.02, h - 0.025, hid, name="Theke Front")
+    panel(x0, y1 - 0.02, cz, x1, y1, h - 0.025, hid, name="Theke Rückwand")
+    for xp in (x0, x1 - 0.02):
+        panel(xp, y0, cz, xp + 0.02, y1, h - 0.025, hid, name="Theke Seite")
+    panel(x0, y0, cz, x1, y1, cz + 0.02, hid, name="Theke Boden")
+    panel(x0 - 0.012, y0 - 0.012, h - 0.025, x1 + 0.012, y1 + 0.012, h, hid, name="Theke")
+    nf = max(2, int(round((x1 - x0) / 0.36)))
+    fw = (x1 - x0) / nf
+    for k in range(nf):
+        box(x0 + k * fw + 0.04, y0 - 0.004, cz + 0.06, x0 + (k + 1) * fw - 0.04, y0, h - 0.08,
+            mat([SAGE, CREAM][k % 2], 0.7), hid, name="Thekenfeld")
+    for px in (x0 + 0.06, x1 - 0.06):
+        for py in (y0 + 0.06, y1 - 0.06):
+            cyl(0, 0, -0.012, 0.012, 0.032, mat((0.30, 0.30, 0.32), 0.5), hid, verts=16, rot=(0, R(90), 0),
+                name="Rolle").location = (px, py, 0.034)
+            box(px - 0.016, py - 0.02, 0.05, px + 0.016, py + 0.02, cz, STEEL, hid, name="Rollengabel")
+
+
+def kl_markise(x0, x1, y_back, z_back, out=0.48, drop=0.18, hid="laden"):
+    """Striped fabric awning mounted on the cabinet rail, sloping down towards the room, scalloped edge."""
+    ang = math.atan2(drop, out)
+    dep = math.hypot(out, drop)
+    aw = rbox(-(x1 - x0) / 2, -dep / 2, -0.01, (x1 - x0) / 2, dep / 2, 0.01, stripes(SAGE, CREAM, 6.0, "X", 0.5), hid, r=0.008,
+              name="Markise")
+    aw.location = ((x0 + x1) / 2, y_back - out / 2, z_back - drop / 2)
+    aw.rotation_euler = (ang, 0, 0)
+    ye, ze = y_back - out, z_back - drop
+    n = max(6, int((x1 - x0) / 0.11))
+    for k in range(n + 1):
+        xx = x0 + k * (x1 - x0) / n
+        o = cyl(0, 0, -0.006, 0.006, 0.06, mat(SAGE if k % 2 == 0 else CREAM, 0.8, sheen=0.5), hid, verts=20, name="Bogen")
+        o.location = (xx, ye + 0.004, ze - 0.004)
+        o.rotation_euler = (R(90) + ang, 0, 0)
+    box(x0, y_back - 0.06, z_back - 0.03, x1, y_back, z_back + 0.03, mat((0.85, 0.85, 0.83), 0.35, metal=0.4), hid, name="Markisenkasten")
+
+
+def kl_schild(x, z, word, color, hid="laden", icon=None):
+    """Two-sided wooden sign hung from the rail in front of the drawer row (Kaufladen / Küche)."""
+    y = KL_SWY
+    panel(x - 0.46, y - 0.03, z - 0.105, x + 0.46, y - 0.012, z + 0.105, hid, face=(0.97, 0.95, 0.90), name="Schild")
+    for sd in (-1, 1):
+        capsule((x + sd * 0.36, y - 0.021, z + 0.1), (x + sd * 0.36, y - 0.005, KL_RAIL - 0.005), 0.004, DARK, hid, name="Schildhaken")
+    text3d(word, x + (0.06 if icon else 0.0), y - 0.031, z - 0.01, 0.16, mat(color, 0.5), hid, extrude=0.004, name="Schrift")
+    if icon == "topf":
+        ix = x - 0.3
+        cyl(0, 0, -0.004, 0.004, 0.045, mat(color, 0.5), hid, verts=24, rot=(R(90), 0, 0), name="Symbol").location = (ix, y - 0.034, z - 0.02)
+        box(ix - 0.06, y - 0.036, z - 0.02, ix + 0.06, y - 0.032, z + 0.012, mat(color, 0.5), hid, name="Symbol")
+        box(ix - 0.075, y - 0.036, z + 0.008, ix + 0.075, y - 0.032, z + 0.02, mat(color, 0.5), hid, name="Symbol")
+
+
+def kl_hoehle(x0, x1, hid="hoehle", kid_inside=False):
+    """Round hideout cave built into the cabinet at child height, cushion and teddy inside, fairy lights round the hole."""
+    y = KL_SWY
+    z0, z1 = 0.28, KL_LOW
+    cx, zc, r = (x0 + x1) / 2, 0.70, 0.37
+    # cavity lining
+    panel(x0 + 0.002, y + 0.019, z0, x1 - 0.002, 4.80 - 0.02, z0 + 0.02, hid, name="Höhle Boden")
+    panel(x0 + 0.002, y + 0.019, z1 - 0.02, x1 - 0.002, 4.80 - 0.02, z1, hid, name="Höhle Decke")
+    panel(x0 + 0.002, 4.80 - 0.04, z0, x1 - 0.002, 4.80 - 0.02, z1, hid, name="Höhle Rückwand")
+    for xp in (x0, x1 - 0.02):
+        panel(xp, y + 0.019, z0, xp + 0.02, 4.80 - 0.02, z1, hid, name="Höhle Seite")
+    front = panel(x0 + 0.002, y, z0 + 0.002, x1 - 0.002, y + 0.019, z1 - 0.002, hid, name="Höhle Front")
+    cut = cyl(0, 0, -0.1, 0.1, r, WOOD, None, verts=72, rot=(R(90), 0, 0))
+    cut.location = (cx, y + 0.01, zc)
+    boolean_cut(front, cut)
+    torus(cx, y + 0.009, zc, r, 0.011, WOOD, hid, rot=(R(90), 0, 0), seg=72, name="Höhle Rand")
+    cushion(cx, 4.45, z0 + 0.02, x1 - x0 - 0.12, 0.6, 0.1, SAGE, 0, hid, name="Höhlenkissen")
+    cushion(x0 + 0.22, 4.6, z0 + 0.12, 0.3, 0.14, 0.26, ROSE, 8, hid, name="Kissen")
+    cushion(x1 - 0.22, 4.6, z0 + 0.12, 0.3, 0.14, 0.24, OCHRE, -6, hid, name="Kissen")
+    animal(x1 - 0.3, 4.38, z0 + 0.12, -70, "bär", (0.72, 0.52, 0.36), s=2.2, hid=hid, soft=True)
+    for k in range(18):
+        a = k * 2 * math.pi / 18
+        ball(cx + math.cos(a) * (r + 0.05), y - 0.008, zc + math.sin(a) * (r + 0.05), 0.012,
+             mat((1.0, 0.9, 0.6), 0.3, emission=(1.0, 0.82, 0.5), strength=8.0), hid, seg=8, name="Lichterkette")
+    ball(cx, 4.5, z1 - 0.03, 0.05, mat((1.0, 0.9, 0.7), 0.4, emission=(1.0, 0.8, 0.55), strength=4.0), hid, scale=(1, 1, 0.5),
+         name="Höhlenlampe")
+    ld = bpy.data.lights.new("Höhlenlicht", "POINT")
+    ld.energy = 6.0
+    ld.color = (1.0, 0.82, 0.6)
+    ld.shadow_soft_size = 0.1
+    lo = bpy.data.objects.new("Höhlenlicht", ld)
+    scene.collection.objects.link(lo)
+    lo.location = (cx, 4.4, z1 - 0.12)
+    if kid_inside:
+        # sits sideways so the legs stay inside and the face shows through the hole
+        kid(5, cx - 0.26, 4.4, 0, "sit", hid=hid, z=z0 + 0.06, look=(cx + 0.8, 3.2, 0.75))
+    A("hoehle", cx - 0.12, y - 0.01, zc + r * 0.75)
+
+
+def kl_fach(offen=False):
+    """Small locked compartment (columns 0-1, door row): top-hung flap, hasp over a staple on the drawer below,
+    combination lock through the staple. offen: flap up, lock hanging open, hot plate, knife block and cleaning
+    agents visible inside."""
+    x0, x1 = KL_COLS[0], KL_COLS[2]
+    y, z0, z1 = KL_SWY, KL_DRAW, KL_DOOR
+    hid = "schloss"
+    xm = (KL_COLS[0] + KL_COLS[1]) / 2
+    w, h = x1 - x0 - 0.004, z1 - z0 - 0.004
+    zs = z0 - 0.035  # staple on the drawer front below the flap
+    box(xm - 0.03, y - 0.004, zs - 0.02, xm + 0.03, y, zs + 0.02, STEEL, hid, name="Öse Platte")
+    torus(xm, y - 0.01, zs, 0.011, 0.003, STEEL, hid, rot=(0, R(90), 0), seg=16, name="Öse")
+    n0 = len(objects)
+    panel(0, 0, -h, w, 0.019, 0, hid, name="Fachklappe")
+    box(xm - x0 - 0.024, -0.005, -h - 0.045, xm - x0 + 0.02, 0.0, -h + 0.07, STEEL, hid, name="Überfalle")
+    e = kl_assemble(n0, (x0 + 0.002, y, z1 - 0.002), (-96 if offen else 0, 0, 0), name="Fachklappe")
+    kl_zahlenschloss(xm, y - 0.012, zs - 0.045, hid, open_=offen)
+    A("schloss", xm, y - 0.04, zs - 0.08)
+    if not offen:
+        return
+    inner = mat((0.93, 0.86, 0.72), 0.6, name="Fach innen")
+    box(x0 + 0.02, y + 0.02, z0, x1 - 0.02, 4.78, z0 + 0.02, inner, hid, name="Fach Boden")
+    box(x0 + 0.02, y + 0.02, z1 - 0.02, x1 - 0.02, 4.78, z1, inner, hid, name="Fach Decke")
+    box(x0 + 0.02, 4.76, z0, x1 - 0.02, 4.78, z1, inner, hid, name="Fach Rückwand")
+    for xp in (x0, x1 - 0.02):
+        panel(xp, y, z0, xp + 0.02, 4.78, z1, hid, name="Fach Seite")
+    zf = z0 + 0.02
+    kl_kochplatte((x0 + 0.26, 4.70, zf + 0.177), rot=18, on=False, hid=hid, tilt=78)  # stored upright at the back
+    A("kochplatte", x0 + 0.27, 4.62, zf + 0.2)
+    # knife block with three handles
+    kb = (x0 + 0.56, 4.34)
+    o = rbox(-0.045, -0.07, 0, 0.045, 0.07, 0.19, mat((0.70, 0.50, 0.32), 0.5, noise=0.08), hid, r=0.01, name="Messerblock")
+    o.location = (kb[0], kb[1], zf + 0.095)
+    o.rotation_euler = (R(-10), 0, 0)
+    for k in range(3):
+        capsule((kb[0] - 0.022 + k * 0.022, kb[1] + 0.03, zf + 0.19), (kb[0] - 0.022 + k * 0.022, kb[1] + 0.05, zf + 0.29), 0.01,
+                mat((0.18, 0.16, 0.15), 0.4), hid, name="Messergriff")
+    # cleaning agents at the back
+    bott = [(x0 + 0.75, SKY, 0.2, True), (x0 + 0.86, (0.96, 0.96, 0.94), 0.18, False), (x0 + 0.97, SAGE, 0.19, False)]
+    for bx, col, bh, spray in bott:
+        by = 4.42
+        cyl(bx, by, zf, zf + bh, 0.032, mat(col, 0.35, coat=0.4), hid, verts=20, name="Reiniger")
+        if spray:
+            box(bx - 0.015, by - 0.02, zf + bh, bx + 0.015, by + 0.018, zf + bh + 0.05, WHITE, hid, name="Sprühkopf")
+            box(bx - 0.008, by - 0.04, zf + bh + 0.02, bx + 0.008, by - 0.02, zf + bh + 0.045, WHITE, hid, name="Sprühkopf")
+        else:
+            cyl(bx, by, zf + bh, zf + bh + 0.03, 0.013, mat(BERRY if col == SAGE else SKY, 0.4), hid, verts=14, name="Deckel")
+    torus(x0 + 0.3, 4.44, zf + 0.012, 0.055, 0.006, DARK, hid, seg=24, name="Kabel")
+
+
+def kl_schrankwand(v, offen=False):
+    """The storage wall. v: '' (shop open), 'umbau', 'kochen'. offen: the locked compartment stands open."""
+    H = KL_TOP
+    y, yb = KL_SWY, 4.80
+    c = KL_COLS
+    hid = "schrankwand"
+    # carcass: end panel, top, rail, column walls of the lower zone
+    panel(KL_SWX - 0.02, y, 0.0, KL_SWX, yb, H, hid, name="Seitenwand")
+    panel(-0.005, y - 0.01, H, KL_SWX + 0.005, yb, H + 0.03, None, freq=60.0, name="Wandkappe")
+    rbox(c[0], y - 0.03, KL_LOW, KL_SWX - 0.02, y + 0.02, KL_RAIL, mat(SAGE, 0.55, coat=0.2), hid, r=0.006, name="Leiste")
+    box(c[0] + 0.01, y + 0.024, KL_RAIL, KL_SWX - 0.02, yb, KL_DRAW, KL_GAP, hid, name="Korpus")
+    box(c[0 if not offen else 2] + 0.01, y + 0.024, KL_DRAW, KL_SWX - 0.02, yb, KL_DOOR, KL_GAP, hid, name="Korpus")
+    box(c[0] + 0.01, y + 0.024, KL_DOOR, KL_SWX - 0.02, yb, H, KL_GAP, hid, name="Korpus")
+    # adult zone: drawer row, door row (cols 0-1 = locked compartment), top row; calm flush fronts
+    for k in range(6):
+        kl_front(c[k], c[k + 1], KL_RAIL, KL_DRAW, hid, grip="top" if k else None, name="Schublade")
+        if k == 0:
+            kl_fach(offen)
+        elif k > 1:
+            kl_front(c[k], c[k + 1], KL_DRAW, KL_DOOR, hid, grip="left" if k % 2 else "right", name="Tür")
+        kl_front(c[k], c[k + 1], KL_DOOR, H, hid, grip="left" if k % 2 else "right", name="Tür")
+    A("schrankwand", c[3], y - 0.02, (KL_DRAW + KL_DOOR) / 2 + 0.05)
+    # ---- column 0: Plattenfach (open slot, tops stand upright side by side)
+    inner = mat((0.93, 0.86, 0.72), 0.6, name="Fach innen")
+    for xp in (c[0], c[1] - 0.02):
+        panel(xp, y, 0.0, xp + 0.02, yb, KL_LOW, hid, name="Plattenfach Seite")
+    box(c[0] + 0.02, yb - 0.03, 0.0, c[1] - 0.02, yb - 0.01, KL_LOW, inner, hid, name="Plattenfach Rückwand")
+    panel(c[0] + 0.02, y, 0.0, c[1] - 0.02, yb - 0.03, 0.03, hid, name="Plattenfach Boden")
+    for i in range(6):  # guide grooves on the floor and under the rail
+        for zz in (0.03, KL_LOW - 0.012):
+            box(KL_SLOT[i] - 0.009, y + 0.02, zz, KL_SLOT[i] - 0.003, yb - 0.04, zz + 0.01, WOOD, hid, name="Führung")
+    # ---- columns 1-2: cave; games drawer below
+    kl_front(c[1], c[3], 0.0, 0.28, hid, grip="top", name="Spieleschublade", icon=((c[1] + c[3]) / 2 + 0.3, 0.14, "wuerfel"))
+    # ---- columns 3-5: shop bay (pocket doors)
+    sb0, sb1 = c[3], c[6] - 0.02
+    if v == "":
+        panel(sb0, y, 0.0, sb0 + 0.02, yb, KL_LOW, hid, name="Ladenbucht Seite")
+        box(sb0 + 0.02, yb - 0.03, 0.0, sb1, yb - 0.01, KL_LOW, inner, hid, name="Ladenbucht Rückwand")
+        box(sb0 + 0.02, y + 0.02, 0.0, sb1, yb - 0.03, 0.01, inner, hid, name="Ladenbucht Boden")
+        for xp, sd in ((sb0 + 0.02, 1), (sb1, -1)):  # pocket doors pushed into the sides, only their edges show
+            panel(xp if sd > 0 else xp - 0.022, y + 0.03, 0.01, xp + 0.022 if sd > 0 else xp, yb - 0.06, KL_LOW - 0.01, hid,
+                  name="Einschubtür")
+    else:
+        mid = (sb0 + c[6]) / 2
+        kl_front(sb0, mid, 0.0, KL_LOW, hid, grip="right", name="Ladentür", icon=(mid - 0.2, 0.95, "apfel"))
+        kl_front(mid, c[6], 0.0, KL_LOW, hid, grip="left", name="Ladentür")
+
+
 def build_kaufladen(v):
+    """v5 Kaufladen: '' = 10:00 shop, 'umbau' = 11:15 the shop folds into the wall and the table tops come out,
+    'kochen' = 11:15 six tops form one island, hot plate in the middle where small arms cannot reach.
+    Shots: kasse (default variant), offen (umbau: the locked compartment open, name schrankwand_offen)."""
     W, D, H = 5.6, 4.8, 2.6
     room_base(W, D)
-    wall("x", D, 0.0, W, h=H, openings=[(3.5, 5.1, 0.55, 1.98, "window")])
+    wall("x", D, 0.0, W, h=H, openings=[(3.5, 5.1, 0.55, 1.98, "window")], glass=kl_winter_glass())
     wall("y", 0.0, 0.0, D + 0.18, h=H, openings=[(0.4, 1.3, 0.0, 2.1, "door")], m=WALL_ROSE)
-    wainscot("x", D, 0.0, W, h=1.0, skip=[(3.5, 5.1)])
+    wainscot("x", D, 5.1, W, h=1.0)
     wainscot("x", D, 3.5, 5.1, h=0.5, ledge=False)
-    wainscot("y", 0.0, 0.0, D, h=1.0, skip=[(0.4, 1.3)])
-    # recipe letterbox to the kitchen, next to the door
-    bx, by, bz = 0.02, 1.75, 1.05
-    panel(bx, by - 0.2, bz - 0.17, bx + 0.14, by + 0.2, bz + 0.17, "briefkasten", name="Rezept-Briefkasten")
-    box(bx + 0.138, by - 0.12, bz + 0.08, bx + 0.146, by + 0.12, bz + 0.1, DARK, "briefkasten", name="Schlitz")
-    cyl(bx + 0.15, by, bz - 0.06, bz - 0.0, 0.06, mat(BERRY, 0.4, coat=0.3), "briefkasten", verts=20,
-        rot=(0, R(90), 0), name="Topf-Symbol").location = (bx + 0.15, by, bz - 0.04)
-    text3d("Rezepte für die Küche", bx + 0.15, by, bz + 0.27, 0.05, DARK, "briefkasten", rot=(R(90), 0, R(90)), name="Schild")
-    panel(bx, by - 0.26, bz + 0.22, bx + 0.02, by + 0.26, bz + 0.32, "briefkasten", name="Schildbrett")
-    A("briefkasten", bx + 0.15, by, bz + 0.1)
-    # shop stall: counter, shelves of crates, awning, sign
-    x0, x1, cy0, cy1 = 0.45, 2.95, 2.85, 3.3
-    panel(x0, cy0, 0, x1, cy0 + 0.02, 0.62, "laden", name="Theke Front")
-    panel(x0, cy0, 0.62, x1, cy1, 0.65, "laden", name="Theke")
-    panel(x0, cy0, 0, x0 + 0.02, cy1, 0.62, "laden", name="Theke Seite")
-    panel(x1 - 0.02, cy0, 0, x1, cy1, 0.62, "laden", name="Theke Seite")
-    for k, col in enumerate([SAGE, CREAM, SAGE, CREAM, SAGE]):
-        box(x0 + 0.08 + k * 0.49, cy0 - 0.004, 0.08, x0 + 0.45 + k * 0.49, cy0, 0.54, mat(col, 0.7), "laden", name="Thekenfeld")
-    for xp in (x0 + 0.05, x1 - 0.05):
-        panel(xp - 0.03, cy0 + 0.05, 0.65, xp + 0.03, cy0 + 0.11, 1.9, "laden", name="Pfosten")
-    panel(x0, cy0 + 0.04, 1.86, x1, cy0 + 0.12, 1.92, "laden", name="Balken")
-    aw = rbox(-(x1 - x0) / 2 - 0.1, -0.42, -0.012, (x1 - x0) / 2 + 0.1, 0.42, 0.012, stripes(SAGE, CREAM, 6.0, "X", 0.5),
-              "laden", r=0.008, name="Markise")
-    aw.location = ((x0 + x1) / 2, cy0 - 0.12, 1.78)
-    aw.rotation_euler = (R(-24), 0, 0)
-    for k in range(13):
-        xx = x0 - 0.08 + k * (x1 - x0 + 0.16) / 12
-        o = cyl(0, 0, -0.006, 0.006, 0.075, mat(SAGE if k % 2 == 0 else CREAM, 0.8, sheen=0.5), "laden", verts=20, name="Bogen")
-        o.location = (xx, cy0 - 0.12 - 0.42 * math.cos(R(24)), 1.78 - 0.42 * math.sin(R(24)) - 0.01)
-        o.rotation_euler = (R(90 - 24), 0, 0)
-    panel((x0 + x1) / 2 - 0.7, cy0 + 0.06, 1.95, (x0 + x1) / 2 + 0.7, cy0 + 0.1, 2.3, "laden", name="Schild")
-    text3d("Kaufladen", (x0 + x1) / 2, cy0 + 0.055, 2.125, 0.17, mat(BERRY, 0.5), "laden", extrude=0.006, name="Schrift")
-    # shelves of crates against the north wall
-    for t_, (zz, dy) in enumerate([(0.0, 0.0), (0.42, 0.12), (0.84, 0.24)]):
-        panel(0.35, D - 0.5 + dy, zz + 0.3, 3.05, D - 0.02, zz + 0.33, "regal", name="Kistenregal")
-    for xp in (0.37, 1.7, 3.03):
-        panel(xp - 0.02, D - 0.5, 0, xp + 0.02, D - 0.02, 1.2, "regal", name="Kistenregal")
-    kinds = [("apfel", "zitrone"), ("paprika", "karotte"), ("brot", "tomate")]
-    for t_, (zz, dy) in enumerate([(0.0, 0.0), (0.42, 0.12), (0.84, 0.24)]):
-        for j, xr in enumerate([(0.45, 1.6), (1.8, 2.95)]):
-            crate(xr[0], D - 0.46 + dy, xr[1], D - 0.08, zz + 0.33, kinds[t_][j], "regal")
-    # counter goods: 5 aubergines, 20 cherries, the till
-    crate(0.55, 2.9, 1.05, 3.24, 0.65, "aubergine", "laden", n=5)
-    bowl(1.35, 3.07, 0.65, 0.13, None, "laden", (0.95, 0.94, 0.9))
-    for k in range(20):
-        a = k * 2.39
-        rr = 0.03 + 0.07 * math.sqrt(k / 20)
-        fruit("kirsche", 1.35 + math.cos(a) * rr, 3.07 + math.sin(a) * rr, 0.72 + 0.02 * (k % 3), "laden")
-    tray = kasse(2.3, 3.07, 0.65)
-    kiddo_cube(tray[0], tray[1], tray[2], "fuchs", None, "mila", face=-100)
-    A("mila_cube", tray[0], tray[1], tray[2] + 0.06)
-    # people
-    who("defne", 2.72, 3.68, -105, "stand", hid="defne", acc=("crown",), look=(2.0, 2.4, 0.8))
-    who("mila", 2.05, 2.42, 95, "reach", hid="mila", acc=("fruit",), look=(2.3, 3.07, 0.75),
-        arms={"r": (2.18, 2.88, 0.72)})
-    kid(2, 2.75, 2.05, 125, "stand", hid="kinder", acc=("basket",), look=(2.3, 3.0, 0.8))
-    # drawing table with birthday ring
-    tx, ty = 4.0, 1.55
-    kid_table(tx - 0.5, ty - 0.5, tx + 0.5, ty + 0.5, 0.5, "maltisch", round_=True)
-    for k, (dx, dy, ang) in enumerate([(-0.15, -0.1, 20), (0.18, 0.12, -30)]):
-        o = box(-0.14, -0.1, 0, 0.14, 0.1, 0.004, PAPER, "maltisch", name="Papier")
-        o.location = (tx + dx, ty + dy, 0.5)
-        o.rotation_euler = (0, 0, R(ang))
-        for j, col in enumerate([(0.86, 0.2, 0.15), (0.95, 0.75, 0.2), (0.35, 0.62, 0.3)]):
-            ball(tx + dx + (j - 1) * 0.05, ty + dy + 0.01 * j, 0.506, 0.025, mat(col, 0.8), "maltisch", scale=(1.3, 1, 0.15))
-    cyl(tx + 0.25, ty - 0.2, 0.5, 0.6, 0.04, mat(SKY, 0.5), "maltisch", name="Stiftebecher")
-    for k in range(6):
-        capsule((tx + 0.25 + math.cos(k) * 0.02, ty - 0.2 + math.sin(k) * 0.02, 0.55),
-                (tx + 0.25 + math.cos(k) * 0.035, ty - 0.2 + math.sin(k) * 0.035, 0.68), 0.006,
-                mat(CLOTH[k], 0.5), "maltisch", name="Stift")
-    # Geburtstagskranz with candles and a 5
-    torus(tx - 0.1, ty + 0.25, 0.53, 0.14, 0.03, WOOD, "kranz", seg=36, name="Kranz")
-    for k in range(5):
-        a = k * 2 * math.pi / 5
-        px, py = tx - 0.1 + math.cos(a) * 0.14, ty + 0.25 + math.sin(a) * 0.14
-        cyl(px, py, 0.55, 0.66, 0.012, mat(CREAM, 0.6), "kranz", verts=12, name="Kerze")
-        ball(px, py, 0.68, 0.013, mat((1, 0.8, 0.4), 0.3, emission=(1.0, 0.7, 0.3), strength=20.0), "kranz", scale=(1, 1, 1.6),
-             seg=10, name="Flamme")
-    text3d("5", tx - 0.1, ty + 0.25, 0.62, 0.12, mat(OCHRE, 0.4, coat=0.4), "kranz", rot=(R(90), 0, R(-40)), extrude=0.012)
-    A("kranz", tx - 0.1, ty + 0.25, 0.7)
-    stool(tx - 0.62, ty - 0.35, 0.3, ROSE, "maltisch")
-    kid(4, tx - 0.62, ty - 0.35, 30, "sitc", hid="maltisch", seat=0.3, look=(tx - 0.15, ty - 0.1, 0.5), acc=("brush",))
-    stool(tx + 0.55, ty + 0.5, 0.3, SKY, "maltisch")
-    kid(7, tx + 0.55, ty + 0.5, 220, "sitc", hid="maltisch", seat=0.3, look=(tx + 0.18, ty + 0.12, 0.5))
-    who("ayla", tx + 0.7, ty - 0.45, 150, "kneel", hid="ayla", look=(tx - 0.4, ty - 0.3, 0.6))
-    # window side
-    plant(3.8, D - 0.1, 0.55, 0.55, kind="herb")
-    plant(4.8, D - 0.1, 0.55, 0.55, pot="cream", kind="bush")
-    gemuesestand(3.45, 3.62, 4.65)
-    # a child's shopping basket, ready to go
-    bm = mat(SAGE, 0.5, coat=0.2)
-    bx_, by_ = 3.2, 3.25
-    box(bx_ - 0.14, by_ - 0.1, 0.0, bx_ + 0.14, by_ + 0.1, 0.012, bm, "gemuese", name="Einkaufskorb")
-    for (a0, b0, a1, b1) in ((-0.14, -0.1, 0.14, -0.09), (-0.14, 0.09, 0.14, 0.1), (-0.14, -0.09, -0.13, 0.09), (0.13, -0.09, 0.14, 0.09)):
-        box(bx_ + a0, by_ + b0, 0.0, bx_ + a1, by_ + b1, 0.12, bm, "gemuese", name="Einkaufskorb")
-    torus(bx_, by_, 0.12, 0.13, 0.009, mat(OCHRE, 0.5), "gemuese", rot=(R(90), 0, 0), half=True, name="Henkel")
-    fruit("apfel", bx_ - 0.06, by_, 0.055, "gemuese")
-    fruit("karotte", bx_ + 0.04, by_ - 0.02, 0.05, "gemuese")
-    fruit("tomate", bx_ + 0.07, by_ + 0.04, 0.05, "gemuese")
-    bunting((0.03, 2.2, 2.4), (0.03, D - 0.05, 2.4), sag=0.18, colors=[OCHRE, BERRY, SKY, SAGE])
-    bunting((0.3, D - 0.02, 2.42), (3.3, D - 0.02, 2.42), sag=0.22, colors=[ROSE, OCHRE, SAGE, SKY])
+    wainscot("y", 0.0, 0.0, KL_SWY - 0.01, h=1.0, skip=[(0.4, 1.3)])
+    offen = SHOT == "offen"
+    kl_schrankwand(v, offen=offen)
+    # walls: bunting, children's drawings; windowsill stays empty, a small tree stands on the floor beside the window
+    bunting((0.03, 1.55, 2.4), (0.03, KL_SWY - 0.06, 2.4), sag=0.16, colors=[OCHRE, BERRY, SKY, SAGE])
+    bunting((3.5, D - 0.02, 2.42), (W - 0.08, D - 0.02, 2.42), sag=0.18, colors=[ROSE, OCHRE, SAGE, SKY])
     for k, (yy, mo) in enumerate([(2.6, "rainbow"), (3.15, "person")]):
         drawing(0.005, yy, 1.45, 0, 0.36, 0.28, motif=mo, hid="bilder")
+    plant(5.32, 4.38, 0.0, 0.95, pot="terra", kind="tree")
+    L, B, t = KL_PL
+    if v == "":
+        # ---------------------------------------------------------------- 10:00 shop
+        for i in range(6):
+            kl_stored(i, KL_PLCOL[i])
+        A("platten", KL_SLOT[2] + 0.02, KL_SWY - 0.02, 0.9)
+        kl_hoehle(KL_COLS[1], KL_COLS[3], kid_inside=True)
+        sb0, sb1 = KL_COLS[3] + 0.02, KL_COLS[6] - 0.02
+        kl_kistenregal(sb0 + 0.02, sb1 - 0.02, KL_SWY + 0.02)
+        kl_markise(sb0 - 0.02, sb1 + 0.02, KL_SWY - 0.03, KL_LOW + 0.04)
+        kl_schild((sb0 + sb1) / 2 + 0.05, (KL_RAIL + KL_DRAW) / 2 + 0.005, "Kaufladen", BERRY)
+        # rolling counter with the till in front of the bay
+        tx0, tx1, ty0, ty1, th = 1.86, 3.30, 3.20, 3.60, 0.52
+        kl_theke(tx0, tx1, ty0, ty1, th)
+        crate(1.93, 3.26, 2.36, 3.56, th, "aubergine", "laden", n=5)
+        tray = kasse(2.86, 3.40, th)
+        kiddo_cube(tray[0], tray[1], tray[2], "fuchs", None, "mila", face=-100)
+        A("mila_cube", tray[0], tray[1], tray[2] + 0.06)
+        # the aubergine Mila just laid on the red window
+        ball(2.9, 3.40, th + 0.235, 0.04, mat((0.30, 0.11, 0.36), 0.25, coat=0.6), "kasse", scale=(2.0, 1, 0.9),
+             rot=(R(-22), 0, R(8)), name="Aubergine")
+        # people
+        who("defne", 3.2, 3.86, -118, "reach", hid="defne", acc=("crown",), look=(2.4, 3.0, 0.62),
+            arms={"l": (3.04, 3.62, 0.6), "r": (3.32, 3.66, 0.5)})
+        who("mila", 2.36, 3.02, 72, "reach", hid="mila", look=(2.8, 3.32, 0.62),
+            arms={"r": (2.47, 3.19, 0.535), "l": (2.22, 3.08, 0.38)})
+        kid(2, 3.45, 2.62, 128, "stand", hid="kinder", acc=("basket",), look=(2.8, 3.3, 0.7))
+        # drawing table with birthday ring (as in v3)
+        tx, ty = 4.0, 1.55
+        kid_table(tx - 0.5, ty - 0.5, tx + 0.5, ty + 0.5, 0.5, "maltisch", round_=True)
+        for k, (dx, dy, ang) in enumerate([(-0.15, -0.1, 20), (0.18, 0.12, -30)]):
+            o = box(-0.14, -0.1, 0, 0.14, 0.1, 0.004, PAPER, "maltisch", name="Papier")
+            o.location = (tx + dx, ty + dy, 0.5)
+            o.rotation_euler = (0, 0, R(ang))
+            for j, col in enumerate([(0.86, 0.2, 0.15), (0.95, 0.75, 0.2), (0.35, 0.62, 0.3)]):
+                ball(tx + dx + (j - 1) * 0.05, ty + dy + 0.01 * j, 0.506, 0.025, mat(col, 0.8), "maltisch", scale=(1.3, 1, 0.15))
+        cyl(tx + 0.25, ty - 0.2, 0.5, 0.6, 0.04, mat(SKY, 0.5), "maltisch", name="Stiftebecher")
+        for k in range(6):
+            capsule((tx + 0.25 + math.cos(k) * 0.02, ty - 0.2 + math.sin(k) * 0.02, 0.55),
+                    (tx + 0.25 + math.cos(k) * 0.035, ty - 0.2 + math.sin(k) * 0.035, 0.68), 0.006,
+                    mat(CLOTH[k], 0.5), "maltisch", name="Stift")
+        torus(tx - 0.1, ty + 0.25, 0.53, 0.14, 0.03, WOOD, "kranz", seg=36, name="Kranz")
+        for k in range(5):
+            a = k * 2 * math.pi / 5
+            px, py = tx - 0.1 + math.cos(a) * 0.14, ty + 0.25 + math.sin(a) * 0.14
+            cyl(px, py, 0.55, 0.66, 0.012, mat(CREAM, 0.6), "kranz", verts=12, name="Kerze")
+            ball(px, py, 0.68, 0.013, mat((1, 0.8, 0.4), 0.3, emission=(1.0, 0.7, 0.3), strength=20.0), "kranz",
+                 scale=(1, 1, 1.6), seg=10, name="Flamme")
+        text3d("5", tx - 0.1, ty + 0.25, 0.62, 0.12, mat(OCHRE, 0.4, coat=0.4), "kranz", rot=(R(90), 0, R(-40)), extrude=0.012)
+        A("kranz", tx - 0.1, ty + 0.25, 0.7)
+        stool(tx - 0.62, ty - 0.35, 0.3, ROSE, "maltisch")
+        kid(4, tx - 0.62, ty - 0.35, 30, "sitc", hid="maltisch", seat=0.3, look=(tx - 0.15, ty - 0.1, 0.5), acc=("brush",))
+        stool(tx + 0.55, ty + 0.5, 0.3, SKY, "maltisch")
+        kid(7, tx + 0.55, ty + 0.5, 220, "sitc", hid="maltisch", seat=0.3, look=(tx + 0.18, ty + 0.12, 0.5))
+        who("ayla", tx + 0.7, ty - 0.45, 150, "kneel", hid="ayla", look=(tx - 0.4, ty - 0.3, 0.6))
+        # a child's shopping basket, ready to go
+        bm = mat(SAGE, 0.5, coat=0.2)
+        bx_, by_ = 1.55, 2.75
+        box(bx_ - 0.14, by_ - 0.1, 0.0, bx_ + 0.14, by_ + 0.1, 0.012, bm, "laden", name="Einkaufskorb")
+        for (a0, b0, a1, b1) in ((-0.14, -0.1, 0.14, -0.09), (-0.14, 0.09, 0.14, 0.1), (-0.14, -0.09, -0.13, 0.09),
+                                 (0.13, -0.09, 0.14, 0.09)):
+            box(bx_ + a0, by_ + b0, 0.0, bx_ + a1, by_ + b1, 0.12, bm, "laden", name="Einkaufskorb")
+        torus(bx_, by_, 0.12, 0.13, 0.009, mat(OCHRE, 0.5), "laden", rot=(R(90), 0, 0), half=True, name="Henkel")
+        fruit("apfel", bx_ - 0.06, by_, 0.055, "laden")
+        fruit("karotte", bx_ + 0.04, by_ - 0.02, 0.05, "laden")
+        fruit("tomate", bx_ + 0.07, by_ + 0.04, 0.05, "laden")
+    elif v == "umbau":
+        # ---------------------------------------------------------------- 11:15 the shop folds in, tops come out
+        kl_hoehle(KL_COLS[1], KL_COLS[3])
+        kl_schild((KL_COLS[3] + KL_COLS[6]) / 2 + 0.04, (KL_RAIL + KL_DRAW) / 2 + 0.005, "Küche", SAGE_D, hid="schrankwand", icon="topf")
+        if offen:  # close-up: all six tops still stand in the wall, nobody in front
+            for i in range(6):
+                kl_stored(i, KL_PLCOL[i], hid="platten")
+            A("platten", KL_SLOT[3] + 0.02, KL_SWY - 0.03, 0.85)
+        else:
+            for i in (3, 4, 5):
+                kl_stored(i, KL_PLCOL[i], hid="platten")
+            kl_stored(2, KL_PLCOL[2], dy=-0.42, hid="platten")
+            A("platten", KL_SLOT[4], KL_SWY - 0.02, 0.95)
+            # Maren pulls the next top out by its loop
+            pm = who("sanne", 0.25, 3.3, 70, "reach", hid="maren", acc=("apron",), look=(1.5, 2.6, 0.9),
+                     arms={"l": (KL_SLOT[2] - 0.01, KL_SWY - 0.44, 0.93), "r": (KL_SLOT[2] + 0.04, KL_SWY - 0.4, 1.2)})
+            A("maren_head", *pm["head"])
+            # Mila and Defne carry a top flat between them, sideways towards the middle of the room
+            ccx, ccy, ccz = 1.62, 2.92, 0.40
+            kl_platte((ccx, ccy, ccz), (0, 0, 0), KL_PLCOL[1], "fold", hid="platten")
+            who("mila", ccx - 0.36, ccy + 0.47, -86, "hold", hid="mila", look=(ccx + 1.2, ccy - 1.2, 0.6),
+                arms={"l": (ccx - 0.5, ccy + 0.31, ccz - 0.02), "r": (ccx - 0.22, ccy + 0.31, ccz - 0.02)})
+            who("defne", ccx + 0.38, ccy + 0.47, -94, "hold", hid="defne", acc=("crown",), look=(ccx + 0.9, ccy - 1.0, 0.6),
+                arms={"l": (ccx + 0.24, ccy + 0.31, ccz - 0.02), "r": (ccx + 0.52, ccy + 0.31, ccz - 0.02)})
+            # the first top already stands on its legs; a child brings a connector
+            fx, fy = 2.75, 1.45
+            kl_platte((fx, fy, KL_TH), (0, 0, 0), KL_PLCOL[0], "out", hid="platten")
+            kl_verbinder(fx + L / 2 - 0.02, fy - B / 2 + 0.09, KL_TH, 0, hid="platten", edge=(fx + L / 2 - 0.02, fy - B / 2, 0, -1))
+            pk = kid(4, fx + L / 2 - 0.18, fy + B / 2 + 0.2, -95, "reach", hid="kinder", look=(fx + L / 2 - 0.05, fy, 0.45),
+                     arms={"r": (fx + L / 2 - 0.04, fy + B / 2 - 0.06, KL_TH + 0.05), "l": (fx + L / 2 - 0.3, fy + B / 2 - 0.05, KL_TH + 0.03)})
+            hr_ = Vector(pk["hand_r"])
+            kl_verbinder(hr_.x, hr_.y - 0.02, hr_.z + 0.015, 0, hid="kinder")
+    elif v == "kochen":
+        # ---------------------------------------------------------------- 11:15 one island of six tops
+        kl_hoehle(KL_COLS[1], KL_COLS[3])
+        kl_schild((KL_COLS[3] + KL_COLS[6]) / 2 + 0.04, (KL_RAIL + KL_DRAW) / 2 + 0.005, "Küche", SAGE_D, hid="schrankwand", icon="topf")
+        # U of six tops, open towards the door; the base is two tops deep, the hot plate sits in its middle,
+        # 0.8 to 1.0 m from every edge where children stand. Maren works inside the U, the trolley closes it behind her.
+        X0, Y0 = 1.65, 1.0
+        h = KL_TH
+        tops = [((X0 + 0.6, Y0 + 0.3), 0, 0), ((X0 + 1.8, Y0 + 0.3), 0, 1),            # front arm
+                ((X0 + 0.6, Y0 + 2.1), 180, 2), ((X0 + 1.8, Y0 + 2.1), 180, 3),        # back arm
+                ((X0 + 1.5, Y0 + 1.2), -90, 4), ((X0 + 2.1, Y0 + 1.2), 90, 5)]         # base, two tops deep
+        for (px, py), rz, ci in tops:
+            kl_platte((px, py, h), (0, 0, rz), KL_PLCOL[ci], "out", hid="insel", loop=False)
+        # connectors on every seam (bow-ties on top, lever clips on the outer faces)
+        X1, Y1 = X0 + 2.4, Y0 + 2.4
+        for yy, ny in ((Y0 + 0.1, -1), (Y0 + 0.5, 0), (Y1 - 0.1, 1), (Y1 - 0.5, 0)):
+            kl_verbinder(X0 + 1.2, yy, h, 0, edge=(X0 + 1.2, Y0 if ny < 0 else Y1, 0, ny) if ny else None)
+        for xx in (X0 + 1.35, X0 + 1.75, X0 + 2.25):
+            for yy in (Y0 + 0.6, Y1 - 0.6):
+                kl_verbinder(xx, yy, h, 90, edge=(X1, yy, 1, 0) if xx > X0 + 2.2 else None)
+        for yy in (Y0 + 0.75, Y1 - 0.75):
+            kl_verbinder(X0 + 1.8, yy, h, 0)
+        A("verbinder", X0 + 1.2, Y0 + 0.1, h + 0.01)
+        # hot plate with the pot of tomato sauce, cable down through a grommet; basil and tomatoes for the sauce
+        kx, ky = X0 + 1.41, Y0 + 1.2
+        kl_kochplatte((kx, ky, h), rot=-90, on=True)
+        kl_topf(kx, ky, h + 0.056)
+        cyl(kx + 0.2, ky + 0.05, h - 0.002, h + 0.003, 0.018, DARK, "kochplatte", verts=16, name="Kabeldurchlass")
+        curve_tube([(kx + 0.17, ky + 0.05, h + 0.02), (kx + 0.19, ky + 0.05, h + 0.03), (kx + 0.2, ky + 0.05, h)], 0.004, DARK,
+                   "kochplatte", name="Kabel")
+        A("kochplatte", kx, ky, h + 0.2)
+        brett = rbox(-0.16, -0.1, 0, 0.16, 0.1, 0.018, OAK, "insel", r=0.008, name="Brett")
+        brett.location = (X0 + 1.62, Y0 + 1.68, h)
+        for k in range(3):
+            fruit("tomate", X0 + 1.52 + k * 0.09, Y0 + 1.68 + (k % 2) * 0.03, h + 0.05, "insel")
+        plant(X0 + 1.85, Y0 + 0.78, h, 0.42, pot="cream", hid="insel", kind="herb")
+        # Maren inside the U at the hot plate, stirring
+        mx, my = X0 + 0.95, ky
+        pm = who("sanne", mx, my, 0, "reach", hid="maren", acc=("apron",), look=(kx, ky + 0.6, 0.7),
+                 arms={"r": (kx - 0.04, ky - 0.04, h + 0.24), "l": (X0 + 1.22, ky + 0.28, h + 0.03)})
+        kl_loeffel(pm["hand_r"], (kx + 0.01, ky - 0.02, h + 0.15), "maren")
+        A("maren_head", *pm["head"])
+        # the caterer trolley closes the U behind her
+        kl_wagen(X0 - 0.58, ky - 0.45, X0 - 0.1, ky + 0.45)
+        # children at the outer edges, each stirring a bowl
+        sauce = (0.80, 0.22, 0.12)
+        kids = [("mila", X0 + 0.55, Y1 + 0.21, -90), ("defne", X0 + 1.33, Y1 + 0.21, -90), (0, X0 + 2.02, Y1 + 0.21, -90),
+                (3, X0 + 0.6, Y0 - 0.21, 90), (6, X0 + 1.8, Y0 - 0.21, 90), (2, X1 + 0.22, Y0 + 1.25, 180)]
+        for ki, (who_, kx_, ky_, f) in enumerate(kids):
+            fv = fvec(f)
+            bw = Vector((kx_, ky_, h)) + fv * 0.42
+            bowl(bw.x, bw.y, h, 0.085, sauce, "insel", color=[CREAM, SKY, ROSE][ki % 3])
+            hr = bw + Vector((0, 0, 0.09)) - fv * 0.04 + fv.cross(UP) * 0.03
+            hl = bw - fv * 0.085 - fv.cross(UP) * 0.08 + Vector((0, 0, 0.055))
+            look = (bw.x, bw.y, h + 0.05)
+            if who_ == "mila":
+                hl = bw - fv * 0.02 - fv.cross(UP) * 0.06 + Vector((0, 0, 0.16))
+                pk = who("mila", kx_, ky_, f, "reach", hid="mila", look=(bw.x + 0.3, bw.y - 0.6, 0.75), arms={"r": hr, "l": hl})
+                hl_ = Vector(pk["hand_l"])
+                for j in range(3):  # a sprig of basil over the bowl
+                    ball(hl_.x - 0.01 + j * 0.012, hl_.y - 0.02 - j * 0.01, hl_.z - 0.03 - j * 0.012, 0.016, LEAF2, "mila",
+                         scale=(1.4, 0.8, 0.35), seg=8, name="Basilikum")
+                A("schuessel", bw.x, bw.y, h + 0.06)
+            elif who_ == "defne":
+                pk = who("defne", kx_, ky_, f, "reach", hid="defne", acc=("crown",), look=(X0 + 0.55, Y1 + 0.1, 0.7),
+                         arms={"r": hr, "l": hl})
+            else:
+                pk = kid(who_, kx_, ky_, f, "reach", hid="kinder", look=look, arms={"r": hr, "l": hl})
+            kl_loeffel(pk["hand_r"], (bw.x, bw.y, h + 0.055), "insel")
+        # tomatoes and a second basil pot near the children
+        bowl(X0 + 0.92, Y1 - 0.2, h, 0.07, None, "insel", color=CREAM)
+        for k in range(4):
+            fruit("tomate", X0 + 0.9 + (k % 2) * 0.05, Y1 - 0.22 + (k // 2) * 0.05, h + 0.05 + (k // 2) * 0.01, "insel")
+        plant(X0 + 1.72, Y1 - 0.18, h, 0.38, pot="terra", hid="insel", kind="herb")
     A("in", 0.25, 0.85, 0.0)
     A("out", W - 0.1, 0.25, 0.0)
     pts = box_corners(-0.2, 0, -SLAB, W, D + 0.2, H + 0.05)
-    shots = {"kasse": dict(loc=(3.05, 1.85, 1.22), target=(2.3, 3.3, 0.84), lens=34, fstop=3.5)}
+    shots = {"kasse": dict(loc=(3.56, 2.17, 1.06), target=(2.76, 3.6, 0.7), lens=34, fstop=3.5),
+             "offen": dict(loc=(1.6, 2.45, 1.98), target=(0.64, 4.25, 1.3), lens=26, fstop=6.0, name="schrankwand_offen")}
     return dict(W=W, D=D, time="vormittag", pts=pts, shots=shots, target=(W / 2, D / 2, 1))
 
 
