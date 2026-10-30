@@ -303,6 +303,11 @@ def bild_icon(kind, c, r, u, n, k, hid=None, col=None):
         slab(0, -0.06, 0.4, 0.5)
         for sd in (-1, 1):
             slab(sd * 0.27, 0.12, 0.18, 0.16)
+    elif kind == "garten":  # a sprout in a little bed
+        slab(0, -0.3, 0.62, 0.12)
+        slab(0, -0.08, 0.08, 0.36)
+        for sd, b in ((-1, 0.1), (1, 0.18)):
+            ball(*P(sd * 0.15, b, 0.04), 0.13 * k, wm, hid, scale=(1.25, 0.7, 0.35), rot=rot, seg=14, name="Icon")
 
 
 def lathe(cx, cy, z, prof, m, hid=None, verts=72, name="Drehteil"):
@@ -417,7 +422,8 @@ def hubel(cx, cy, z=0.0, rot=90.0, filled=None, hid="hubel", pad=SAGE, cam=CAM):
             torus(p.x, p.y, zz + 0.0015, 0.05, 0.0045, mat(col, 0.35, coat=0.3, emission=col, strength=2.5 if on else 0.2),
                   hid, seg=32, name="Muldenring")
             if on:
-                kiddo_cube(p.x, p.y, zz - 0.004, lst[j], None, hid, face=a, s=0.07)
+                an, ac = lst[j] if isinstance(lst[j], tuple) else (lst[j], None)
+                kiddo_cube(p.x, p.y, zz - 0.004, an, ac, hid, face=a, s=0.07)
             pts.append((p.x, p.y, zz))
             i += 1
         out["mulden"][name_] = pts
@@ -473,11 +479,12 @@ class Wall:
 PW_COL = {"y": (0.97, 0.74, 0.16), "b": (0.28, 0.54, 0.88), "g": (0.40, 0.72, 0.30), "?": (0.97, 0.96, 0.93)}
 
 
-def planwuerfel(F, uc, zc, rows, size=0.05, gap=0.01, hid="planwuerfel", cover=True):
+def planwuerfel(F, uc, zc, rows, size=0.05, gap=0.01, hid="planwuerfel", cover=True, icons=False):
     """Plan strip with small motorised turning cubes, one per big time of day.
 
     rows: list of strings, top row first; each char y/b/g/? is the face shown (yellow Kaufladen, blue Bauen,
-    green Garten, white with question mark). One row = the day, 4 rows x 5 columns = the week.
+    green Garten, white with question mark; v5 adds r: rose Malen). One row = the day, 4 rows x 5 columns = the week.
+    icons: raised white pictograms on the coloured faces (basket, blocks, brush, sprout).
     Returns dict: centre, cells (row, col) -> world point of the cube face, frage -> first '?' cell."""
     nr, nc = len(rows), max(len(r) for r in rows)
     W_ = nc * size + (nc - 1) * gap
@@ -501,6 +508,8 @@ def planwuerfel(F, uc, zc, rows, size=0.05, gap=0.01, hid="planwuerfel", cover=T
                      mat(PW_COL[ch], 0.4, coat=0.35), hid, r=size * 0.12, seg=3, name="Planwürfel")
             face_pt = F.p(u, d0 + size, z)
             out["cells"][(i, j)] = tuple(face_pt)
+            if icons and ch in PW_ICON:
+                bild_icon(PW_ICON[ch], face_pt, F.t, UP, F.n, size * 0.78, hid)
             if ch == "?":
                 text3d("?", *(face_pt + F.n * 0.0013 + Vector((0, 0, -size * 0.03))), size * 0.78, mat((0.25, 0.20, 0.18), 0.5),
                        hid, rot=F.text_rot(), extrude=0.0012, name="Fragezeichen")
@@ -743,6 +752,7 @@ def hoehle(x0, y0, y1, depth=1.1, h=1.25, hid="hoehle"):
 
 # ---------------------------------------------------------------- v5: Garderobenschrank, Magnettafel, Wunschkasten
 PW_COL["r"] = (0.92, 0.52, 0.60)  # rose: Malen
+PW_ICON = {"y": "laden", "b": "bauen", "r": "malen", "g": "garten"}
 NICHE_TINT = {"hase": (0.80, 0.86, 0.92), "fuchs": (0.98, 0.86, 0.66), "katze": (0.95, 0.82, 0.82),
               "eule": (0.84, 0.90, 0.78), "igel": (0.88, 0.82, 0.90), "bär": (0.92, 0.84, 0.74), "ente": (0.98, 0.92, 0.70)}
 LED_WARM = (1.0, 0.80, 0.52)
@@ -912,10 +922,10 @@ def garderobe(F, a0, kids, w=0.304, depth=0.48, h=1.55, hid="schrank", open_k=No
         # Planwürfel on top, near the front edge
         rows = kd.get("plan")
         if rows:
-            size = 0.06 if len(rows) == 1 else 0.04
-            gap = 0.012 if len(rows) == 1 else 0.006
+            size = 0.072 if len(rows) == 1 else 0.04
+            gap = 0.01 if len(rows) == 1 else 0.006
             H_ = len(rows) * size + (len(rows) - 1) * gap + 0.044
-            pw = planwuerfel(shifted(F, fr - size - 0.035), uc, h + 0.002 + H_ / 2, rows, size, gap)
+            pw = planwuerfel(shifted(F, fr - size - 0.035), uc, h + 0.002 + H_ / 2, rows, size, gap, icons=True)
             out["plan"] = pw["centre"]
             out["cells"] = pw["cells"]
         res.append(out)
@@ -1795,7 +1805,7 @@ def build_abholung(v):
     mp = Vector((0.66, 2.36, 0.0))
     lp = Vector((0.42, 1.48, 0.0))
     pm = who("mila", mp.x, mp.y, 205, "reach", hid="mila", look=(lp.x, lp.y, 1.0),
-             arms={"r": cp + Vector((0.06, 0.0, 0.04))})
+             arms={"r": cp + Vector((0.06, 0.0, 0.04))}, shoes=SOCKS[1])
     # Papa Jonas reads the day in the parent app
     jp = Vector((1.05, 2.72, 0.0))
     fj = fvec(-62)
@@ -2325,6 +2335,7 @@ def build_vorraum(v):
 DIMS.setdefault("teen14", dict(leg=0.56, torso=0.42, r=0.136, head=0.138, arm=0.46, ar=0.042, lr=0.058, foot=0.064))
 SOCKS = [CREAM, ROSE, SKY, (0.93, 0.86, 0.66), SAGE, LINEN, (0.86, 0.78, 0.90)]  # children wear socks or slippers here
 COVERS = (0.58, 0.76, 0.90)  # blue shoe covers: parents keep their shoes on, the dirt stays in the entrance room
+SLIPPERS = (0.62, 0.64, 0.70)  # Maren's grey felt house slippers
 WG_CACHE = {}
 
 
@@ -2367,9 +2378,11 @@ def wintry(objs, m):
 
 
 def maren(x, y, face, pose="stand", hid="maren", acc=(), **kw):
-    """Maren, the group's Lernbegleiterin (the 'sanne' figure in CAST); anchors maren_head, maren_phone, ..."""
+    """Maren, the group's Lernbegleiterin (the 'sanne' figure in CAST); anchors maren_head, maren_phone, ...
+    In the Piazza she wears felt house slippers (street shoes stay in the entrance room)."""
     c = dict(CAST["sanne"])
     a = tuple(c.pop("acc", ())) + tuple(acc)
+    c["shoes"] = SLIPPERS
     c.update(kw)
     return person(x, y, face, pose=pose, hid=hid, key="maren", acc=a, **c)
 
@@ -2424,7 +2437,11 @@ PIAZZA_CUBES = {"745": [True, True, True, True, "gebaerden"], "800": [True, Fals
                 "1615": [True, True, True, True, "gebaerden"], "abholung": [True, "hand", True, True, "gebaerden"]}
 PIAZZA_WEEK = {"745": ["yb", "??", "??", "??", "??"], "800": ["yb", "y?", "??", "??", "??"],
                "1615": ["yb", "yg", "b?", "??", "??"], "abholung": ["yb", "yg", "b?", "??", "??"]}
-HUBEL_FILL = {"800": dict(laden=[None, "bär", "ente", "hase", "igel"], bauen=["eule", "bär"], malen=["ente"])}
+# cubes already in the hollows at 8:00 (Mila takes the last free Kaufladen hollow, Defne then picks Malen). Emil's owl
+# is at Bauen like his Planwürfel; Ben's hare and Lina's hedgehog are still in their niches, so the other children's
+# animals differ from theirs or by colour.
+HUBEL_FILL = {"800": dict(laden=["bär", "ente", ("hase", (0.80, 0.84, 0.90)), ("katze", (0.95, 0.80, 0.55)), None],
+                          bauen=["eule", ("bär", (0.85, 0.62, 0.40)), ("ente", (0.98, 0.95, 0.88))], malen=[])}
 
 
 def piazza_room(v):
@@ -2509,7 +2526,8 @@ def piazza_room(v):
     # Hubel on a braided rug
     cx, cy = 3.1, 2.3
     rug_round(cx, cy, 1.5, [CLAY, ROSE, OCHRE, SAGE, CREAM, ROSE, SAGE], hid="teppich")
-    hub = hubel(cx, cy, 0.026, rot=84.0, filled=HUBEL_FILL.get(key), pad=SAGE)
+    # Kaufladen sector on the right: at 8:00 its last free hollow (back right) lies where no picture cube hides it
+    hub = hubel(cx, cy, 0.026, rot=32.0, filled=HUBEL_FILL.get(key), pad=SAGE)
     A("hubel", *hub["top"])
     A("hubel_top", *hub["top"])
     A("bildwuerfel", *hub["cubes"]["laden"])
@@ -2538,35 +2556,43 @@ def build_piazza(v):
         pm = maren(mp.x, mp.y, 25, "stand", look=(3.9, D - 0.3, 1.7), arms={"r": hand})
         A("schluessel", *schluessel(pm["hand_r"], 25))
     elif v == "800":
-        # 8:00: morning circle; Mila puts her fox cube into the last free hollow at the Kaufladen, Defne beside her
-        ring = [(115, 8), (150, 1), (185, 2), (220, 4), (255, 0), (290, 5), (325, 7)]
-        for k, (a, i) in enumerate(ring):
-            if SHOT == "hubel" and a in (290, 325):  # they would sit between the close-up camera and the Hubel
-                continue
-            p = C + fvec(a) * 1.05
-            pouf(p.x, p.y, 0.19, [SAGE, ROSE, OCHRE, SKY][k % 4], "kinder")
-            kid(i, p.x, p.y, a + 180, "sit", hid="kinder", look=(cx, cy, 0.55), z=0.1, shoes=SOCKS[k % len(SOCKS)])
-        for a, r_, col in ((48, 1.1, ROSE), (82, 1.16, SKY)):  # the poufs Mila and Defne just got up from
-            p = C + fvec(a) * r_
-            pouf(p.x, p.y, 0.19, col, "kinder")
+        # 8:00: morning circle. Mila stands at the back right of the Hubel and puts her fox cube into the last free
+        # hollow at the Kaufladen; Defne beside her still holds hers and looks over to Malen. Maren sits on a stool at
+        # the back left. The circle leaves a gap towards the viewer, so the small buttons and the castors stay in view.
         hol = Vector(hub["free"]["laden"])
-        am = 48.0
-        mp = C + fvec(am) * 0.77
+        am = math.degrees(math.atan2(hol.y - cy, hol.x - cx))
+        mp = C + fvec(am) * 0.76
         tgt = hol + Vector((0, 0, 0.1)) + (mp - C).normalized() * 0.02
-        pm = who("mila", mp.x, mp.y, am + 180, "reach", look=hol, arms={"r": tgt})
+        pm = who("mila", mp.x, mp.y, am + 180, "reach", look=hol, arms={"r": tgt}, shoes=SOCKS[1])
         hr = Vector(pm["hand_r"])
         dh = Vector((hol.x - hr.x, hol.y - hr.y, 0.0)).normalized()
-        cb = hr + dh * 0.03
-        kiddo_cube(cb.x, cb.y, cb.z - 0.06, "fuchs", None, "mila", face=CAM, s=0.07)
-        A("mila_cube", cb.x, cb.y, cb.z - 0.025)
+        cb = hr + dh * 0.03 + Vector((0, 0, -0.025))
+        # she holds the cube tilted a little towards the viewer, so the fox on top can be seen
+        mark = len(objects)
+        kiddo_cube(0.0, 0.0, -0.035, "fuchs", None, "mila", face=CAM, s=0.07)
+        dc = fvec(322)
+        place_group(objects[mark:], cb, Matrix.Rotation(R(38), 4, Vector((-dc.y, dc.x, 0.0))))
+        A("mila_cube", cb.x, cb.y, cb.z + 0.01)
         A("mulde", *hol)
-        dp = C + fvec(78) * 0.84
-        pd_ = who("defne", dp.x, dp.y, 258, "hold", look=hub["cubes"]["malen"])
+        ad = am + 27
+        dp = C + fvec(ad) * 0.84
+        pd_ = who("defne", dp.x, dp.y, ad + 180, "hold", look=hub["cubes"]["malen"], shoes=SOCKS[6])
         mid = (Vector(pd_["hand_r"]) + Vector(pd_["hand_l"])) / 2
-        kiddo_cube(mid.x, mid.y, mid.z - 0.03, "katze", None, "defne", face=CAM, s=0.07)
-        sp = C + fvec(18) * 1.28
+        kiddo_cube(mid.x, mid.y, mid.z - 0.03, "katze", None, "defne", face=ad + 180, s=0.07)
+        for a, col in ((am, ROSE), (ad, SKY)):  # the poufs Mila and Defne just got up from
+            p = C + fvec(a) * 1.13
+            pouf(p.x, p.y, 0.19, col, "kinder")
+        ring = [(345, 8), (15, 1), (42, 2), (122, 4), (192, 0), (230, 5), (268, 7)]
+        for k, (a, i) in enumerate(ring):
+            if SHOT == "hubel" and a == 345:  # would sit right in front of the close-up camera
+                continue
+            p = C + fvec(a) * 1.05
+            pouf(p.x, p.y, 0.19, [SAGE, OCHRE, ROSE, SKY][k % 4], "kinder")
+            lk = (cb.x, cb.y, cb.z) if k % 2 == 0 else (cx, cy, 0.55)  # some watch Mila's cube
+            kid(i, p.x, p.y, a + 180, "sit", hid="kinder", look=lk, z=0.1, shoes=SOCKS[k % len(SOCKS)])
+        sp = C + fvec(157) * 1.28
         stool(sp.x, sp.y, 0.32, OCHRE, "maren")
-        maren(sp.x, sp.y, 18 + 180, "sitc", seat=0.32, look=pm["head"])
+        maren(sp.x, sp.y, 157 + 180, "sitc", seat=0.32, look=pm["head"])
     else:
         # 16:15: the last children are gone; Maren at the magnet board speaks her note into the phone
         time, lcfg = "nachmittag", dict(sun_el=8.0, strength=3.4)
@@ -2575,9 +2601,13 @@ def build_piazza(v):
         f = fvec(fc)
         hand = mp + f * 0.16 + f.cross(UP) * 0.05 + Vector((0, 0, 1.22))
         maren(mp.x, mp.y, fc, "stand", acc=("phone",), arms={"r": hand}, look=(mp.x + 1.2, mp.y - 0.4, 1.2))
+    # 745z: the CO2 box and the closed window before unlocking; 745: the open window with its chain drives
+    fen = (dict(loc=(4.05, 2.75, 1.3), target=(3.35, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
+           dict(loc=(3.2, 2.45, 1.42), target=(3.62, D, 1.64), lens=22, fstop=8.0))
     shots = {
-        "fenster": dict(loc=(4.05, 2.75, 1.3), target=(3.35, D, 1.42), lens=24, fstop=6.0),
-        "hubel": dict(loc=(cx + 1.22, cy - 1.3, 0.8), target=(cx + 0.1, cy + 0.06, 0.4), lens=31, fstop=4.0),
+        "fenster": fen,
+        "hubel": dict(loc=tuple(C + fvec(330) * 1.8 + Vector((0, 0, 1.0))), target=tuple(C + fvec(70) * 0.18 + Vector((0, 0, 0.37))),
+                      lens=34, fstop=4.5),
         "schrank": dict(loc=(1.75, 2.85, 1.2), target=(0.0, 3.25, 1.02), lens=20, fstop=6.0),
         "offen": dict(loc=(1.72, 2.12, 1.02), target=(0.22, 2.56, 0.78), lens=23, fstop=5.6, name="schrank_offen"),
     }
