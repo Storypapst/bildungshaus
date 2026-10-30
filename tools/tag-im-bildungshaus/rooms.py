@@ -2079,15 +2079,18 @@ def vr_pot(x, y, z, r=0.068, h=0.11, kind="terra", hid="regal"):
     return z + h - 0.01
 
 
-def moisture_stick(x, y, soil, thirsty=False, hid="stab", h=0.225):
-    """Slim wooden stick in the soil with a small lamp on top: soft blue = thirsty, off = fine."""
-    vb("tube", hid, WOOD, (x, y, soil - 0.02), (x, y, soil + h), 0.004, seg=8)
+def moisture_stick(x, y, soil, thirsty=False, hid="stab", h=0.225, lean=(0.0, 0.0)):
+    """Slim wooden stick in the soil with a small lamp on top: soft blue = thirsty, off = fine. lean: horizontal offset
+    of the top, so that the lamp leans out of the leaves towards the room."""
+    top = (x + lean[0], y + lean[1], soil + h)
+    vb("tube", hid, WOOD, (x, y, soil - 0.02), top, 0.004, seg=8)
     if thirsty:
-        lm = mat((0.42, 0.66, 1.0), 0.3, emission=(0.35, 0.62, 1.0), strength=40.0, name="Durst")
+        lm = mat((0.30, 0.55, 1.0), 0.3, emission=(0.22, 0.50, 1.0), strength=9.0, name="Durst")
     else:
-        lm = mat((0.94, 0.94, 0.91), 0.3, coat=0.5, name="Lämpchen aus")
-    vb("ball", hid, lm, (x, y, soil + h + 0.016), 0.021, seg=14)
-    return (x, y, soil + h + 0.016)
+        lm = mat((0.84, 0.82, 0.77), 0.35, coat=0.4, name="Lämpchen aus")
+    c = (top[0], top[1], top[2] + 0.018)
+    vb("ball", hid, lm, c, 0.026 if thirsty else 0.019, seg=14)
+    return c
 
 
 def herb(x, y, soil, kind, s=1.0, hid="regal"):
@@ -2132,32 +2135,33 @@ def herb(x, y, soil, kind, s=1.0, hid="regal"):
                 vb("ball", hid, PARSLEY, c, 0.019 * s, scale=(1, 1, 0.6), seg=10)
 
 
-def cactus(x, y, z, hid="kaktus"):
+def cactus(x, y, z, hid="kaktus", s=1.0):
     """The columnar cactus from the Piazza windowsill (two arms, soft spines, a small flower). Returns soil and top."""
-    soil = vr_pot(x, y, z, r=0.06, h=0.09, kind="cream", hid=hid)
+    soil = vr_pot(x, y, z, r=0.06 * s, h=0.09 * s, kind="cream", hid=hid)
     cm = mat((0.30, 0.54, 0.36), 0.5, noise=0.1, name="Kaktus")
     spine = mat((0.97, 0.94, 0.84), 0.5, name="Dorn")
-    top = soil + 0.2
-    vb("tube", hid, cm, (x, y, soil), (x, y, top), 0.034, seg=16)
-    vb("ball", hid, cm, (x, y, top), 0.034, seg=16)
+    top = soil + 0.2 * s
+    vb("tube", hid, cm, (x, y, soil), (x, y, top), 0.034 * s, seg=16)
+    vb("ball", hid, cm, (x, y, top), 0.034 * s, seg=16)
     for sd, z0, z1 in ((1, 0.07, 0.15), (-1, 0.1, 0.17)):
-        a0 = Vector((x + sd * 0.03, y - 0.005, soil + z0))
-        a1 = a0 + Vector((sd * 0.035, -0.004, 0.0))
-        a2 = a1 + Vector((0, 0, z1 - z0))
-        vb("tube", hid, cm, a0, a1, 0.016, seg=12)
-        vb("ball", hid, cm, a1, 0.016, seg=12)
-        vb("tube", hid, cm, a1, a2, 0.016, seg=12)
-        vb("ball", hid, cm, a2, 0.016, seg=12)
+        a0 = Vector((x + sd * 0.03 * s, y - 0.005 * s, soil + z0 * s))
+        a1 = a0 + Vector((sd * 0.035 * s, -0.004 * s, 0.0))
+        a2 = a1 + Vector((0, 0, (z1 - z0) * s))
+        vb("tube", hid, cm, a0, a1, 0.016 * s, seg=12)
+        vb("ball", hid, cm, a1, 0.016 * s, seg=12)
+        vb("tube", hid, cm, a1, a2, 0.016 * s, seg=12)
+        vb("ball", hid, cm, a2, 0.016 * s, seg=12)
     for k in range(8):
         a = k * math.pi / 4
         for j in range(6):
-            vb("ball", hid, spine, (x + math.cos(a) * 0.035, y + math.sin(a) * 0.035, soil + 0.02 + j * 0.033), 0.0035, seg=6)
+            vb("ball", hid, spine, (x + math.cos(a) * 0.035 * s, y + math.sin(a) * 0.035 * s, soil + (0.02 + j * 0.033) * s),
+               0.0035 * s, seg=6)
     for k in range(5):
         a = k * 2 * math.pi / 5
-        vb("ball", hid, mat((0.95, 0.52, 0.66), 0.5), (x + math.cos(a) * 0.011, y + math.sin(a) * 0.011, top + 0.03), 0.01,
-           scale=(1, 1, 0.5), seg=10)
-    vb("ball", hid, mat((0.98, 0.84, 0.30), 0.5), (x, y, top + 0.033), 0.006, seg=8)
-    return soil, (x, y, top + 0.04)
+        vb("ball", hid, mat((0.95, 0.52, 0.66), 0.5), (x + math.cos(a) * 0.011 * s, y + math.sin(a) * 0.011 * s,
+           top + 0.03 * s), 0.01 * s, scale=(1, 1, 0.5), seg=10)
+    vb("ball", hid, mat((0.98, 0.84, 0.30), 0.5), (x, y, top + 0.033 * s), 0.006 * s, seg=8)
+    return soil, (x, y, top + 0.04 * s)
 
 
 def tomato_plant(F, u, d, z, trusses, hid="tomaten", h=0.95, pot="terra"):
@@ -2213,10 +2217,10 @@ def ripe_tag(c, n, hid="tomaten"):
     """Small wooden tag on a string; the red painted side faces the room: ripe."""
     c, n = Vector(c), Vector(n).normalized()
     rot = n.to_track_quat("Z", "Y").to_euler()
-    cyl(0, 0, -0.003, 0.003, 0.036, mat((0.86, 0.72, 0.52), 0.5, noise=0.06), hid, verts=24, rot=rot, name="Plättchen").location = c
-    cyl(0, 0, -0.001, 0.001, 0.031, mat((0.88, 0.14, 0.10), 0.4, coat=0.3), hid, verts=24, rot=rot,
+    cyl(0, 0, -0.003, 0.003, 0.044, mat((0.86, 0.72, 0.52), 0.5, noise=0.06), hid, verts=24, rot=rot, name="Plättchen").location = c
+    cyl(0, 0, -0.001, 0.001, 0.038, mat((0.88, 0.14, 0.10), 0.4, coat=0.3), hid, verts=24, rot=rot,
         name="Plättchen rot").location = c + n * 0.0035
-    capsule(c + UP * 0.034, c + UP * 0.1 - n * 0.06, 0.0016, mat(LINEN, 0.8), hid, name="Schnur")
+    capsule(c + UP * 0.042, c + UP * 0.1 - n * 0.06, 0.0016, mat(LINEN, 0.8), hid, name="Schnur")
 
 
 def grow_bar(F, u0, u1, d, z, power=5.0, hid="licht"):
@@ -2334,6 +2338,64 @@ def battery_box(x, y, z, level=3, hid="speicher"):
     return (x, y - 0.1, z + 0.15)
 
 
+def shoe_bench(x0, x1, y0, y1, seat, kinds, hid="bank"):
+    """Free-standing double shoe bench: two children's benches back to back with one shared backrest. Under each seat
+    one open compartment per child, the child's animal on the backrest above it. kinds: {"s": [...], "n": [...]} animals
+    per side (south side opens towards -y). Returns the compartment centres per side, the floor height in the
+    compartments and the y of each side's front edge."""
+    t = 0.022
+    yc = (y0 + y1) / 2
+    n = len(kinds["s"])
+    bw = (x1 - x0) / n
+    panel(x0 + 0.05, y0 + 0.05, 0.0, x1 - 0.05, y1 - 0.05, 0.05, hid, name="Sockel")
+    panel(x0, y0, 0.05, x1, y1, 0.05 + t, hid, name="Fachboden")
+    for (a, b) in ((y0 - 0.02, yc - 0.003), (yc + 0.003, y1 + 0.02)):
+        panel(x0 - 0.01, a, seat - 0.03, x1 + 0.01, b, seat, hid, name="Sitz")
+    panel(x0, yc - 0.008, 0.05, x1, yc + 0.008, seat - 0.03, hid, name="Mittelwand")
+    for k in range(n + 1):
+        xx = x0 + k * bw
+        a, b = (xx, xx + t) if k == 0 else ((xx - t, xx) if k == n else (xx - t / 2, xx + t / 2))
+        panel(a, y0, 0.05, b, y1, seat - 0.03, hid, name="Fachwand")
+    for xx in (x0 + 0.03, (x0 + x1) / 2, x1 - 0.03):
+        panel(xx - 0.025, yc - 0.0125, seat, xx + 0.025, yc + 0.0125, seat + 0.4, hid, name="Lehnenpfosten")
+    for sd in (-1, 1):
+        ya, yb = sorted((yc + sd * 0.0125, yc + sd * 0.0345))
+        for (z0, z1) in ((seat + 0.15, seat + 0.23), (seat + 0.29, seat + 0.38)):
+            panel(x0 - 0.01, ya, z0, x1 + 0.01, yb, z1, hid, name="Lehne")
+        yf = yc + sd * 0.0345
+        for k, kind in enumerate(kinds["s" if sd < 0 else "n"]):
+            xc = x0 + (k + 0.5) * bw
+            badge = cyl(0, 0, -0.004, 0.004, 0.03, multiplex("Y", 100.0), hid, verts=28, rot=(R(90), 0, 0), name="Bildschild")
+            badge.location = (xc, yf + sd * 0.004, seat + 0.335)
+            relief((xc, yf + sd * 0.008, seat + 0.335), (0, sd, 0), UP, kind, None, 0.8, hid)
+    return [x0 + (k + 0.5) * bw for k in range(n)], 0.05 + t, {"s": y0, "n": y1}
+
+
+def worn_boot(foot, face, color, hid):
+    """A rubber boot still on a seated figure's foot (sitc pose): shaft round the lower leg, the foot inside."""
+    f = fvec(face)
+    m = mat(color, 0.35, coat=0.5, name="Gummistiefel")
+    p = Vector(foot)
+    cyl(p.x - f.x * 0.035, p.y - f.y * 0.035, 0.0, 0.2, 0.058, m, hid, verts=24, bev=0.01, name="Stiefel")
+    torus(p.x - f.x * 0.035, p.y - f.y * 0.035, 0.195, 0.056, 0.008, mat(tuple(c * 0.75 for c in color), 0.4), hid, seg=20,
+          name="Stiefelrand")
+    o = rbox(-0.062, -0.1, 0.0, 0.062, 0.1, 0.108, m, hid, r=0.038, rot=(0, 0, R(face - 90)), name="Stiefel")
+    o.location = (p.x + f.x * 0.01, p.y + f.y * 0.01, 0.0)
+
+
+def foot_points(x, y, face, kind="kid", seat=0.32):
+    """Where person(..., pose='sitc') puts the feet (the shoe centres), so a worn boot can be drawn round one."""
+    d = DIMS[kind]
+    f = fvec(face)
+    s = f.cross(UP).normalized()
+    out = {}
+    for sd, key in ((-1, "l"), (1, "r")):
+        hip = Vector((x, y, 0)) + s * sd * d["lr"] * 1.05
+        knee = hip + f * (d["leg"] * 0.62)
+        out[key] = (knee.x + f.x * 0.055, knee.y + f.y * 0.055, 0.06)
+    return out
+
+
 def build_vorraum(v):
     """v5 green entrance room: variants 800 (arriving), 1400 (herb garden), nacht (grow lights at night). See CONTRACT_v5.md.
     Outside door with the grid mat at the front of the west wall, hooks for wet things over the grid, plant shelves on both
@@ -2344,7 +2406,7 @@ def build_vorraum(v):
     room_base(W, D, floor_m=tiles("X", (0.82, 0.72, 0.60), (0.90, 0.86, 0.79), 0.3, axis_v="Y"))
     wg = winter_glass(night)
     pz0, pz1 = 2.6, 3.45            # door to the Piazza (north wall)
-    dy0, dy1 = 0.22, 1.12           # outside door (west wall)
+    dy0, dy1 = 0.14, 1.04           # outside door (west wall)
     wall("x", D, 0.0, W, h=H, openings=[(0.3, 1.75, 2.0, 2.42, "window"), (pz0, pz1, 0.0, 2.1, "door")], glass=wg,
          sill=False, backdrop=False)
     wall("y", 0.0, 0.0, D + 0.18, h=H, openings=[(dy0, dy1, 0.0, 2.1, "door")], m=WALL_SAGE, backdrop=False)
@@ -2364,7 +2426,7 @@ def build_vorraum(v):
     box(-0.035, ya + 0.12, 0.08, -0.03, yb - 0.12, 0.3, mat(SAGE_D, 0.5, coat=0.3), "tuer", name="Trittschutz")
 
     # ---- grid mat (Gitterrost) in front of the door and under the hooks: dirt and drips fall through
-    gx0, gx1, gy0, gy1 = 0.02, 0.95, 0.14, 2.04
+    gx0, gx1, gy0, gy1 = 0.02, 0.95, 0.08, 2.06
     box(gx0, gy0, -0.006, gx1, gy1, 0.002, mat((0.17, 0.17, 0.18), 0.7, name="Rostwanne"), "rost", name="Rostwanne")
     bar = mat((0.46, 0.46, 0.48), 0.35, metal=0.6, name="Gitterrost")
     for (a0, b0, a1, b1) in ((gx0, gy0, gx1, gy0 + 0.025), (gx0, gy1 - 0.025, gx1, gy1), (gx0, gy0, gx0 + 0.025, gy1),
@@ -2379,19 +2441,21 @@ def build_vorraum(v):
         box(gx0, yy - 0.004, 0.0, gx1, yy + 0.004, 0.009, bar, "rost", name="Rostquerstab")
     A("rost", 0.48, 0.7, 0.02)
 
-    # ---- hooks for wet mud trousers and rain jackets over the grid (these stay here)
-    hy = [1.31, 1.55, 1.79, 1.98]
-    panel(0.0, 1.2, 0.98, 0.022, 2.04, 1.44, "haken", name="Hakenleiste")
-    for k, (yy, kind) in enumerate(zip(hy, ["igel", "hase", "bär", "fuchs"])):
-        capsule((0.02, yy, 1.12), (0.085, yy, 1.15), 0.011, WOOD_D, "haken", name="Haken")
-        ball(0.09, yy, 1.152, 0.016, mat(OCHRE, 0.4, coat=0.4), "haken", seg=12, name="Hakenknopf")
+    # ---- hooks for wet mud trousers and rain jackets over the grid (these stay here): one long double hook per child,
+    # the mud trousers hang by their straps at the back, the rain jacket by its hood in front of them
+    hy = [1.22, 1.46, 1.70, 1.94]
+    panel(0.0, 1.08, 0.98, 0.022, 2.06, 1.44, "haken", name="Hakenleiste")
+    for k, (yy, kind) in enumerate(zip(hy, ["igel", "fuchs", "bär", "hase"])):
+        capsule((0.02, yy, 1.12), (0.155, yy, 1.17), 0.011, WOOD_D, "haken", name="Haken")
+        ball(0.16, yy, 1.175, 0.016, mat(OCHRE, 0.4, coat=0.4), "haken", seg=12, name="Hakenknopf")
         badge = cyl(0, 0, -0.005, 0.005, 0.034, multiplex("X", 100.0), "haken", verts=28, rot=(0, R(90), 0), name="Bildschild")
         badge.location = (0.027, yy, 1.33)
         relief((0.032, yy, 1.33), (1, 0, 0), UP, kind, None, 0.9, "haken")
-    mud_trousers(hy[0], 1.15, (0.96, 0.78, 0.24))
-    jacket(0.035, hy[1] + 0.005, 0.9, 0, SKY, "haken")
-    mud_trousers(hy[2], 1.15, (0.32, 0.44, 0.64))
-    A("haken", 0.09, 1.55, 1.15)
+    for yy, col in zip(hy, [(0.96, 0.78, 0.24), (0.32, 0.44, 0.64), BERRY, (0.46, 0.62, 0.42)]):
+        mud_trousers(yy, 1.15, col)
+    jacket(0.072, hy[0], 0.96, 0, SKY, "haken")
+    jacket(0.072, hy[2], 0.96, 0, (0.95, 0.80, 0.36), "haken")
+    A("haken", 0.12, 1.58, 1.12)
 
     # ---- plant shelves on both walls around the back corner, warm LED grow lights under every board
     Fw, Fn = Wall("y", 0.0), Wall("x", D)
@@ -2409,14 +2473,17 @@ def build_vorraum(v):
             for z in boards[i][1:]:
                 lights[(tag_, i, z)] = grow_bar(F, u0 + 0.02, u1 - 0.02, dep * 0.5, z, power=3.0)
     thirsty = {"800": {("n", 4, 0.94, 0), ("w", 1, 0.10, 1)},
-               "1400": {("w", 0, 0.10, 0), ("n", 1, 1.36, 0), ("n", 4, 0.10, 1)},
+               "1400": {("w", 0, 0.10, 1), ("n", 1, 1.36, 0), ("n", 4, 0.10, 1)},
                "nacht": {("n", 4, 0.10, 1), ("w", 1, 0.94, 0)}}.get(v, set())
-    plan = {("w", 0): [("basil", "parsley"), ("mint", "basil"), ("cactus", "parsley"), ("basil", "mint")],
+    # (the pots next to a bay's left side are partly hidden by it, so the thirsty basil and the cactus stand right)
+    plan = {("w", 0): [("parsley", "basil"), ("mint", "basil"), ("parsley", "cactus"), ("basil", "mint")],
             ("w", 1): [("basil", "mint"), ("mint", "parsley"), ("parsley", "basil"), ("mint", "basil")],
-            ("n", 1): [("basil", "parsley"), ("mint", "basil"), ("parsley", "mint"), ("basil", "mint")],
-            ("n", 2): [None, ("basil", "parsley")],
-            ("n", 3): [None, ("parsley", "mint")],
-            ("n", 4): [("mint", "parsley"), ("basil", "mint"), ("parsley", "basil"), ("mint", "basil")]}
+            ("n", 1): [("basil", "parsley", "mint"), ("mint", "basil", "parsley"), ("parsley", "mint", "basil"),
+                       ("basil", "mint", "parsley")],
+            ("n", 2): [None, ("basil", "parsley", "mint")],
+            ("n", 3): [None, ("parsley", "mint", "basil")],
+            ("n", 4): [("mint", "parsley", "basil"), ("basil", "mint", "parsley"), ("parsley", "basil", "mint"),
+                       ("mint", "basil", "parsley")]}
     pots = ["cream", "terra", "sage", "cream", "terra", "rose", "cream", "sage", "terra"]
     found = {}
     pk = 0
@@ -2426,21 +2493,24 @@ def build_vorraum(v):
         for z, row in zip(tiers[i], rows):
             if row is None:
                 continue
+            three = len(row) == 3          # the wider bays take three smaller pots per board
             for j, kind in enumerate(row):
-                u = u0 + (u1 - u0) * (0.28 if j == 0 else 0.72)
+                u = u0 + (u1 - u0) * ((0.19, 0.5, 0.81)[j] if three else (0.28, 0.72)[j])
                 p = F.p(u, dep * 0.5, z + 0.022)
                 if kind == "cactus":
-                    soil, top = cactus(p.x, p.y, p.z)
+                    soil, top = cactus(p.x, p.y, p.z, s=1.15)
                     lamp = moisture_stick(p.x + F.n.x * 0.04 - F.t.x * 0.03, p.y + F.n.y * 0.04 - F.t.y * 0.03, soil, False,
                                           "kaktus", h=0.1)
                     found["kaktus"] = top
                     continue
-                s = random.uniform(1.35, 1.6)
-                soil = vr_pot(p.x, p.y, p.z, kind=pots[pk % len(pots)])
+                s = random.uniform(1.25, 1.45) if three else random.uniform(1.45, 1.7)
+                r = 0.057 if three else 0.068
+                soil = vr_pot(p.x, p.y, p.z, r=r, kind=pots[pk % len(pots)])
                 pk += 1
                 herb(p.x, p.y, soil, kind, s)
-                lamp = moisture_stick(p.x + F.n.x * 0.05 + F.t.x * 0.022, p.y + F.n.y * 0.05 + F.t.y * 0.022, soil,
-                                      (tag_, i, z, j) in thirsty)
+                on, out = r * 0.8, 0.105 + 0.03 * (s - 1.25)
+                lamp = moisture_stick(p.x + F.n.x * on + F.t.x * on * 0.3, p.y + F.n.y * on + F.t.y * on * 0.3, soil,
+                                      (tag_, i, z, j) in thirsty, h=0.17, lean=tuple((F.n * (out - on)).xy))
                 found[(tag_, i, z, j)] = (p, soil, lamp)
     # two cherry tomatoes in the tall bays; the right one is ripe and carries the red tag
     ts1, tips1, _ = tomato_plant(Fn, 1.03, dep * 0.5, VR_TIERS[0] + 0.022, ["ggg", "gog", "gg"])
@@ -2476,67 +2546,59 @@ def build_vorraum(v):
     text3d("Piazza", (pz0 + pz1) / 2, D - 0.025, 2.27, 0.1, mat(PETROL, 0.5), "tuer_piazza", extrude=0.004)
     A("tuer_piazza", (pz0 + pz1) / 2, D, 1.25)
 
-    # ---- free-standing shoe bench: one open compartment per child with its animal, a slatted backrest
-    bx0, bx1, by0, by1, seat = 1.25, 2.75, 1.0, 1.42, 0.32
-    kinds = ["igel", "hase", "bär", "fuchs", "ente"]
-    nb_ = len(kinds)
-    bw = (bx1 - bx0) / nb_
-    t = 0.022
-    panel(bx0 + 0.05, by0 + 0.05, 0.0, bx1 - 0.05, by1 - 0.03, 0.05, "bank", name="Sockel")
-    panel(bx0, by0, 0.05, bx1, by1, 0.05 + t, "bank", name="Fachboden")
-    panel(bx0 - 0.01, by0 - 0.02, seat - 0.03, bx1 + 0.01, by1, seat, "bank", name="Sitz")
-    panel(bx0, by1 - 0.012, 0.05, bx1, by1, seat - 0.03, "bank", name="Rückwand")
-    for k in range(nb_ + 1):
-        xx = bx0 + k * bw
-        a, b = (xx, xx + t) if k == 0 else ((xx - t, xx) if k == nb_ else (xx - t / 2, xx + t / 2))
-        panel(a, by0, 0.05, b, by1, seat - 0.03, "bank", name="Fachwand")
-    for xx in (bx0 + 0.02, (bx0 + bx1) / 2, bx1 - 0.02):
-        panel(xx - 0.025, by1 - 0.06, seat, xx + 0.025, by1 - 0.035, seat + 0.38, "bank", name="Lehnenpfosten")
-    for (z0, z1) in ((seat + 0.15, seat + 0.22), (seat + 0.28, seat + 0.37)):
-        panel(bx0 - 0.01, by1 - 0.085, z0, bx1 + 0.01, by1 - 0.06, z1, "bank", name="Lehne")
-    for k, kind in enumerate(kinds):
-        xc = bx0 + (k + 0.5) * bw
-        badge = cyl(0, 0, -0.004, 0.004, 0.03, multiplex("Y", 100.0), "bank", verts=28, rot=(R(90), 0, 0), name="Bildschild")
-        badge.location = (xc, by1 - 0.089, seat + 0.325)
-        relief((xc, by1 - 0.093, seat + 0.325), (0, -1, 0), UP, kind, None, 0.8, "bank")
-    A("bank", (bx0 + bx1) / 2, (by0 + by1) / 2, seat + 0.02)
-    fz = 0.05 + t
-    mila_fach = bx0 + 3.5 * bw
-    A("schuhfach", mila_fach, by0 + 0.05, 0.2)
-    boot_cols = [SKY, (0.95, 0.78, 0.24), SAGE, BERRY, (0.55, 0.62, 0.78)]
-    for k in range(nb_):
-        xc = bx0 + (k + 0.5) * bw
-        if v == "800" and k in (1, 4):
-            slippers(xc, by0 + 0.2, fz, -90, FELT[k], "schuhe")       # these children are not here yet
-        elif v == "800" and k == 3:
-            boot(Vector((xc - 0.075, by0 + 0.22, fz)), -90, BERRY)      # Mila's first boot is already in
-        else:
-            for sd in (-1, 1):
-                boot(Vector((xc + sd * 0.042, by0 + 0.22, fz)), -90, boot_cols[k])
+    # ---- free-standing double shoe bench in the middle: two benches back to back, one open compartment per child under
+    # the seats (twelve places), the children's animals on the shared backrest
+    bx0, bx1, by0, by1, seat = 1.2, 2.8, 0.92, 1.64, 0.32
+    kinds = {"s": ["igel", "katze", "hase", "eule", "fuchs", "ente"], "n": ["bär", "ente", "eule", "hase", "katze", "igel"]}
+    xs, fz, front = shoe_bench(bx0, bx1, by0, by1, seat, kinds)
+    A("bank", (bx0 + bx1) / 2, by0 + 0.18, seat + 0.02)
+    mila_k = 4
+    A("schuhfach", xs[mila_k], by0 + 0.04, 0.17)
+    boot_cols = [SKY, (0.95, 0.78, 0.24), SAGE, (0.55, 0.62, 0.78), BERRY, PETROL, ROSE, OCHRE, CLAY, PLUM, SKY, SAGE]
+    # at 8:00 some children are already inside (their boots are in, they wear their slippers), the others are not here
+    # yet (their slippers wait); at night only slippers are left; at 14:00 everybody is inside
+    away = {"800": {("s", 1), ("s", 5), ("n", 0), ("n", 3), ("n", 4)}, "nacht": None}.get(v, set())
+    for side, sgn in (("s", -1), ("n", 1)):
+        yb = front[side] - sgn * 0.13
+        for k, xc in enumerate(xs):
+            if side == "s" and k == mila_k and v == "800":
+                continue                     # Mila's slippers are in Papa's hand, her boots are still on her
+            col = boot_cols[(k + (6 if side == "n" else 0)) % len(boot_cols)]
+            if away is None or (side, k) in away:
+                slippers(xc, yb, fz, -90 * -sgn, FELT[(k + 2 * (side == "n")) % len(FELT)], "schuhe")
+            else:
+                for sd in (-1, 1):
+                    boot(Vector((xc + sd * 0.042, yb, fz)), -90 * -sgn, BERRY if (side == "s" and k == mila_k) else col)
 
     # ---- extras: a small step for the upper boards, a watering can when nobody uses it
     if v != "1400":
-        watering_can((0.66, 2.5, 0.168), 200, 0, "regal")
+        watering_can((2.36, 2.72, 0.168), 160, 0, "regal")
 
     # ---- people
     if v == "800":
         for k in range(8):
             ball(random.uniform(0.28, 0.78), random.uniform(0.4, 1.0), 0.014, random.uniform(0.012, 0.022), SNOW, "rost",
                  scale=(1, 1, 0.45), seg=10, name="Schnee")
-        jp = who("jonas", 1.70, 1.22, -90, "sitc", seat=seat, hid="jonas", acc=("scarf",), look=(2.3, 1.08, 0.62),
-                 arms={"l": (2.02, 0.9, 0.52)})
+        # Papa sits beside her with her slippers from the fox compartment; Mila has pulled off one boot and holds it,
+        # the other one is still on her foot
+        mx, my = xs[mila_k] - 0.07, by0 + 0.125     # a little left of her compartment so that it stays in view
+        jp = who("jonas", mx - 0.62, by0 + 0.17, -90, "sitc", seat=seat, hid="jonas", acc=("scarf",),
+                 look=(mx, my - 0.1, 0.55), arms={"l": (mx - 0.27, by0 - 0.06, 0.5)})
         hl = Vector(jp["hand_l"])
-        slippers(hl.x + 0.01, hl.y - 0.01, hl.z - 0.045, -60, (0.93, 0.62, 0.55), "jonas")
-        mp = who("mila", 2.38, 1.10, -90, "sitc", seat=seat, hid="mila", acc=("beanie",), shoes=(0.93, 0.74, 0.70),
-                 look=(2.2, 0.92, 0.25), arms={"r": (2.19, 0.97, 0.38)})
-        hr_ = Vector(mp["hand_r"])
-        boot(Vector((hr_.x, hr_.y, hr_.z - 0.19)), -90, BERRY, "mila")
+        slippers(hl.x + 0.02, hl.y - 0.03, hl.z - 0.045, -60, FELT[0], "jonas")
+        sock = (0.97, 0.93, 0.86)
+        mp = who("mila", mx, my, -90, "sitc", seat=seat, hid="mila", acc=("beanie",), shoes=sock,
+                 look=(mx, by0 - 0.2, 0.3), arms={"r": (mx - 0.04, by0 - 0.08, 0.46), "l": (mx + 0.05, by0 - 0.08, 0.46)})
+        worn_boot(foot_points(mx, my, -90)["l"], -90, BERRY, "mila")
+        hc = (Vector(mp["hand_r"]) + Vector(mp["hand_l"])) / 2
+        boot(Vector((hc.x, min(hc.y, by0 - 0.115), hc.z - 0.1)), -90, BERRY, "mila")
     elif v == "1400":
-        basil = found[("w", 0, 0.10, 0)]
+        # Mila stands beside the shelf, facing the room, and waters the basil whose stick glows blue
+        basil = found[("w", 0, 0.10, 1)]
         A("stab", *basil[2])
-        mpos, mf = Vector((0.5, 2.38, 0.0)), 240
-        hand = Vector((0.33, 2.28, 0.44))
-        mp = who("mila", mpos.x, mpos.y, mf, "stand", hid="mila", shoes=(0.93, 0.80, 0.52), look=tuple(basil[0] + UP * 0.12),
+        mpos, mf = Vector((0.57, 2.6, 0.0)), -62
+        hand = Vector((0.41, 2.47, 0.43))
+        mp = who("mila", mpos.x, mpos.y, mf, "stand", hid="mila", shoes=FELT[4], look=(1.2, 2.45, 0.95),
                  arms={"r": tuple(hand)})
         hc = Vector(mp["hand_r"]) + Vector((0, 0, 0.01))
         yaw = math.degrees(math.atan2(basil[0].y - hc.y, basil[0].x - hc.x))
@@ -2544,29 +2606,43 @@ def build_vorraum(v):
         soil_pt = Vector((basil[0].x + 0.02, basil[0].y + 0.01, basil[1] + 0.005))
         wm = mat((0.70, 0.85, 1.0), 0.05, coat=1.0, alpha=0.45, name="Wasser")
         curve_tube([tuple(tip), tuple(tip.lerp(soil_pt, 0.5) + UP * 0.01), tuple(soil_pt)], 0.004, wm, "mila", name="Wasser")
-        # Maren cuts two ripe tomatoes with a child who holds the bowl
-        mr = who("sanne", 1.25, 2.55, 10, "kneel", hid="maren", look=(1.95, 2.4, 0.62), arms={"l": tips2[0]})
+        # Maren kneels at the ripe tomato and cuts two with small scissors, a child holds the bowl
+        kb_pos = Vector((1.9, 2.44, 0.0))
+        mr = who("sanne", 1.17, 2.5, 22, "kneel", hid="maren", look=(kb_pos.x, kb_pos.y, 0.62),
+                 arms={"l": tips2[0], "r": tuple(Vector(tips2[0]) + Vector((0.02, -0.12, -0.06)))})
         A("maren_head", *mr["head"])
-        kb = kid(2, 1.98, 2.42, 195, "hold", hid="kinder", shoes=FELT[1], look=(1.45, 2.85, 0.6))
+        sc = Vector(mr["hand_r"])
+        for sd in (-1, 1):
+            capsule(sc, sc + Vector((0.05, 0.04, 0.012 * sd)), 0.004, STEEL, "maren", name="Schere")
+            torus(*(sc + Vector((-0.012, -0.01, 0.012 * sd))), 0.011, 0.003, mat(BERRY, 0.4), "maren", seg=12, name="Scherengriff")
+        kb = kid(2, kb_pos.x, kb_pos.y, 172, "hold", hid="kinder", shoes=FELT[1], look=(1.5, 2.72, 0.66))
         bm = (Vector(kb["hand_r"]) + Vector(kb["hand_l"])) / 2
         bowl(bm.x, bm.y, bm.z - 0.045, 0.09, None, "kinder", color=SKY)
         for sd in (-1, 1):
             ball(bm.x + sd * 0.03, bm.y, bm.z + 0.0, 0.024, mat(TOM_COL["r"], 0.28, coat=0.6, name="Tomate"), "kinder",
                  seg=14)
-        # a child looks up at the cactus, another one smells the mint
-        kid(4, 0.76, 2.64, 215, "stand", hid="kinder", shoes=FELT[2], look=found["kaktus"])
+        # one child smells the mint, another one sits on the bench with a small pot of basil in her lap
         mint = found[("n", 4, 0.52, 1)]
-        kid(6, 2.36, 2.58, 140, "stand", hid="kinder", shoes=FELT[3], look=tuple(mint[0] + UP * 0.1))
+        kid(6, 2.38, 2.6, 140, "stand", hid="kinder", shoes=FELT[3], look=tuple(mint[0] + UP * 0.1))
+        kx = xs[1]
+        lap = Vector((kx, by0 + 0.0, 0.4))
+        ks = kid(4, kx, by0 + 0.125, -90, "sitc", seat=seat, hid="kinder", shoes=FELT[2], look=tuple(lap + UP * 0.12),
+                 arms={"r": tuple(lap + Vector((-0.06, 0.0, 0.03))), "l": tuple(lap + Vector((0.06, 0.0, 0.03)))})
+        lp = (Vector(ks["hand_r"]) + Vector(ks["hand_l"])) / 2
+        soil = vr_pot(lp.x, min(lp.y, by0 - 0.06), lp.z - 0.07, r=0.055, h=0.1, kind="sage", hid="kinder")
+        herb(lp.x, min(lp.y, by0 - 0.06), soil, "basil", 1.2, hid="kinder")
     A("kaktus", *found["kaktus"])
     if "stab" not in ANCH:
-        A("stab", *found[("w", 0, 0.10, 0)][2])
-    A("in", 0.3, 0.67, 0.0)
+        A("stab", *found[("w", 0, 0.10, 1)][2])
+    A("in", 0.3, (dy0 + dy1) / 2, 0.0)
     A("out", (pz0 + pz1) / 2, D - 0.25, 0.0)
     vb_flush()
     pts = box_corners(-0.2, 0, -SLAB, W, D + 0.2, H + 0.05)
     shots = {"licht": dict(loc=(2.78, 1.2, 1.22), target=(1.2, 3.0, 1.12), lens=24, fstop=5.6)}
     if night:
         shots["licht"]["name"] = "vorraum_nacht"
+        for k in ("rost", "haken", "bank", "schuhfach", "tuer_piazza", "in", "out"):
+            ANCH.pop(k, None)     # outside the close-up frame
     cfg = dict(W=W, D=D, time="morgen" if v == "800" else "nachmittag", pts=pts, shots=shots, target=(W / 2, D / 2, 1))
     if night:
         cfg["light"] = dict(strength=0.01, world=0.02, fill=0.0)
