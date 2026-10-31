@@ -433,8 +433,11 @@ def hubel(cx, cy, z=0.0, rot=90.0, filled=None, hid="hubel", pad=SAGE, cam=CAM):
             torus(p.x, p.y, zz + 0.0015, 0.045, 0.004, mat(col, 0.35, coat=0.3, emission=col, strength=0.9 if on else 0.15),
                   hid, seg=32, name="Muldenring")
             if on:
-                an, ac = lst[j] if isinstance(lst[j], tuple) else (lst[j], None)
-                kiddo_cube(p.x, p.y, zz - 0.004, an, ac, hid, face=a, s=0.068)
+                e = lst[j] if isinstance(lst[j], tuple) else (lst[j], None)
+                an, ac = e[0], e[1]
+                dr, dz = e[2] if len(e) > 2 else (0.0, 0.0)  # pushed a little off its hollow (radial m, turn deg)
+                q = C + fvec(a) * (rm + dr)
+                kiddo_cube(q.x, q.y, zz - 0.004, an, ac, hid, face=a + dz, s=0.068)
             pts.append((p.x, p.y, zz))
             i += 1
         out["mulden"][name_] = pts
@@ -898,9 +901,20 @@ def garderobe(F, a0, kids, w=0.304, depth=0.48, h=1.55, hid="schrank", open_k=No
                 zz = 0.33 + j * 0.04
                 box(*F.bx(ui0 + 0.05, 0.0121, zz, ui1 - 0.05, 0.0138, zz + 0.012), mat((0.30, 0.24, 0.20), 0.6), hid,
                     name="Lüftung")
+            # a pair of knitted mittens drying on the slats: hand, thumb, striped cuff
+            mm, cuff = fabric(BERRY, 0.7, 0.95, 0.1), fabric(CREAM, 0.7, 0.95, 0.1)
             for sd in (-1, 1):
-                ball(*F.p(uc + sd * 0.06, depth * 0.5, 0.306), 0.045, fabric(kd.get("jacket", OCHRE)), hid,
-                     scale=(1.4, 0.9, 0.4), rot=(0, 0, R(F.face + sd * 12)), seg=16, name="Fäustling")
+                ang = R(F.face + 90 + sd * 14)
+                ax = Vector((math.cos(ang), math.sin(ang), 0.0))      # along the mitten, fingers to the back
+                side = ax.cross(UP)
+                c0 = F.p(uc + sd * 0.062, depth * 0.48, 0.31)
+                ball(*c0, 0.042, mm, hid, scale=(1.0, 0.8, 0.36), rot=(0, 0, ang), seg=18, name="Fäustling")
+                ball(*(c0 - ax * 0.012 + side * sd * 0.038), 0.017, mm, hid, scale=(1.5, 0.9, 0.7),
+                     rot=(0, 0, ang - sd * 0.6), seg=12, name="Daumen")
+                cf = cyl(0, 0, -0.016, 0.016, 0.03, cuff, hid, verts=18, name="Bündchen")
+                cf.location = c0 - ax * 0.05
+                cf.rotation_euler = (0, R(90), ang)
+                cf.scale = (0.5, 1, 1)
             out["trockenfach"] = tuple(F.p(uc, depth - 0.06, 0.38))
             # tall compartment: jacket on the hook rail, hat and scarf on side hooks
             panel(*F.bx(ui0 + 0.015, 0.012, 1.17, ui1 - 0.015, 0.03, 1.21), hid, name="Hakenleiste")
@@ -2577,20 +2591,37 @@ def build_abholung(v):
     wb = Vector(P_["wb"]["slot"])
     ap = Vector((0.3, 4.05, 0.0))
     af = 240
+    # the card stands centred in the slot, half pushed in; her fingers pinch its top edge at the end towards her
+    lid = wb.z - 0.0085                         # top of the lid
+    cc = Vector((wb.x, wb.y, lid + 0.004))      # card centre: half of it already in the box
+    ch = 0.036
+    pinch = Vector((wb.x, wb.y + 0.03, lid + 0.004 + ch))
+    sh_r = ap + fvec(af - 90) * DIMS["adult"]["r"] * 0.88
+    reach = Vector((pinch.x + 0.025, pinch.y + 0.045, pinch.z + 0.045))
+    hand_t = reach - (reach - Vector((sh_r.x, sh_r.y, reach.z))).normalized() * 0.04
     pa = who("ayla", ap.x, ap.y, af, "stand", hid="ayla", shoes=COVERS, look=(wb.x, wb.y, wb.z + 0.02),
-             arms={"r": (wb.x + 0.03, wb.y + 0.0, wb.z + 0.03)})
+             arms={"r": tuple(hand_t)})
     ueberschuhe(ap.x, ap.y, af, "ayla")
-    hl_ = Vector(pa["hand_r"])
-    o = box(-0.05, -0.0015, -0.036, 0.05, 0.0015, 0.036, mat((0.97, 0.86, 0.45), 0.8), "ayla", name="Wunschkarte")
-    o.location = hl_ + Vector((-0.035, -0.01, 0.045))
-    o.rotation_euler = (R(8), 0, R(90))  # upright in the plane of the slot
-    A("wunsch_karte", *o.location)
+    o = box(-0.05, -0.0015, -ch, 0.05, 0.0015, ch, mat((0.97, 0.86, 0.45), 0.8), "ayla", name="Wunschkarte")
+    o.location = cc
+    o.rotation_euler = (0, 0, R(90))  # upright in the plane of the slot
+    for k in range(3):  # a few pencil lines on the visible half
+        capsule(cc + Vector((0.0016, -0.03 + k * 0.004, 0.026 - k * 0.011)), cc + Vector((0.0016, 0.03, 0.026 - k * 0.011)),
+                0.0012, mat((0.35, 0.35, 0.45), 0.6), "ayla", name="Wunschtext")
+    hr_ = Vector(pa["hand_r"])
+    skin = mat(SKINS[CAST["ayla"]["skin"]], 0.55, sheen=0.2, name="Haut")
+    for sd in (-1, 1):  # thumb on the room side, index finger on the wall side of the card
+        tip = pinch + Vector((sd * 0.008, 0.0, -0.012))
+        capsule(hr_ + (tip - hr_).normalized() * 0.04, tip, 0.0085, skin, "ayla", name="Finger")
+    A("wunsch_karte", *cc)
     who("defne", 0.64, 4.32, 218, "stand", hid="defne", shoes=SOCKS[6], acc=("crown",), look=(wb.x, wb.y, wb.z))
     # Maren plays with one of the last children in the play corner
     maren(4.85, 0.95, 140, "kneel", look=(4.65, 0.75, 0.3))
     kid(5, 4.95, 0.52, 100, "sit", hid="kinder", look=(4.65, 0.72, 0.4), shoes=SOCKS[4])
     # the board's tap point sits on the 'Soße gekocht' tile, above Ayla's head (the board centre is behind it)
     A("tafel", *P_["taf"]["sosse"])
+    # the Planwürfel tap point sits on Mila's cube for tomorrow morning: blue, Bauen
+    A("planwuerfel", *m["cells"][(0, 0)])
     shots = {"faecher": dict(loc=(2.6, 2.0, 1.44), target=(0.3, 2.5, 1.03), lens=44, fstop=6.3),
              "wunsch": dict(loc=(0.82, 2.95, 2.0), target=(0.22, 3.92, 1.25), lens=26, fstop=4.0)}  # over the cabinets
     return dict(W=W, D=D, time="nachmittag", pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1))
@@ -4589,7 +4620,8 @@ PIAZZA_WEEK = {"745": ["yb", "??", "??", "??", "??"], "800": ["yb", "y?", "??", 
 # cubes already in the hollows at 8:00 (Mila takes the last free Kaufladen hollow, Defne then picks Malen). Emil's owl
 # is at Bauen like his Planwürfel; Ben's hare and Lina's hedgehog are still in their niches, so the other children's
 # animals differ from theirs or by colour.
-HUBEL_FILL = {"800": dict(laden=["bär", "ente", ("hase", (0.80, 0.84, 0.90)), ("katze", (0.95, 0.80, 0.55)), None],
+HUBEL_FILL = {"800": dict(laden=["bär", "ente", ("hase", (0.80, 0.84, 0.90)), ("katze", (0.95, 0.80, 0.55), (0.024, 25)),
+                                None],
                           bauen=["eule", ("bär", (0.85, 0.62, 0.40)), ("ente", (0.98, 0.95, 0.88))], malen=[])}
 
 
@@ -4787,11 +4819,11 @@ def build_piazza(v):
             ANCH[k_] = tuple(tilt @ Vector(ANCH[k_]))
         A("maren_phone", *(tilt @ ph))
     # 745z: the CO2 box and the closed window before unlocking; 745: the open window with its chain drives
-    fen = (dict(loc=(3.25, 2.75, 1.3), target=(3.95, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
-           dict(loc=(2.95, 2.45, 1.42), target=(3.37, D, 1.64), lens=22, fstop=8.0))
+    fen = (dict(loc=(3.25, 2.75, 1.3), target=(3.8, D, 1.42), lens=28, fstop=6.0) if v == "745z" else
+           dict(loc=(3.5, 2.35, 1.42), target=(3.68, D, 1.5), lens=22, fstop=8.0))
     shots = {
         "fenster": fen,
-        "hubel": dict(loc=tuple(C + fvec(325) * 2.0 + Vector((0, 0, 1.05))),
+        "hubel": dict(loc=tuple(C + fvec(317) * 2.0 + Vector((0, 0, 1.1))),
                       target=tuple(C + fvec(70) * 0.16 + Vector((0, 0, 0.34))), lens=36, fstop=5.0),
         "schrank": dict(loc=(2.15, 3.3, 1.15), target=(0.0, 3.12, 0.92), lens=20, fstop=6.0),  # behind Maren's stool
         "offen": dict(loc=(1.75, 2.0, 1.32), target=(0.22, 2.53, 0.76), lens=19, fstop=5.6, name="schrank_offen"),

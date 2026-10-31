@@ -1089,9 +1089,10 @@ def relief(c, n, u, kind="fuchs", color=None, s=1.0, hid=None):
         for sd in (-1, 1):
             ear(sd * 0.014, 0.014, 0.006, 0.55, 0.85, 0.026, 0.009, m)
             ear(sd * 0.014, 0.016, 0.009, 0.55, 0.85, 0.012, 0.004, DARK)
-        B(0, -0.013, 0.008, 0.012, white, (1.15, 0.95, 0.6))
-        B(0, -0.024, 0.011, 0.0042, DARK, seg=10)
-        eyes(0.002)
+        # small white muzzle at the chin, the black nose right at its tip, two clear eyes above it
+        B(0, -0.0145, 0.007, 0.0085, white, (1.15, 0.95, 0.55))
+        B(0, -0.0225, 0.0105, 0.0036, DARK, seg=10)
+        eyes(0.003, 0.0135, 0.0098, 0.0042)
     elif kind == "hase":
         B(0, -0.002, 0.004, 0.022, m, (0.95, 0.95, 0.45), 20)
         for sd in (-1, 1):
