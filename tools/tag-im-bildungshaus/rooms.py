@@ -1363,7 +1363,7 @@ KL_PL = (1.2, 0.7, 0.025)  # table top: length, width, thickness (2 x 3 of them 
 KL_PLCOL = [SAGE, ROSE, OCHRE, SKY, CLAY, PLUM]
 KL_TH = 0.40  # island height (children's table, the figures are toy scale)
 KL_SLIPPERS = (0.62, 0.64, 0.70)  # Maren's grey felt house slippers (same colour as SLIPPERS in the Piazza)
-KL_COVERS = (0.58, 0.76, 0.90)  # parents' blue shoe covers (same colour as COVERS in the Piazza)
+KL_COVERS = (0.16, 0.48, 0.96)  # parents' bright-blue shoe covers (same colour as COVERS in the Piazza)
 KL_SLOT = [0.045 + i * 0.085 for i in range(6)]  # x of each stored top's face (legs fold towards +x)
 KL_GAP = mat((0.28, 0.20, 0.14), 0.85, name="Fuge")
 
@@ -1863,7 +1863,7 @@ def kl_ueberzieher_kniend(x, y, face, hid="ayla"):
     d = DIMS["adult"]
     f = fvec(face)
     sv = f.cross(UP).normalized()
-    m = mat(KL_COVERS, 0.6, sheen=0.4, name="Überzieher")
+    m = mat(KL_COVERS, 0.3, coat=0.6, name="Überzieher")
     for sd in (-1, 1):
         knee = Vector((x, y, 0)) + sv * sd * d["lr"] * 1.1 + f * 0.08 + UP * d["lr"]
         foot = knee - f * (d["leg"] * 0.6)
@@ -1905,7 +1905,7 @@ def build_kaufladen(v):
         for i in range(6):
             kl_stored(i, KL_PLCOL[i])
         A("platten", KL_SLOT[2] + 0.02, KL_SWY - 0.02, 0.9)
-        kl_hoehle(KL_COLS[1], KL_COLS[3], kid_inside=True)
+        kl_hoehle(KL_COLS[1], KL_COLS[3])
         sb0, sb1 = KL_COLS[3] + 0.02, KL_COLS[6] - 0.02
         kl_kistenregal(sb0 + 0.02, sb1 - 0.02, KL_SWY + 0.02)
         kl_markise(sb0 - 0.02, sb1 + 0.02, KL_SWY - 0.03, KL_LOW + 0.04)
