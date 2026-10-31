@@ -1516,8 +1516,14 @@ def finish(args, name, opaque=False, exposure=-0.3):
         if getattr(args, "blend_only", False):
             print("SAVED", os.path.join(args.out, f"{name}.blend"))
             return
+    # Write to a partial file first: render_v5.sh skips existing PNGs, so a PNG cut off by an
+    # interrupted run must never appear under its final name.
+    final_path = scene.render.filepath
+    tmp_path = final_path[:-len(".png")] + ".partial.png"
+    scene.render.filepath = tmp_path
     bpy.ops.render.render(write_still=True)
-    print("RENDERED", scene.render.filepath)
+    os.replace(tmp_path, final_path)
+    print("RENDERED", final_path)
 
 
 def fit_iso(points, margin=0.035):
