@@ -288,10 +288,10 @@ const DETAILS = {
   {img:['piazza_800_schrank'], t:'Von außen nur ruhige Holzfronten. Keine Jacken, keine Matschhosen, kein Schuhberg, auch im Februar.', ov:[]},
   {img:['schrank_offen'], t:'Milas Tür geht auf, innen wird es hell. Ein hohes Fach für Jacke, Mütze und Schal, darunter ein belüftetes Trockenfach.',
    ov:[{pulse:['fach_hoch']}, {pulse:['trockenfach']}]},
-  {img:['schrank_offen'], t:'Unten die Schublade mit Wechselkleidung. Ein Symbol an der Tür zeigt den Eltern, wenn etwas fehlt.',
-   ov:[{pulse:['schublade']}, {chip:['schublade'], t:'auffüllen', dy:-44}]},
-  {img:['piazza_800_schrank', 'schrank_offen'], need:['tafel'], t:'Oben ein kleines Schatzfach für Zettel und Mitgebrachtes. Neben dem Schrank die Magnettafel der Gruppe: was war, was kommt.',
-   ov:[{pulse:['schatzfach']}, {pulse:['tafel']}]},
+  {img:['schrank_offen'], t:'Unten die Schublade mit Wechselkleidung, ein Symbol an der Tür zeigt den Eltern, wenn etwas fehlt. Oben ein kleines Schatzfach für Zettel und Mitgebrachtes.',
+   ov:[{pulse:['schublade']}, {chip:['schublade'], t:'auffüllen', dy:-44}, {pulse:['schatzfach']}]},
+  {img:['piazza_800_schrank'], need:['tafel'], t:'Neben dem Schrank die Magnettafel der Gruppe: was war, was kommt. Eltern sehen es beim Anziehen, ohne Bildschirm.',
+   ov:[{pulse:['tafel']}]},
   {img:['piazza_800_schrank'], ev:true, t:'Zeit fürs An- und Ausziehen, verlorene Sachen, wie oft Eltern an der Tafel ins Gespräch kommen.'}]},
  hubel:{title:'Der Hubel', steps:[
   {img:['piazza_800_hubel'], t:'Vor dem Kreis stellt Maren am iPhone drei Angebote ein und wie viele Plätze jedes hat.', ov:[{phone:'angebote'}]},
@@ -322,7 +322,7 @@ const DETAILS = {
   {img:['schrankwand_offen'], t:'Oben, außer Reichweite, ein Fach mit Zahlenschloss: Kochplatte, Messer, Reiniger. Den Code kennen nur Erwachsene.', ov:[{pulse:['schloss']}]},
   {img:['kaufladen_kochen', 'kaufladen_umbau'], need:['verbinder'], t:'Die Tischplatten stehen nebeneinander in der Wand. Herausziehen, Beine ausklappen, verbinden. Die Verbinder rasten hörbar ein, die Insel steht fest.',
    ov:[{pulse:['verbinder']}, {chip:['verbinder'], t:'klick', dy:-44}]},
-  {img:['kaufladen_kochen'], t:'Maren öffnet das Rezept der Kollegin aus dem Ideenschatz. Für zwei Kinder ohne Milch rechnet es eine Portion ohne Parmesan.', ov:[{phone:'rezept'}]},
+  {img:['kaufladen_kochen'], t:'Maren öffnet das Rezept der Kollegin aus dem Ideenschatz. Für die zwei Kinder, die keine Milch vertragen, rechnet es zwei Portionen ohne Käse.', ov:[{phone:'rezept'}]},
   {img:['kaufladen_kochen'], ev:true, t:'Reste pro Mahlzeit, Zeit fürs Umräumen, wie viele Kinder mitrühren, Unfälle an der Insel.'}]},
  garten:{title:'Der Kräutergarten', steps:[
   {img:['vorraum_1400'], t:'Zwei Wände voller Kräuter und Tomaten. Draußen liegt Schnee, drinnen ist es grün.', ov:[{pulse:['regal']}]},
@@ -692,7 +692,7 @@ function startAuto(st){
     setStage(st, st.cur + 1);
   }, 2600);
 }
-function stopAuto(st){ if (!st) return; clearInterval(st.autoT); st.autoT = null; st.autoDone = true; if (st.switchEl) st.switchEl.classList.remove('auto'); }
+function stopAuto(st){ if (!st) return; clearInterval(st.autoT); st.autoT = null; clearTimeout(st.autoWait); st.autoWait = 0; st.autoDone = true; if (st.switchEl) st.switchEl.classList.remove('auto'); }
 
 /* ================================================================ swipe variants with a picture slot */
 const VARS = [];
@@ -1470,9 +1470,11 @@ const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting
 ST.forEach(st => io.observe(st.sec));
 // stations with several pictures run through them once when they come into view (not with reduced motion)
 const stageIO = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting || e.intersectionRatio < .5) return;
-  const st = ST.find(x => x.box === e.target); stageIO.unobserve(e.target); if (st) setTimeout(() => startAuto(st), 900);
-}), {threshold:[.5]});
+  const st = ST.find(x => x.box === e.target); if (!st) return;
+  if (!e.isIntersecting || e.intersectionRatio < .5){ clearTimeout(st.autoWait); st.autoWait = 0; if (st.autoT) stopAuto(st); return; }
+  if (st.autoDone || st.autoWait) return;
+  st.autoWait = setTimeout(() => { st.autoWait = 0; stageIO.unobserve(e.target); startAuto(st); }, 900);
+}), {threshold:[0, .5]});
 if (!reduce) ST.forEach(st => { if (st.box && st.stages.length > 1) stageIO.observe(st.box); });
 if ('ResizeObserver' in window){ const ro = new ResizeObserver(() => requestLayout()); ro.observe(flow); }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { requestLayout(); updateNextUI(); });
