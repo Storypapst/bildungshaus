@@ -2643,10 +2643,11 @@ def school_next_door():
     box(-19.0, 0.0, -SLAB, -0.45, 18.0, -0.02, multiplex("Z", 22.0), bev=0.006, seg=1, name="Sockel Schule")
     box(-19.0, 0.0, -0.02, -0.45, 18.0, 0.0, tiles("X", (0.86, 0.82, 0.74), (0.76, 0.72, 0.65), 0.5, axis_v="Y"), hid,
         name="Schulhof")
-    box(-1.45, 0.0, 0.0, -0.45, 18.0, 0.012, grass_m(), hid, name="Rasen")
+    box(-1.45, 0.0, 0.0, -0.45, 18.0, 0.012, winter_lawn(), hid, name="Rasen")
     for k in range(6):
-        ball(-0.95 + random.uniform(-0.15, 0.15), 0.8 + k * 1.1, 0.4, random.uniform(0.32, 0.42), random.choice([LEAF, LEAF2]),
-             hid, seg=14, name="Hecke")
+        hx, hy_, hr = -0.95 + random.uniform(-0.15, 0.15), 0.8 + k * 1.1, random.uniform(0.32, 0.42)
+        ball(hx, hy_, 0.4, hr, random.choice([LEAF, LEAF2]), hid, seg=14, name="Hecke")
+        snow_cap(hx, hy_, 0.4, hr, hid)
     body = mat((0.86, 0.85, 0.82), 0.85, name="Putz Schule")
     box(sx0, sy0, 0.0, sx1, sy1, sh, body, hid, name="Schule")
     band = mat((0.78, 0.77, 0.74), 0.85, name="Putz Schule Band")
@@ -2683,9 +2684,77 @@ def school_next_door():
     A("schule", sx1 + 0.05, sy0 + 2.6, 5.4)
 
 
+_WL = {}
+
+
+def winter_lawn():
+    """February lawn: dull winter grass with patches of light snow (world-space noise, so all lawn pieces agree)."""
+    if "m" in _WL:
+        return _WL["m"]
+    m = bpy.data.materials.new("Winterwiese")
+    nb = NB(m)
+    pos = nb.node("ShaderNodeNewGeometry").outputs["Position"]
+    f = nb.math("ADD", nb.noise(pos, 1.1, 3.0, 0.6), nb.math("MULTIPLY", nb.math("SUBTRACT", nb.noise(pos, 9.0, 2.0, 0.5), 0.5), 0.3))
+    col = nb.ramp(f, [(0.0, (0.47, 0.53, 0.35)), (0.46, (0.58, 0.62, 0.42)), (0.52, (0.86, 0.89, 0.88)),
+                      (0.6, (0.95, 0.96, 0.98)), (1.0, (0.97, 0.98, 1.0))])
+    nb.color(col)
+    nb.bsdf.inputs["Roughness"].default_value = 0.9
+    _WL["m"] = m
+    return m
+
+
+def bare_tree(x, y, h=3.0, r=1.2, hid=None, seed=0):
+    """Leafless tree for February: a tapering trunk, four limbs that fork twice into thin twigs."""
+    rnd = random.Random(seed)
+    bark = mat((0.44, 0.37, 0.32), 0.8, noise=0.1, name="Rinde")
+    top = Vector((x, y, h * 0.42))
+    capsule((x, y, 0.0), top, 0.12 * h / 3.0, bark, hid, taper=0.7, name="Stamm")
+
+    def branch(p, d, L, rad, depth):
+        q = p + d * L
+        capsule(p, q, rad, bark, hid, taper=0.65, seg=10, name="Ast")
+        if depth == 0:
+            return
+        for k in range(3 if depth == 2 else 2):
+            a = rnd.uniform(0, 2 * math.pi)
+            nd = (d + Vector((math.cos(a), math.sin(a), 0)) * rnd.uniform(0.4, 0.75) + UP * 0.2).normalized()
+            branch(q, nd, L * 0.66, rad * 0.58, depth - 1)
+    for k in range(4):
+        a = k * math.pi / 2 + rnd.uniform(-0.35, 0.35)
+        d = Vector((math.cos(a) * 0.6, math.sin(a) * 0.6, 0.8)).normalized()
+        branch(top, d, r * 0.78, 0.065 * h / 3.0, 2)
+
+
+def sled(x, y, face, hid=None):
+    """Wooden children's sled: two bent runners, slats on top, a rope at the front. Returns the rope end."""
+    f = fvec(face)
+    s = f.cross(UP).normalized()
+    wood = mat((0.80, 0.58, 0.36), 0.5, noise=0.08, name="Schlitten")
+    runner = mat(BERRY, 0.45, coat=0.3, name="Kufe")
+    c = Vector((x, y, 0.0))
+    for sd in (-1, 1):
+        o = c + s * sd * 0.17
+        curve_tube([tuple(o - f * 0.38 + UP * 0.02), tuple(o + f * 0.3 + UP * 0.02), tuple(o + f * 0.42 + UP * 0.1),
+                    tuple(o + f * 0.36 + UP * 0.17)], 0.014, runner, hid, name="Kufe")
+        for k in (-0.25, 0.1):
+            capsule(o + f * k + UP * 0.02, o + f * k + UP * 0.15, 0.012, runner, hid, name="Strebe")
+    for k in range(5):
+        p = c + f * (-0.3 + k * 0.13) + UP * 0.16
+        rbox(-0.2, -0.04, -0.01, 0.2, 0.04, 0.01, wood, hid, r=0.008, rot=(0, 0, R(face + 90)), name="Latte").location = p
+    end = c + f * 0.9 + s * 0.1 + UP * 0.01
+    curve_tube([tuple(c + f * 0.38 + UP * 0.16), tuple(c + f * 0.65 + UP * 0.05), tuple(end)], 0.005, mat(LINEN, 0.8), hid,
+               name="Seil")
+    return end
+
+
+def snow_cap(x, y, z, r, hid=None):
+    """A little light snow on top of a hedge ball."""
+    ball(x, y, z + r * 0.8, r * 0.74, SNOW, hid, scale=(1, 1, 0.34), seg=14, name="Schnee")
+
+
 def build_aussen(v):
     W, D = 15.0, 12.0
-    room_base(W, D, floor_m=grass_m())
+    room_base(W, D, floor_m=winter_lawn())      # February: a dull lawn with light snow
     # path to the corner entrance
     box(10.4, 0.0, 0.0, 11.5, 5.75, 0.015, tiles("X", (0.86, 0.80, 0.70), (0.7, 0.65, 0.58), 0.4, axis_v="Y"), "weg", name="Weg")
     box(10.0, 5.75, 0.0, 12.45, 6.35, 0.015, tiles("X", (0.86, 0.80, 0.70), (0.7, 0.65, 0.58), 0.4, axis_v="Y"), "weg", name="Weg")
@@ -2815,21 +2884,22 @@ def build_aussen(v):
     # garden: sandbox, apple tree, raised beds, play tower, fence
     for (a0, b0, a1, b1) in ((1.5, 2.0, 4.0, 2.2), (1.5, 3.8, 4.0, 4.0), (1.5, 2.0, 1.7, 4.0), (3.8, 2.0, 4.0, 4.0)):
         panel(a0, b0, 0, a1, b1, 0.3, "sandkasten", name="Sandkasten")
+    # in winter the sandbox is closed with a lid of boards
     box(1.7, 2.2, 0, 3.8, 3.8, 0.22, mat((0.92, 0.82, 0.62), 0.95, noise=0.15, nscale=30), "sandkasten", name="Sand")
-    cyl(2.2, 3.3, 0.22, 0.42, 0.1, mat(BERRY, 0.4, coat=0.4), "sandkasten", name="Eimer")
-    kid(0, 2.4, 2.8, 30, "sit", hid="kinder", z=0.22, look=(3.0, 3.1, 0.3))
-    kid(6, 3.2, 3.35, -120, "sit", hid="kinder", z=0.22, look=(2.6, 2.9, 0.4), acc=("beanie",))
-    tree(6.6, 3.6, 3.1, 1.25, apples=True, hid="baum")
+    for k in range(9):
+        panel(1.52 + k * 0.275, 1.98, 0.3, 1.52 + k * 0.275 + 0.26, 4.02, 0.33, "sandkasten", name="Deckel")
+    for yy in (2.3, 3.7):
+        panel(1.5, yy - 0.04, 0.33, 4.0, yy + 0.04, 0.36, "sandkasten", name="Deckel")
+    bare_tree(6.6, 3.6, 3.1, 1.25, hid="baum", seed=3)
     A("baum", 6.6, 3.6, 3.4)
     for (a0, a1) in ((1.0, 3.0), (3.4, 5.4)):
         panel(a0, 5.0, 0, a1, 5.8, 0.5, "beete", name="Hochbeet")
         box(a0 + 0.05, 5.05, 0.4, a1 - 0.05, 5.75, 0.48, mat((0.32, 0.22, 0.15), 0.9), "beete", name="Erde")
-        for k in range(6):
-            px = a0 + 0.2 + k * (a1 - a0 - 0.4) / 5
-            ball(px, 5.4, 0.6, 0.13, random.choice([LEAF, LEAF2]), "beete", seg=12, scale=(1, 1, 0.8))
-            if k % 2:
-                ball(px + 0.06, 5.25, 0.62, 0.045, mat((0.86, 0.16, 0.1), 0.35, coat=0.4), "beete", seg=10)
-    ball(5.0, 5.4, 0.58, 0.16, mat((0.92, 0.52, 0.15), 0.5), "beete", scale=(1.1, 1.1, 0.8), seg=16, name="Kürbis")
+        # resting for the winter: bare soil under a little straw and a thin layer of snow
+        for k in range(7):
+            px = a0 + 0.2 + k * (a1 - a0 - 0.4) / 6
+            ball(px, 5.4 + (0.12 if k % 2 else -0.12), 0.48, 0.16, SNOW, "beete", scale=(1, 0.8, 0.12), seg=12, name="Schnee")
+            ball(px + 0.1, 5.4, 0.48, 0.09, mat((0.84, 0.72, 0.46), 0.9), "beete", scale=(1.4, 0.8, 0.15), seg=10, name="Stroh")
     A("beete", 3.2, 5.4, 0.7)
     A("hochbeete", 3.2, 5.4, 0.7)
     tx, ty = 13.0, 3.0
@@ -2837,11 +2907,12 @@ def build_aussen(v):
         box(px - 0.05, py - 0.05, 0, px + 0.05, py + 0.05, 2.4, OAK, "turm", name="Pfosten")
     panel(tx - 0.65, ty - 0.65, 1.2, tx + 0.65, ty + 0.65, 1.25, "turm", name="Podest")
     cone(tx, ty, 2.65, 1.0, 0.02, 0.6, mat(BERRY, 0.6), "turm", rot=(0, 0, R(45)), verts=4, name="Dach", smooth=False)
-    sl = box(-0.25, 0, -0.02, 0.25, 2.2, 0.02, STEEL, "turm", name="Rutsche")
-    sl.location = (tx, ty - 0.65 - 1.0, 0.62)
-    sl.rotation_euler = (R(-33), 0, 0)
-    sl.location = (tx, ty - 0.65 - 0.92, 0.6)
-    kid(3, tx, ty, -60, "wave", hid="kinder", z=1.25, look=(11, 2, 1))
+    kid(3, tx, ty, -60, "wave", hid="kinder", z=1.25, look=(11, 2, 1), acc=("beanie",))
+    # a child in a snowsuit pulls a wooden sled across the snowy lawn
+    se = sled(12.95, 1.35, 150, hid="kinder")
+    ks = kid(1, se.x - 0.25 * math.cos(R(150)), se.y - 0.25 * math.sin(R(150)), 150, "walk", hid="kinder", dress=False,
+             top=SKY, bottom=(0.30, 0.45, 0.62), acc=("beanie",), arms={"l": tuple(se + UP * 0.35)})
+    curve_tube([tuple(se), tuple(Vector(ks["hand_l"]))], 0.005, mat(LINEN, 0.8), "kinder", name="Seil")
     for x in [i * 0.16 for i in range(int(9.9 / 0.16))]:
         box(x, 0.06, 0, x + 0.07, 0.1, 0.75, mat((0.93, 0.9, 0.84), 0.6), "zaun", name="Latte")
     for x in [i * 0.16 + 11.7 for i in range(int(3.2 / 0.16))]:
@@ -2851,19 +2922,22 @@ def build_aussen(v):
     for (a0, a1) in ((0.0, 9.9), (11.7, 14.9)):
         box(a0, 0.03, 0.25, a1, 0.06, 0.32, mat((0.93, 0.9, 0.84), 0.6), "zaun")
         box(a0, 0.03, 0.55, a1, 0.06, 0.62, mat((0.93, 0.9, 0.84), 0.6), "zaun")
-    for k in range(9):
-        ball(0.25 + random.uniform(0, 0.3), 0.7 + k * 0.62, 0.45, random.uniform(0.35, 0.5), random.choice([LEAF, LEAF2]), "zaun",
-             seg=14)
+    for k in range(9):   # evergreen hedge with a little snow on top
+        hx, hy_, hr = 0.25 + random.uniform(0, 0.3), 0.7 + k * 0.62, random.uniform(0.35, 0.5)
+        ball(hx, hy_, 0.45, hr, random.choice([LEAF, LEAF2]), "zaun", seg=14)
+        snow_cap(hx, hy_, 0.45, hr, "zaun")
     for k, c in enumerate([BERRY, SKY, OCHRE]):
         balance_bike(12.75 + k * 0.42, 6.75 + k * 0.1, 80, c, "garten")
     # Papa and Mila on the way in, Maren waves at the door of the green entrance room
     meet = Vector((11.08, 3.5, 0.72))
-    who("jonas", 11.25, 3.35, 85, "walk", hid="jonas", arms={"l": meet}, look=(10.9, 6.3, 1.6))
-    who("mila", 10.85, 3.45, 85, "walk", hid="mila", arms={"r": meet}, look=(10.9, 6.3, 1.2), acc=("beanie",))
-    mr = who("sanne", 11.75, 5.95, -115, "wave", hid="maren", look=(11, 3.4, 1.0))
+    who("jonas", 11.25, 3.35, 85, "walk", hid="jonas", arms={"l": meet}, look=(10.9, 6.3, 1.6), top=(0.60, 0.49, 0.40),
+        acc=("scarf",))
+    who("mila", 10.85, 3.45, 85, "walk", hid="mila", arms={"r": meet}, look=(10.9, 6.3, 1.2), acc=("beanie",),
+        top=PIAZZA_KIDS[1]["jacket"], stripe=None)
+    mr = who("sanne", 11.75, 5.45, -115, "wave", hid="maren", shoes=SLIPPERS, look=(11, 3.4, 1.0))
     A("maren_head", *mr["head"])
     plant(9.4, 6.2, 0, 1.0, pot="terra", kind="bush")
-    tree(14.45, 10.9, 3.5, 0.95, hid="baum2")
+    bare_tree(14.45, 10.9, 3.5, 0.95, hid="baum2", seed=7)
     A("kita_window", 4.6, by0 - 0.05, 1.6)
     A("kita_roof", 5.3, 9.2, bh + 0.5)
     A("in", 11.0, 0.3, 0.0)
