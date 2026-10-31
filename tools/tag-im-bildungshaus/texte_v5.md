@@ -245,8 +245,8 @@ Startbild · Kachelreihe Hintergründe (klein) · 7:10 U-Bahn · 7:45 Piazza · 
 **Nahaufnahme: Der Garderobenschrank**
 1. [Bild `piazza_800_schrank`, geschlossen] Von außen nur ruhige Holzfronten. Keine Jacken, keine Matschhosen, kein Schuhberg, auch im Februar.
 2. [Bild `schrank_offen`, Puls Fach] Milas Tür geht auf, innen wird es hell. Ein hohes Fach für Jacke, Mütze und Schal, darunter ein belüftetes Trockenfach.
-3. [Puls Schublade, Chip: auffüllen] Unten die Schublade mit Wechselkleidung. Ein Symbol an der Tür zeigt den Eltern, wenn etwas fehlt.
-4. [Puls Schatzfach und `tafel`] Oben ein kleines Schatzfach für Zettel und Mitgebrachtes. Neben dem Schrank die Magnettafel der Gruppe: was war, was kommt.
+3. [Bild `schrank_offen`, Puls Schublade und Schatzfach, Chip: auffüllen] Unten die Schublade mit Wechselkleidung, ein Symbol an der Tür zeigt den Eltern, wenn etwas fehlt. Oben ein kleines Schatzfach für Zettel und Mitgebrachtes.
+4. [Bild `piazza_800_schrank`, Puls `tafel`] Neben dem Schrank die Magnettafel der Gruppe: was war, was kommt. Eltern sehen es beim Anziehen, ohne Bildschirm.
 5. **Woran wir merken würden, ob es wirkt:** Zeit fürs An- und Ausziehen, verlorene Sachen, wie oft Eltern an der Tafel ins Gespräch kommen.
 
 **Nahaufnahme: Der Hubel**
@@ -404,7 +404,7 @@ Startbild · Kachelreihe Hintergründe (klein) · 7:10 U-Bahn · 7:45 Piazza · 
 1. [Bild `kaufladen_umbau`, Puls `schrankwand`] Die Wand ist ganz aus Holz, vom Boden bis zur Decke. Unten Spiele und der Laden, frei für Kinder.
 2. [Bild `schrankwand_offen`, Puls `schloss`] Oben, außer Reichweite, ein Fach mit Zahlenschloss: Kochplatte, Messer, Reiniger. Den Code kennen nur Erwachsene.
 3. [Puls `verbinder`, Chip: klick] Die Tischplatten stehen nebeneinander in der Wand. Herausziehen, Beine ausklappen, verbinden. Die Verbinder rasten hörbar ein, die Insel steht fest.
-4. [Bild `kaufladen_kochen`, Handy-Mock rezept] Maren öffnet das Rezept der Kollegin aus dem Ideenschatz. Für zwei Kinder ohne Milch rechnet es eine Portion ohne Parmesan.
+4. [Bild `kaufladen_kochen`, Handy-Mock rezept] Maren öffnet das Rezept der Kollegin aus dem Ideenschatz. Für die zwei Kinder, die keine Milch vertragen, rechnet es zwei Portionen ohne Käse.
 5. **Woran wir merken würden, ob es wirkt:** Reste pro Mahlzeit, Zeit fürs Umräumen, wie viele Kinder mitrühren, Unfälle an der Insel.
 
 **Was steckt dahinter?**

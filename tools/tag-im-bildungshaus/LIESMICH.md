@@ -6,11 +6,17 @@ Alle Texte stammen aus `texte_v5.md`. Bildnamen und Ankerpunkte zwischen 3D und 
 
 ## Was wo steht
 
-- `texte_v4.md`: freigegebene Textebene (Abschnitte 0–12 sind die Seite, 13 Quellen, 14 Backlog,
-  15 Abgleich, 16 offene Fragen).
+- `texte_v5.md`: freigegebene Textebene der Kita-Seite (Abschnitt 3 die Stationen, 5 die Kacheln,
+  7 die 3D-Liste, 8 Abgleich mit Franks Punkten). `texte_v4.md` ist die Vorgängerversion.
+- `CONTRACT_v5.md`: Rendernamen, Ankerpunkte, Objektgestaltung und Plausibilitätsregeln.
+- `bildprompts_v5.md`: Prompts und Dateinamen der KI-Bilder.
 - `lib.py`: Blender-Bibliothek mit Multiplex-Material, Figuren, Möbeln, Licht, Kamera und
   `kiddo_cube()` für den Smart Kiddo Cube.
-- `rooms.py`: die Räume, die Fachwand, die Kameras der Nahaufnahmen.
+- `rooms.py`: die Räume (v5: Piazza mit Hubel und Garderobenschrank, grüner Vorraum, Kaufladen mit
+  Schrankwand und Kochinsel, Startbild, Waschraum), die Kameras der Nahaufnahmen. `--blend-only`
+  speichert eine .blend-Datei, ohne zu rendern.
+- `render_v5.sh`: rendert alle v5-Räume, Nahaufnahmen und Hover-Masken der Kita-Seite. Setzt nach
+  einem Abbruch fort und schreibt am Ende `$OUT/V5_DONE` (etwa 75 Minuten auf 2 Kernen).
 - `render_v3.sh`: rendert alle Räume, Nahaufnahmen und Hover-Masken. Läuft im Hintergrund weiter,
   setzt nach Abbruch fort und schreibt am Ende `renders/V3_DONE` (CPU, etwa 2 bis 3 Stunden auf
   2 Kernen). `contact_v3.py` macht ein Kontaktblatt aller Renderings.
@@ -27,8 +33,17 @@ Alle Texte stammen aus `texte_v5.md`. Bildnamen und Ankerpunkte zwischen 3D und 
 ```
 pip install bpy pillow
 export PYTHONHASHSEED=0
-setsid nohup ./render_v3.sh > renders/v3_batch.log 2>&1 &   # fertig, wenn renders/V3_DONE existiert
+OUT=renders setsid nohup ./render_v5.sh > renders/v5_batch.log 2>&1 &   # fertig, wenn renders/V5_DONE existiert
 python3 build.py renders
+```
+
+Die v3-Renderings (`render_v3.sh`, schreibt `renders/V3_DONE`) braucht nur noch, wer die Ersatzbilder
+aus `FALLBACK` nutzen will, solange ein v5-Rendering fehlt.
+
+Eine .blend-Datei pro Raum zum Öffnen in Blender:
+
+```
+python3 rooms.py --scene piazza --variant 800 --blend-only --out blend
 ```
 
 Einen Raum oder eine Nahaufnahme einzeln neu rendern:

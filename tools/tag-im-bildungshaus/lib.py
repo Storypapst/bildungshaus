@@ -1439,8 +1439,9 @@ def finish(args, name, opaque=False, exposure=-0.3):
             "anchors": {k: proj(v) for k, v in ANCH.items()},
             "paths": {k: [proj(p) for p in pts] for k, pts in PATHS.items()},
             "colors": id_colors}
-    with open(os.path.join(args.out, f"{name}.json"), "w") as f:
-        json.dump(meta, f, indent=1)
+    if not getattr(args, "blend_only", False):  # a .blend-only run renders no PNG, so it must not replace the anchors
+        with open(os.path.join(args.out, f"{name}.json"), "w") as f:
+            json.dump(meta, f, indent=1)
     if os.environ.get("BH_ANCHORS_ONLY"):
         print("ANCHORS", name)
         return

@@ -299,7 +299,7 @@ function startAuto(st){
     setStage(st, st.cur + 1);
   }, 2600);
 }
-function stopAuto(st){ if (!st) return; clearInterval(st.autoT); st.autoT = null; st.autoDone = true; if (st.switchEl) st.switchEl.classList.remove('auto'); }
+function stopAuto(st){ if (!st) return; clearInterval(st.autoT); st.autoT = null; clearTimeout(st.autoWait); st.autoWait = 0; st.autoDone = true; if (st.switchEl) st.switchEl.classList.remove('auto'); }
 
 /* ================================================================ swipe variants with a picture slot */
 const VARS = [];
@@ -1077,9 +1077,11 @@ const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting
 ST.forEach(st => io.observe(st.sec));
 // stations with several pictures run through them once when they come into view (not with reduced motion)
 const stageIO = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting || e.intersectionRatio < .5) return;
-  const st = ST.find(x => x.box === e.target); stageIO.unobserve(e.target); if (st) setTimeout(() => startAuto(st), 900);
-}), {threshold:[.5]});
+  const st = ST.find(x => x.box === e.target); if (!st) return;
+  if (!e.isIntersecting || e.intersectionRatio < .5){ clearTimeout(st.autoWait); st.autoWait = 0; if (st.autoT) stopAuto(st); return; }
+  if (st.autoDone || st.autoWait) return;
+  st.autoWait = setTimeout(() => { st.autoWait = 0; stageIO.unobserve(e.target); startAuto(st); }, 900);
+}), {threshold:[0, .5]});
 if (!reduce) ST.forEach(st => { if (st.box && st.stages.length > 1) stageIO.observe(st.box); });
 if ('ResizeObserver' in window){ const ro = new ResizeObserver(() => requestLayout()); ro.observe(flow); }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { requestLayout(); updateNextUI(); });

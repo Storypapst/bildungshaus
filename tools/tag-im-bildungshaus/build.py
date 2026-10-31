@@ -50,10 +50,8 @@ FALLBACK = {
     "piazza_745z_fenster": ["halle_745z_fenster", "halle_745z_oberlicht"],
     "piazza_745_fenster": ["halle_745_fenster", "halle_745_oberlicht"],
     "piazza_800": ["halle_800"],
-    "piazza_800_hubel": ["halle_800_obelisk"],
     "piazza_800_schrank": ["fachwand"],
     "schrank_offen": ["fachwand"],
-    "piazza_1615": ["abholung"],
     # vorraum_*, kaufladen_umbau, kaufladen_kochen, schrankwand_offen: placeholder until rendered
 }
 # Placeholder size while nothing is rendered: rooms like the alpha-cropped v3 rooms, close-ups 1400 x 1008.
@@ -198,9 +196,9 @@ def build_ki(report):
         for f in sorted(src.iterdir(), key=lambda p: (p.stem, [".png", ".jpg", ".jpeg", ".webp"].index(p.suffix.lower()) if p.suffix.lower() in KI_EXT else 9)):
             if not f.is_file() or f.suffix.lower() not in KI_EXT or f.stem in names:
                 continue
-            names.add(f.stem)
             target = out_dir / f"{f.stem}.webp"
             if fresh(target, f):
+                names.add(f.stem)
                 continue
             try:
                 im = Image.open(f)
@@ -211,13 +209,17 @@ def build_ki(report):
                 if im.width > maxw:
                     im = im.resize((maxw, round(im.height * maxw / im.width)), Image.LANCZOS)
                 im.save(target, "WEBP", quality=82, method=6)
+                names.add(f.stem)
             except Exception as e:
                 print(f"  ki {f.name}: {e}")
-        # drop WebPs whose source is gone
+        report.append(f"ki: {len(names)} image(s) from {src}")
+    else:
+        names = set()
+    # drop WebPs whose source is gone (also when there is no KI folder at all)
+    if out_dir.is_dir():
         for f in out_dir.glob("*.webp"):
             if f.stem not in names:
                 f.unlink()
-        report.append(f"ki: {len(names)} image(s) from {src}")
     ki = {}
     if out_dir.is_dir():
         for f in sorted(out_dir.glob("*.webp")):
