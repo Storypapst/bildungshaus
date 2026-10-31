@@ -2500,9 +2500,10 @@ def build_abholung(v):
     # Papa Jonas reads the day in the parent app; bulgy bright-blue covers over his shoes
     jp = Vector((1.5, 3.2, 0.0))
     fj = fvec(300)
-    pj = jonas_standing(jp.x, jp.y, 300, "hold", acc=("phone",), look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
+    # he lowers his eyes to the phone, the head only a little bent (so the chin stays above the collar)
+    pj = jonas_standing(jp.x, jp.y, 300, "hold", acc=("phone",), look=(jp.x + fj.x * 0.6, jp.y + fj.y * 0.6, 1.44))
     # Lotte (14) comes over from the school next door through the entrance room: school backpack, headphones round her
-    # neck, her jacket over the arm; she looks at Mila ("Zeig mal!")
+    # neck, her jacket over the arm ("Zeig mal!")
     lf = 28
     f = fvec(lf)
     rs = f.cross(UP).normalized()
@@ -2512,7 +2513,8 @@ def build_abholung(v):
     cl = dict(CAST["lotte"])
     cl.pop("acc", None)  # the lib's backpack is an axis-aligned cube; she gets a shaped school backpack below
     cl.update(kind="teen14", shoes=SOCKS[3])
-    pl = person(lp.x, lp.y, lf, pose="stand", hid="lotte", key="lotte", look=tuple(Vector(pm["head"])),
+    # as she comes in she turns her face to Mila and Papa (towards the viewer, so her face shows)
+    pl = person(lp.x, lp.y, lf, pose="stand", hid="lotte", key="lotte", look=(1.55, 2.15, 1.1),
                 arms={"r": tuple(hr), "l": tuple(hl)}, **cl)
     hip = dl["leg"] + 0.05
     sh_z = hip + dl["torso"] - dl["r"] * 0.55
@@ -2537,27 +2539,39 @@ def build_abholung(v):
     for sd in (-1, 1):
         ball(*(lp + rs * sd * 0.075 + f * 0.06 + UP * (nz - 0.01)), 0.03, hp, "lotte", scale=(1, 1, 0.6), seg=14,
              name="Kopfhörer")
-    # her winter jacket, folded over the right forearm: the body hangs down on both sides of the arm, one sleeve and
-    # the hood dangle, a zip shows along the front edge
+    # her quilted winter jacket, folded over the right forearm (the side towards the viewer): both halves hang down from
+    # the arm, quilting seams across, one sleeve with a ribbed cuff dangles at the front, the hood with a cream fleece
+    # rim hangs at the elbow end
     sh = lp + rs * dl["r"] * 0.88 + UP * sh_z
     hand = Vector(pl["hand_r"])
     arm = hand - sh
-    mid = sh + arm * 0.7
+    mid = sh + arm * 0.68
     ah = Vector((arm.x, arm.y, 0.0)).normalized()
     side = ah.cross(UP).normalized()
+    if side.dot(rs) < 0:
+        side = -side
     yaw = math.atan2(ah.y, ah.x)
     jc = (0.26, 0.42, 0.58)
-    jm, zm = fabric(jc), mat((0.80, 0.80, 0.82), 0.3, metal=0.6)
+    jm, seam = fabric(jc), fabric(tuple(v * 0.7 for v in jc))
+    rib, fleece = fabric((0.18, 0.28, 0.40)), fabric(CREAM, 0.8, 0.95, 0.15)
+    top = mid + UP * 0.035
+    hh = 0.24
     for sd in (-1, 1):
-        o = rbox(-0.11, -0.016, -0.24, 0.11, 0.016, 0.0, jm, "lotte", r=0.014, name="Jacke")
-        o.location = mid + side * sd * 0.03 + UP * 0.03
-        o.rotation_euler = (R(-sd * 6), 0, yaw)
-    o = torus(*(mid + UP * 0.03), 0.03, 0.016, jm, "lotte", rot=(R(90), 0, yaw), seg=20, half=True, name="Jacke")
-    capsule(mid + ah * 0.09 + side * 0.04 + UP * -0.04, mid + ah * 0.12 + side * 0.05 + UP * -0.3, 0.03, jm, "lotte",
-            name="Ärmel")
-    ball(*(mid - ah * 0.1 - side * 0.045 + UP * -0.05), 0.06, jm, "lotte", scale=(1, 0.7, 1.1), seg=16, name="Kapuze")
-    rbox(-0.003, -0.003, -0.22, 0.003, 0.003, 0.0, zm, "lotte", rot=(0, 0, yaw), name="Reißverschluss").location = \
-        mid + side * 0.047 + ah * 0.1 + UP * 0.02
+        o = rbox(-0.1, -0.02, -hh / 2, 0.1, 0.02, hh / 2, jm, "lotte", r=0.018, name="Jacke")
+        o.location = top + side * sd * 0.032 + UP * (-hh / 2)
+        o.rotation_euler = (R(sd * 5), 0, yaw)
+    torus(*top, 0.032, 0.022, jm, "lotte", rot=(R(90), 0, yaw), seg=20, half=True, name="Jacke")
+    for k in range(1, 4):  # quilting seams on the outer half
+        zq = top.z - hh * k / 4
+        a0 = Vector((top.x, top.y, zq)) + side * 0.054 - ah * 0.095
+        capsule(a0, a0 + ah * 0.19, 0.005, seam, "lotte", name="Steppnaht")
+    s0 = top + ah * 0.085 + side * 0.06 + UP * -0.03
+    s1 = s0 + ah * 0.03 + UP * -0.27
+    capsule(s0, s1, 0.033, jm, "lotte", name="Ärmel")
+    cyl(s1.x, s1.y, s1.z - 0.035, s1.z + 0.005, 0.03, rib, "lotte", verts=20, name="Bündchen")
+    hc_ = top - ah * 0.1 + side * 0.065 + UP * -0.075
+    ball(*hc_, 0.07, jm, "lotte", scale=(0.9, 0.75, 1.05), seg=18, name="Kapuze")
+    torus(*(hc_ + side * 0.045), 0.05, 0.014, fleece, "lotte", rot=(0, R(90), yaw + math.pi / 2), seg=24, name="Kapuzenrand")
     # Ayla, Defne's mother, posts a card into the wooden wish box, seen half from the side; Defne in her birthday crown
     # and berry dress stands beside her and looks up at the box
     wb = Vector(P_["wb"]["slot"])
@@ -2575,6 +2589,8 @@ def build_abholung(v):
     # Maren plays with one of the last children in the play corner
     maren(4.85, 0.95, 140, "kneel", look=(4.65, 0.75, 0.3))
     kid(5, 4.95, 0.52, 100, "sit", hid="kinder", look=(4.65, 0.72, 0.4), shoes=SOCKS[4])
+    # the board's tap point sits on the 'Soße gekocht' tile, above Ayla's head (the board centre is behind it)
+    A("tafel", *P_["taf"]["sosse"])
     shots = {"faecher": dict(loc=(2.6, 2.0, 1.44), target=(0.3, 2.5, 1.03), lens=44, fstop=6.3),
              "wunsch": dict(loc=(0.82, 2.95, 2.0), target=(0.22, 3.92, 1.25), lens=26, fstop=4.0)}  # over the cabinets
     return dict(W=W, D=D, time="nachmittag", pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1))
@@ -4339,8 +4355,9 @@ def thin_glasses(head, look, face, hid, kind="adult", col=(0.42, 0.30, 0.22)):
 
 
 def jonas_standing(x, y, face, pose="hold", look=None, arms=None, acc=(), hid="jonas"):
-    """Papa Jonas at the pickup, dressed as in the morning: open taupe coat over the blue sweater, collar folded down,
-    thin glasses, bulgy blue covers over his shoes. Returns the points of person()."""
+    """Papa Jonas at the pickup, dressed as in the morning (vorraum_800): open taupe coat over the blue sweater, collar
+    folded down onto the shoulders, no glasses, bulgy blue covers over his shoes. Returns the points of person().
+    (lib boxes are centred on their location, so every piece below is placed by its centre.)"""
     c = dict(CAST["jonas"])
     c.pop("acc", None)
     c.update(top=JONAS_COAT, bottom=(0.32, 0.35, 0.44), shoes=COVERS)
@@ -4354,19 +4371,28 @@ def jonas_standing(x, y, face, pose="hold", look=None, arms=None, acc=(), hid="j
     rot = (0, 0, R(face - 90))
     sw, cm = fabric(JONAS_SWEATER), fabric(JONAS_COAT)
     edge = fabric(tuple(v * 0.8 for v in JONAS_COAT))
-    # the sweater shows between the open fronts, from the belt up to the neck
-    rbox(-0.045, -0.01, 0.0, 0.045, 0.01, neck_z - hip_z - 0.02, sw, hid, r=0.008, rot=rot,
-         name="Pullover").location = base + f * d["r"] * 0.79 + UP * (hip_z - 0.04)
-    # coat skirt down to the knees, open at the front, with darker front edges
-    cone(x, y, hip_z - 0.14, d["r"] * 1.22, d["r"] * 0.98, 0.38, cm, hid, verts=32, name="Mantel")
+    hem = hip_z - 0.33                      # coat hem, a little above the knees
+    # the blue sweater shows between the open fronts, from the belt up to a round neckline under the chin
+    z0, z1 = hip_z - 0.06, neck_z + 0.02
+    rbox(-0.05, -0.012, -(z1 - z0) / 2, 0.05, 0.012, (z1 - z0) / 2, sw, hid, r=0.01, rot=rot,
+         name="Pullover").location = base + f * d["r"] * 0.8 + UP * (z0 + z1) / 2
+    ball(*(base + f * d["r"] * 0.5 + UP * (neck_z - 0.03)), d["r"] * 0.55, sw, hid, scale=(1.0, 1.0, 0.3), seg=20,
+         name="Pullover")
+    # coat skirt from the hip down to the hem, open at the front
+    cone(x, y, (hip_z + 0.05 + hem) / 2, d["r"] * 1.22, d["r"] * 0.98, hip_z + 0.05 - hem, cm, hid, verts=32,
+         name="Mantel")
+    # darker front edges, from the hem up to the folded collar
     for sd in (-1, 1):
-        z0_ = hip_z - 0.33
-        rbox(-0.012, -0.012, 0.0, 0.012, 0.012, neck_z - z0_ - 0.03, edge, hid, r=0.006, rot=rot,
-             name="Mantelkante").location = base + f * (d["r"] * 0.9) + sd_ * sd * 0.06 + UP * z0_
-    # collar folded down flat on the shoulders
-    o = torus(x, y, neck_z - 0.025, d["r"] * 0.7, 0.016, cm, hid, seg=28, name="Kragen")
-    o.scale = (1, 1, 0.6)
-    thin_glasses(pts["head"], look, face, hid)
+        ze = neck_z - 0.04
+        rbox(-0.012, -0.012, -(ze - hem) / 2, 0.012, 0.012, (ze - hem) / 2, edge, hid, r=0.006, rot=rot,
+             name="Mantelkante").location = base + f * (d["r"] * 0.9) + sd_ * sd * 0.065 + UP * (hem + ze) / 2
+    # collar folded down flat onto the shoulders: a low ring round the neck and two lapels lying on the chest
+    o = torus(x, y, neck_z - 0.045, d["r"] * 0.82, 0.014, cm, hid, seg=28, name="Kragen")
+    o.scale = (1, 1, 0.55)
+    for sd in (-1, 1):
+        lp_ = base + f * (d["r"] * 0.88) + sd_ * sd * 0.05 + UP * (neck_z - 0.09)
+        rbox(-0.022, -0.007, -0.045, 0.022, 0.007, 0.045, edge, hid, r=0.005,
+             rot=(0, R(sd * 24), R(face - 90)), name="Revers").location = lp_
     ueberschuhe(x, y, face, hid)
     return pts
 
@@ -4624,7 +4650,7 @@ def piazza_room(v):
     # (the board ends 25 cm before the corner, so that Maren can lean against its edge at 16:15)
     wb = wunschkasten(F, 3.675, 1.30)
     taf = magnettafel(F, 3.835, 4.545, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
-                      week=PIAZZA_WEEK[key], sosse=late, lamp=4.0 if key == "1615" else 0.0)
+                      week=PIAZZA_WEEK[key], sosse=late, lamp=1.6 if key == "1615" else 0.0)
     A("schrank_mila", *cab[1]["door"])
     A("mila_fach", *cab[1]["door"])
     A("planwuerfel", *cab[1]["plan"])
