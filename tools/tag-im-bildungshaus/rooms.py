@@ -2218,6 +2218,7 @@ def build_waschraum(v):
             curve_tube([(sx, D - 0.03, 0.62), (sx, D - 0.05, 0.79), (sx, D - 0.3, 0.8), (sx, D - 0.4, 0.75)], 0.014, STEEL,
                        "becken", name="Hahn")
         A(f"sink{i}", sx, sy, 0.6 + dz)
+        A(f"ring{i}", sx + math.cos(R(-40)) * 0.185, sy + math.sin(R(-40)) * 0.185 * 0.85, 0.585 + dz)  # front right of the ring
         P(f"ring{i}", [(sx + math.cos(t * math.pi / 18) * 0.185, sy + math.sin(t * math.pi / 18) * 0.185 * 0.85, 0.585 + dz)
                        for t in range(37)])
     A("sink_low", 2.63, D - 0.3, 0.5)
@@ -2292,17 +2293,36 @@ def build_waschraum(v):
                 curve_tube([tuple(spout), tuple(hit)], 0.0085, wm, "mila" if k == 1 else "kinder", name="Wasser")
             curve_tube([tuple(Vector((sx, D - 0.4, hm.z - 0.04))), (sx, D - 0.39, 0.52)], 0.005, wm,
                        "mila" if k == 1 else "kinder", name="Wasser")
-            for j in range(7):
-                a = j * 2.4
-                ball(hm.x + math.cos(a) * 0.04, hm.y + math.sin(a) * 0.02, hm.z + 0.015 + (j % 3) * 0.012, 0.014 + (j % 2) * 0.006,
-                     foam, "mila" if k == 1 else "kinder", seg=10, name="Schaum")
+            if SHOT == "becken":
+                # close-up: a bubbly lather of many small bubbles on both hands (the room view keeps its simple foam)
+                rnd = random.Random(40 + k)
+                bub = mat((0.99, 0.99, 0.98), 0.3, coat=0.7, name="Schaumblase")
+                rh = DIMS["kid"]["ar"] * 1.3
+                for hp in (Vector(pk["hand_r"]), Vector(pk["hand_l"])):
+                    for j in range(26):
+                        th = rnd.uniform(0, 2 * math.pi)
+                        el = rnd.uniform(-0.15, 1.3)
+                        dv = Vector((math.cos(th) * math.cos(el), math.sin(th) * math.cos(el), math.sin(el)))
+                        r = rnd.uniform(0.005, 0.012)
+                        ball(*(hp + dv * (rh + r * 0.25)), r, bub, "mila" if k == 1 else "kinder", seg=10, name="Schaum")
+                for j in range(8):   # a few bubbles in the gap between the hands
+                    r = rnd.uniform(0.005, 0.01)
+                    ball(hm.x + rnd.uniform(-0.012, 0.012), hm.y + rnd.uniform(-0.03, 0.03), hm.z + rnd.uniform(-0.01, 0.04), r, bub,
+                         "mila" if k == 1 else "kinder", seg=10, name="Schaum")
+            else:
+                for j in range(7):
+                    a = j * 2.4
+                    ball(hm.x + math.cos(a) * 0.04, hm.y + math.sin(a) * 0.02, hm.z + 0.015 + (j % 3) * 0.012,
+                         0.014 + (j % 2) * 0.006, foam, "mila" if k == 1 else "kinder", seg=10, name="Schaum")
     kid(5, 0.55, 2.35, 175, "reach", hid="kinder", arms={"r": (0.12, 2.37, 0.85), "l": (0.14, 2.3, 0.78)})
     mr = who("sanne", 2.25, 2.2, 110, "kneel", hid="sanne", shoes=SLIPPERS, look=(1.33, D - 0.6, 0.8))
     A("maren_head", *mr["head"])
     A("in", 0.25, 0.8, 0.0)
     A("out", W - 0.1, 0.25, 0.0)
     pts = box_corners(-0.2, 0, -SLAB, W, D + 0.2, H + 0.05)
-    shots = {"becken": dict(loc=(1.95, D - 1.05, 1.32), target=(1.3, D - 0.33, 0.6), lens=34, fstop=3.5)}
+    # camera a little left and higher than before: Mila's hands stay clear of her head, and the child at the next basin
+    # (whose head used to fill the bottom-right corner) is out of frame
+    shots = {"becken": dict(loc=(1.78, D - 1.0, 1.48), target=(1.25, D - 0.32, 0.6), lens=34, fstop=3.5)}
     return dict(W=W, D=D, time="mittag", pts=pts, shots=shots, target=(W / 2, D / 2, 1))
 
 
