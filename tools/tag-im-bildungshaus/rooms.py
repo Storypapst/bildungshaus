@@ -621,21 +621,22 @@ def fachwand(F, a0, kids, w=0.42, hid="faecher", depth=0.36, plan_z=None):
     return res
 
 
-def co2box(x, y, z, face=-90, led="green", hid="co2", s=1.0, key="co2", lit=12.0):
-    """Hand-painted wooden box with three LEDs (green, yellow, red); only one is lit."""
+def co2box(x, y, z, face=-90, led="green", hid="co2", s=1.0, key="co2", lit=12.0, plain=False):
+    """Hand-painted wooden box with three LEDs (green, yellow, red); only one is lit.
+    plain (v5): no painted dots, and the yellow LED is a saturated amber."""
     f = fvec(face)
     side = f.cross(UP)
     body = rbox(-0.09 * s, -0.055 * s, 0, 0.09 * s, 0.055 * s, 0.12 * s, mat((0.36, 0.60, 0.70), 0.55, coat=0.2), hid,
                 r=0.012 * s, rot=(0, 0, R(face - 90)), name="Kästchen")
     body.location = (x, y, z + 0.06 * s)  # the mesh is centred: its bottom sits at z, the LEDs on the front face
     front = Vector((x, y, z)) + f * 0.057 * s
-    colors = {"green": (0.3, 1.0, 0.45), "yellow": (1.0, 0.8, 0.2), "red": (1.0, 0.25, 0.2)}
+    colors = {"green": (0.3, 1.0, 0.45), "yellow": (1.0, 0.42, 0.01) if plain else (1.0, 0.8, 0.2), "red": (1.0, 0.25, 0.2)}
     for k, (nm, c) in enumerate(colors.items()):
         on = nm == led
         # only the lit LED glows; the other two are dark, tinted glass
         m = mat(c, 0.3, emission=c, strength=lit) if on else mat(tuple(0.12 + v * 0.16 for v in c), 0.25, coat=0.6)
         ball(*(front + side * (k - 1) * 0.045 * s + UP * 0.08 * s), 0.014 * s, m, hid, seg=12, name="LED")
-    for k in range(5):
+    for k in range(0 if plain else 5):
         ball(*(front + side * (-0.06 + k * 0.03) * s + UP * 0.03 * s), 0.008 * s,
              mat([(0.98, 0.88, 0.45), (0.95, 0.6, 0.6), CREAM][k % 3], 0.5), hid, seg=8, name="Punkt")
     A(key, x, y, z + 0.13 * s)
@@ -4243,12 +4244,12 @@ def ueberschuhe(x, y, face, hid, kind="adult"):
     rim = mat((0.62, 0.80, 1.0), 0.35, coat=0.4, name="Überschuh Gummi")
     for sd in (-1, 1):
         c = Vector((x, y, 0.0)) + sd_ * sd * d["lr"] * 1.15 + f * 0.035
-        ball(*(c + UP * 0.055), d["foot"] * 1.12, cm, hid, scale=(1.3, 2.05, 1.05), rot=(0, 0, R(face - 90)), seg=20,
+        ball(*(c + UP * 0.045), d["foot"] * 0.9, cm, hid, scale=(1.3, 2.05, 1.05), rot=(0, 0, R(face - 90)), seg=20,
              name="Überschuh")
         for k in (-1, 0, 1):  # a few crinkles on top
-            ball(*(c + f * (0.045 * k) + UP * 0.105 + sd_ * sd * 0.01 * k), 0.022, cm, hid, scale=(1.3, 0.8, 0.45),
+            ball(*(c + f * (0.036 * k) + UP * 0.085 + sd_ * sd * 0.008 * k), 0.018, cm, hid, scale=(1.3, 0.8, 0.45),
                  rot=(0, 0, R(face + 20 * k)), seg=10, name="Überschuh")
-        torus(*(c - f * 0.03 + UP * 0.12), d["lr"] * 1.05, 0.009, rim, hid, seg=20, name="Überschuh Gummi")
+        torus(*(c - f * 0.024 + UP * 0.098), d["lr"] * 1.0, 0.008, rim, hid, seg=20, name="Überschuh Gummi")
 
 
 def schluessel(p, face, hid="maren", k=1.6):
@@ -4330,26 +4331,36 @@ def piazza_tuer(open_deg=0.0, hid="tuer", key_in_lock=False):
         capsule(ke + Vector((0, sd * 0.065, 1.0)), ke + Vector((-0.12, sd * 0.065, 1.0)), 0.011, STEEL, hid, name="Klinke")
         rbox(ke.x - 0.022, sd * 0.02 - 0.003, 0.88, ke.x + 0.022, sd * 0.02 + 0.003, 1.05, STEEL, hid, r=0.006,
              name="Beschlag")
-        box(ke.x - 0.004, sd * 0.024 - 0.001, 0.905, ke.x + 0.004, sd * 0.024 + 0.001, 0.93, DARK, hid, name="Schlüsselloch")
-    lock = ke + Vector((0, -0.024, 0.918))
+        # round lock cylinder under the lever, a little proud of the plate
+        cyl(0, 0, 0.0, 0.01, 0.017, mat((0.86, 0.87, 0.88), 0.2, metal=0.9, name="Zylinder"), hid, verts=28,
+            rot=(R(-90 * sd), 0, 0), name="Schließzylinder").location = ke + Vector((0, sd * 0.023, 0.91))
+        box(ke.x - 0.0015, sd * 0.033 - 0.001, 0.902, ke.x + 0.0015, sd * 0.033 + 0.001, 0.918, DARK, hid,
+            name="Schlüsselloch")
+    lock = ke + Vector((0, -0.033, 0.91))
+    key_pts = {}
     if key_in_lock:
-        brass = mat((0.86, 0.68, 0.30), 0.3, metal=0.8, name="Messing")
-        steel_k = mat((0.72, 0.73, 0.75), 0.25, metal=0.85, name="Schlüssel Stahl")
-        capsule(lock, lock + Vector((0, -0.035, 0)), 0.004, brass, hid, name="Schlüssel")
-        bow = torus(*(lock + Vector((0, -0.05, 0))), 0.016, 0.005, brass, hid, rot=(0, R(90), 0), seg=20, name="Schlüssel")
-        ring_c = lock + Vector((0, -0.058, -0.035))
-        torus(*ring_c, 0.022, 0.003, steel_k, hid, rot=(0, R(90), R(20)), seg=24, name="Schlüsselring")
-        for k, (dx, col) in enumerate(((-0.012, steel_k), (0.012, brass))):
-            capsule(ring_c + Vector((dx, -0.004, -0.02)), ring_c + Vector((dx * 1.6, -0.006, -0.07)), 0.004, col, hid,
-                    name="Schlüssel")
-            ball(*(ring_c + Vector((dx, -0.004, -0.024))), 0.011, col, hid, scale=(1, 0.35, 1), seg=12, name="Schlüssel")
-        rbox(-0.02, -0.006, -0.05, 0.02, 0.006, 0.0, mat(BERRY, 0.45, coat=0.3), hid, r=0.006,
-             name="Anhänger").location = ring_c + Vector((0, -0.01, -0.022))
+        # a silver key in the cylinder: blade, shoulder and a big flat bow; a steel ring with a small wooden tag below
+        silver = mat((0.88, 0.89, 0.91), 0.18, metal=0.95, name="Schlüssel Silber")
+        capsule(lock, lock + Vector((0, -0.034, 0)), 0.006, silver, hid, name="Schlüssel")
+        rbox(-0.009, -0.004, -0.006, 0.009, 0.004, 0.006, silver, hid, r=0.002, name="Schlüssel").location = \
+            lock + Vector((0, -0.032, 0))
+        bc = lock + Vector((0, -0.062, 0))
+        bow = cyl(0, 0, -0.005, 0.005, 0.031, silver, hid, verts=32, rot=(R(90), 0, 0), name="Schlüsselreide")
+        bow.location = bc
+        cyl(0, 0, -0.0045, 0.0045, 0.007, DARK, hid, verts=16, rot=(R(90), 0, 0), name="Schlüsselloch").location = \
+            bc + Vector((0, 0, 0.012))
+        ring_c = bc + Vector((0, 0, -0.035))
+        torus(*ring_c, 0.016, 0.0025, silver, hid, rot=(0, R(90), 0), seg=24, name="Schlüsselring")
+        rbox(-0.014, -0.004, -0.036, 0.014, 0.004, 0.0, mat(BERRY, 0.45, coat=0.3), hid, r=0.004,
+             name="Anhänger").location = ring_c + Vector((0, -0.004, -0.014))
+        key_pts = {"key": bc, "grip": bc + Vector((-0.045, -0.012, 0.01))}
     a = R(open_deg - 90)
     rz = Matrix.Rotation(a, 4, "Z")
     place_group(objects[mark:], (hx, hy, 0.0), rz)
     M = Matrix.Translation(Vector((hx, hy, 0.0))) @ rz
-    return {"lock": tuple(M @ (lock + Vector((0, -0.05, 0)))), "edge": tuple(M @ Vector((w, 0, 1.0)))}
+    out = {"lock": tuple(M @ (lock + Vector((0, -0.05, 0)))), "edge": tuple(M @ Vector((w, 0, 1.0)))}
+    out.update({k: tuple(M @ v) for k, v in key_pts.items()})
+    return out
 
 
 def west_fenster(o0, o1, z0, z1, angle, wg, hid="fenster"):
@@ -4422,7 +4433,7 @@ HUBEL_FILL = {"800": dict(laden=["bär", "ente", ("hase", (0.80, 0.84, 0.90)), (
 def piazza_room(v):
     """The shared Piazza (28 m², 5.8 x 4.8 m) for build_piazza and build_abholung.
 
-    North wall: two tall casements with chain drives, the CO2 box on the wall between them (never on a sill). West wall,
+    North wall: two tall casements with chain drives, the CO2 box on the wall beside them (never on a sill). West wall,
     front: one more tall casement, so the room airs across from both sides; then the door to the green entrance room
     (it opens into the Piazza), the Garderobenschrank (one cabinet per child, Planwürfel on top), wish box, magnet
     board. Windowsills stay empty. Hubel on a round rug in the middle, hideout in the north-east corner (clear of the
@@ -4448,10 +4459,11 @@ def piazza_room(v):
         casement(D, a, b, z0w, z1w, 80 if open_ else 0, key="fenster_r" if i == 1 else None,
                  drive_key="antrieb" if i == 1 else None)
         wintry(objects[mark:], wg)
-        panel(a - 0.06, D - 0.07, z0w - 0.035, b + 0.06, D + 0.02, z0w, "fenster", name="Fensterbank")
-    A("fenster_l", sum(wins[0]) / 2, D - 0.035, z0w + 0.01)
+        # a deep, empty windowsill (on purpose: a window that opens by itself would knock things off)
+        panel(a - 0.06, D - 0.24, z0w - 0.04, b + 0.06, D + 0.02, z0w, "fenster", name="Fensterbank")
+    A("fenster_l", sum(wins[0]) / 2, D - 0.12, z0w + 0.01)
     sash_w, _ = west_fenster(wo0, wo1, z0w, z1w, 80 if open_ else 0, wg)
-    panel(-0.02, wo0 - 0.06, z0w - 0.035, 0.07, wo1 + 0.06, z0w, "fenster", name="Fensterbank")
+    panel(-0.02, wo0 - 0.06, z0w - 0.04, 0.24, wo1 + 0.06, z0w, "fenster", name="Fensterbank")
     A("fenster_w", *sash_w)
     A("fenster_s", *sash_w)
     wainscot("x", D, 0.0, W, h=1.0, skip=wins)
@@ -4472,8 +4484,9 @@ def piazza_room(v):
     kids_cfg = [dict(k, plan=plan[i], cube=cubes[i]) for i, k in enumerate(PIAZZA_KIDS)]
     cab = garderobe(F, 2.0, kids_cfg, w=0.304, open_k=1 if SHOT == "offen" else None)
     # the wish box hangs at adult height (it is for the parents), high enough to show above the end of the cabinets
-    wb = wunschkasten(F, 3.80, 1.30)
-    taf = magnettafel(F, 3.97, 4.79, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
+    # (the board ends 15 cm before the corner, so that Maren can lean beside it at 16:15)
+    wb = wunschkasten(F, 3.675, 1.30)
+    taf = magnettafel(F, 3.835, 4.655, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
                       week=PIAZZA_WEEK[key], sosse=late, lamp=4.0 if key == "1615" else 0.0)
     A("schrank_mila", *cab[1]["door"])
     A("mila_fach", *cab[1]["door"])
@@ -4483,9 +4496,8 @@ def piazza_room(v):
     if SHOT == "offen":
         for k_ in ("fach_hoch", "trockenfach", "schublade", "schatzfach", "cube_nische", "licht"):
             A(k_, *cab[1][k_])
-    # CO2 box on the wall between the windows, 1.4 m up
-    co2box(sum(wins[0][1:] + wins[1][:1]) / 2, D - 0.058, 1.33, face=-90, led="yellow" if key == "745" else "green",
-           lit=3.5)
+    # CO2 box on the wall right of the right window, 1.35 m up: no open sash ever hides it
+    co2box(4.56, D - 0.058, 1.33, face=-90, led="yellow" if key == "745" else "green", lit=2.2, plain=True)
     # hideout in the north-east corner, half a metre clear of the right window's sash; one plant on the floor (the
     # other plants live in the entrance room); bunting along the west wall between the window and the board
     piazza_hoehle(4.82, 5.77, D, depth=1.0)
@@ -4536,8 +4548,13 @@ def build_piazza(v):
         left = -f.cross(UP).normalized()
         mp = lock - left * 0.33 - f * 0.1
         mp.z = 0.0
-        maren(mp.x, mp.y, fm, "stand", look=(3.4, 1.4, 1.15), arms={"l": tuple(lock + Vector((0, 0, 0.01)))})
-        A("schluessel", *lock)
+        # her fingers touch the key's bow from below, so the silver key stays in view
+        key = Vector(P_["door"]["key"])
+        want = key + (Vector(P_["door"]["grip"]) - key).normalized() * 0.03 + Vector((0, 0, -0.068))
+        sh = mp + left * 0.136 + Vector((0, 0, 1.135))
+        tg = want - (want - sh).normalized() * 0.04
+        maren(mp.x, mp.y, fm, "stand", look=(3.4, 1.4, 1.15), arms={"l": tuple(tg)})
+        A("schluessel", *key)
     elif v == "800":
         # 8:00: morning circle. Mila stands at the back right of the Hubel and puts her fox cube into the last free
         # hollow at the Kaufladen; Defne beside her still holds hers and looks over to Malen. Maren sits on a stool at
@@ -4603,7 +4620,7 @@ def build_piazza(v):
             ANCH[k_] = tuple(tilt @ Vector(ANCH[k_]))
         A("maren_phone", *(tilt @ ph))
     # 745z: the CO2 box and the closed window before unlocking; 745: the open window with its chain drives
-    fen = (dict(loc=(3.8, 2.75, 1.3), target=(3.1, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
+    fen = (dict(loc=(3.25, 2.75, 1.3), target=(3.95, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
            dict(loc=(2.95, 2.45, 1.42), target=(3.37, D, 1.64), lens=22, fstop=8.0))
     shots = {
         "fenster": fen,
