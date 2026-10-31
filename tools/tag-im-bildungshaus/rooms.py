@@ -1688,7 +1688,7 @@ def kl_hoehle(x0, x1, hid="hoehle", kid_inside=False):
     cushion(cx, 4.45, z0 + 0.02, x1 - x0 - 0.12, 0.6, 0.1, SAGE, 0, hid, name="Höhlenkissen")
     cushion(x0 + 0.22, 4.6, z0 + 0.12, 0.3, 0.14, 0.26, ROSE, 8, hid, name="Kissen")
     cushion(x1 - 0.22, 4.6, z0 + 0.12, 0.3, 0.14, 0.24, OCHRE, -6, hid, name="Kissen")
-    animal(x1 - 0.3, 4.38, z0 + 0.12, -70, "bär", (0.72, 0.52, 0.36), s=2.2, hid=hid, soft=True)
+    animal(cx - 0.02, 4.42, z0 + 0.12, -75, "bär", (0.72, 0.52, 0.36), s=2.2, hid=hid, soft=True)  # visible from every view
     # warm LED strip along the inside of the ceiling, just behind the front: the cave glows from within
     led = mat((1.0, 0.9, 0.72), 0.4, emission=(1.0, 0.80, 0.55), strength=3.0, name="LED-Band")
     rbox(x0 + 0.06, y + 0.05, z1 - 0.032, x1 - 0.06, y + 0.075, z1 - 0.02, led, hid, r=0.004, name="Lichtband")
