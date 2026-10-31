@@ -2046,7 +2046,8 @@ def build_waschraum(v):
     W, D, H = 4.6, 4.0, 2.6
     on = v != "aus"
     room_base(W, D, floor_m=tiles("X", (0.74, 0.66, 0.54), (0.86, 0.82, 0.74), 0.3, axis_v="Y"))
-    wall("x", D, 0.0, W, h=H, openings=[(1.0, 2.3, 1.6, 2.2, "window")], sill=False)
+    # February outside; the window is fixed and has no sill, nothing stands in it
+    wall("x", D, 0.0, W, h=H, openings=[(1.0, 2.3, 1.6, 2.2, "window")], sill=False, glass=winter_glass("morgen"))
     wall("y", 0.0, 0.0, D + 0.18, h=H, openings=[(0.35, 1.25, 0.0, 2.1, "door")], m=WALL_SAGE)
     tile_wall("x", D, 0.0, W, 1.3)
     tile_wall("y", 0.0, 0.0, 0.35, 1.3)
@@ -2070,8 +2071,10 @@ def build_waschraum(v):
                "becken", name="Siphon")
     sinks = [0.68, 1.33, 1.98, 2.63]
     ring_cols = [(0.35, 0.85, 0.75), (0.95, 0.75, 0.30), (0.55, 0.70, 0.98), (0.95, 0.55, 0.65)]
+    # the three children's basins sit a little further forward and their spouts reach over the front of the basin,
+    # so that hands from the step reach the water
     for i, sx in enumerate(sinks):
-        sy = D - 0.27
+        sy = D - 0.27 if i == 3 else D - 0.32
         dz = -0.08 if i == 3 else 0.0
         ball(sx, sy, 0.565 + dz, 0.17, mat((0.97, 0.97, 0.96), 0.2, coat=0.6), "becken", scale=(1, 0.85, 0.32), seg=32, name="Becken")
         ball(sx, sy, 0.575 + dz, 0.14, mat((0.88, 0.89, 0.9), 0.25), "becken", scale=(1, 0.85, 0.28), seg=32, name="Becken innen")
@@ -2089,8 +2092,8 @@ def build_waschraum(v):
             ball(sx, D - 0.05, 0.6 + dz, 0.012, mat((0.3, 0.3, 0.32), 0.3, emission=(0.4, 0.8, 1.0), strength=2.0), "becken", seg=10,
                  name="Sensor")
         else:
-            curve_tube([(sx, D - 0.03, 0.62), (sx, D - 0.05, 0.75), (sx, D - 0.18, 0.76), (sx, D - 0.2, 0.69)], 0.014, STEEL, "becken",
-                       name="Hahn")
+            curve_tube([(sx, D - 0.03, 0.62), (sx, D - 0.05, 0.79), (sx, D - 0.3, 0.8), (sx, D - 0.4, 0.75)], 0.014, STEEL,
+                       "becken", name="Hahn")
         A(f"sink{i}", sx, sy, 0.6 + dz)
         P(f"ring{i}", [(sx + math.cos(t * math.pi / 18) * 0.185, sy + math.sin(t * math.pi / 18) * 0.185 * 0.85, 0.585 + dz)
                        for t in range(37)])
@@ -2131,22 +2134,46 @@ def build_waschraum(v):
         torus(tx, D - 0.34, 0.27, 0.12, 0.025, mat(SAGE, 0.4, coat=0.3), "toilette", seg=28, name="Brille")
         rbox(tx - 0.16, D - 0.12, 0.25, tx + 0.16, D - 0.02, 0.55, WHITE, "toilette", r=0.02, name="Spülkasten")
     smiley(3.6, D - 1.07, 1.02, -90, "froh", 0.05, hid="toilette")
-    # step stool
+    # a long low step along the children's basins (birch, non-slip strips), a loose step stool by the low basin
+    st_h = 0.16
+    panel(cx0, D - 0.8, 0.0, cxs, D - 0.53, st_h, "becken", name="Stufe")
+    for k in range(7):
+        xx = cx0 + 0.1 + k * (cxs - cx0 - 0.2) / 6
+        box(xx - 0.09, D - 0.78, st_h, xx + 0.09, D - 0.55, st_h + 0.003, mat(SAGE, 0.8), "becken", name="Rutschschutz")
     panel(2.9, 2.45, 0, 3.25, 2.75, 0.18, "becken", name="Tritt")
-    # people: kids washing hands, Sanne singing
+    # people: kids on the step washing hands (water runs and they lather while the light beetle runs), Maren singing
+    wm = mat((0.72, 0.86, 1.0), 0.05, coat=1.0, alpha=0.45, name="Wasser")
+    foam = mat((0.98, 0.98, 0.97), 0.6, name="Schaum")
     for k, sx in enumerate(sinks[:3]):
-        if k == 1:
-            who("mila", sx, D - 0.78, 90, "wash", hid="mila", look=(sx, D - 0.2, 0.62))
+        ky = D - 0.645
+        if on:
+            arms = {"r": (sx + 0.03, D - 0.4, 0.62), "l": (sx - 0.03, D - 0.4, 0.62)}
         else:
-            kid(k * 3 + 1, sx, D - 0.8, 90, "wash", hid="kinder", look=(sx, D - 0.2, 0.62))
+            arms = {"r": (sx + 0.07, D - 0.48, 0.6), "l": (sx - 0.07, D - 0.48, 0.6)}
+        look = (sx, D - 0.38, 0.62)
+        if k == 1:
+            pk = who("mila", sx, ky, 90, "stand", hid="mila", z=st_h, look=look, arms=arms)
+        else:
+            pk = kid(k * 3 + 1, sx, ky, 90, "stand", hid="kinder", z=st_h, look=look, arms=arms)
+        if on:
+            hm = (Vector(pk["hand_r"]) + Vector(pk["hand_l"])) / 2
+            spout = Vector((sx, D - 0.4, 0.735))
+            hit = Vector((sx, D - 0.4, hm.z + 0.04))
+            if hit.z < spout.z - 0.01:
+                curve_tube([tuple(spout), tuple(hit)], 0.0085, wm, "mila" if k == 1 else "kinder", name="Wasser")
+            curve_tube([tuple(Vector((sx, D - 0.4, hm.z - 0.04))), (sx, D - 0.39, 0.52)], 0.005, wm,
+                       "mila" if k == 1 else "kinder", name="Wasser")
+            for j in range(7):
+                a = j * 2.4
+                ball(hm.x + math.cos(a) * 0.04, hm.y + math.sin(a) * 0.02, hm.z + 0.015 + (j % 3) * 0.012, 0.014 + (j % 2) * 0.006,
+                     foam, "mila" if k == 1 else "kinder", seg=10, name="Schaum")
     kid(5, 0.55, 2.35, 175, "reach", hid="kinder", arms={"r": (0.12, 2.37, 0.85), "l": (0.14, 2.3, 0.78)})
-    who("sanne", 2.25, 2.2, 110, "kneel", hid="sanne", look=(1.33, D - 0.6, 0.7))
-    plant(3.95, 0.4, 0, 0.8, kind="bush")
-    plant(1.65, D - 0.1, 1.6, 0.45, pot="cream", kind="herb")
+    mr = who("sanne", 2.25, 2.2, 110, "kneel", hid="sanne", shoes=SLIPPERS, look=(1.33, D - 0.6, 0.8))
+    A("maren_head", *mr["head"])
     A("in", 0.25, 0.8, 0.0)
     A("out", W - 0.1, 0.25, 0.0)
     pts = box_corners(-0.2, 0, -SLAB, W, D + 0.2, H + 0.05)
-    shots = {"becken": dict(loc=(1.8, D - 1.25, 1.38), target=(1.33, D - 0.27, 0.58), lens=34, fstop=3.5)}
+    shots = {"becken": dict(loc=(1.95, D - 1.05, 1.32), target=(1.3, D - 0.33, 0.6), lens=34, fstop=3.5)}
     return dict(W=W, D=D, time="mittag", pts=pts, shots=shots, target=(W / 2, D / 2, 1))
 
 
