@@ -19,6 +19,7 @@ ap.add_argument("--out", default="renders")
 ap.add_argument("--res", type=int, default=0)
 ap.add_argument("--samples", type=int, default=40)
 ap.add_argument("--save-blend", action="store_true")
+ap.add_argument("--blend-only", action="store_true", help="save <name>.blend into --out and exit without rendering")
 args = ap.parse_args(sys.argv[1:])
 SCENE, VAR, SHOT = args.scene, args.variant, args.shot
 random.seed(sum(ord(c) for c in SCENE) * 7 + 3)

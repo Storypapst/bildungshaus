@@ -1508,8 +1508,11 @@ def finish(args, name, opaque=False, exposure=-0.3):
             scene.view_settings.look = os.environ.get("BH_LOOK", "AgX - Punchy")
         scene.view_settings.exposure = exposure + float(os.environ.get("BH_EXP", "0"))
         scene.render.filepath = os.path.join(args.out, f"{name}.png")
-    if getattr(args, "save_blend", False):
+    if getattr(args, "save_blend", False) or getattr(args, "blend_only", False):
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(args.out, f"{name}.blend"))
+        if getattr(args, "blend_only", False):
+            print("SAVED", os.path.join(args.out, f"{name}.blend"))
+            return
     bpy.ops.render.render(write_still=True)
     print("RENDERED", scene.render.filepath)
 
