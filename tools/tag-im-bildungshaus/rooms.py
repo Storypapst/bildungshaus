@@ -2358,7 +2358,7 @@ def build_abholung(v):
     P_ = piazza_room("abholung")
     W, D = P_["W"], P_["D"]
     m = P_["cab"][1]
-    # Mila has just put her fox cube back into the niche; her hand still rests on the door beside it (the cube stays in
+    # Mila has just put her fox cube back into the niche; her hand rests on the door just above it (the cube stays in
     # view) and she turns to Lotte at the door
     spot = Vector(m["cube_spot"])
     cp = spot + Vector((0.035, 0.0, 0.0))
@@ -2367,7 +2367,7 @@ def build_abholung(v):
     mp = Vector((0.68, spot.y + 0.21, 0.0))
     lp = Vector((0.4, 1.38, 0.0))
     pm = who("mila", mp.x, mp.y, 235, "reach", hid="mila", look=(lp.x, lp.y, 1.15),
-             arms={"r": (cp.x + 0.05, spot.y + 0.1, cp.z + 0.13)}, shoes=SOCKS[1])
+             arms={"r": (cp.x + 0.06, spot.y + 0.14, 0.7)}, shoes=SOCKS[1])
     # Papa Jonas reads the day in the parent app; bulgy bright-blue covers over his shoes
     jp = Vector((1.5, 3.2, 0.0))
     fj = fvec(300)
@@ -2422,7 +2422,7 @@ def build_abholung(v):
     # Maren plays with one of the last children in the play corner
     maren(4.85, 0.95, 140, "kneel", look=(4.65, 0.75, 0.3))
     kid(5, 4.95, 0.52, 100, "sit", hid="kinder", look=(4.65, 0.72, 0.4), shoes=SOCKS[4])
-    shots = {"faecher": dict(loc=(2.25, 2.02, 1.45), target=(0.3, 2.5, 1.05), lens=30, fstop=5.6),
+    shots = {"faecher": dict(loc=(2.6, 2.0, 1.44), target=(0.3, 2.5, 1.03), lens=44, fstop=6.3),
              "wunsch": dict(loc=(0.82, 3.02, 2.0), target=(0.22, 3.98, 1.25), lens=26, fstop=4.0)}  # over the cabinets
     return dict(W=W, D=D, time="nachmittag", pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1))
 
