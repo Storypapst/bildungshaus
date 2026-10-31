@@ -2007,7 +2007,7 @@ def build_kaufladen(v):
     A("in", 0.25, 0.85, 0.0)
     A("out", W - 0.1, 0.25, 0.0)
     pts = box_corners(-0.2, 0, -SLAB, W, D + 0.2, H + 0.05)
-    shots = {"kasse": dict(loc=(3.56, 2.17, 1.06), target=(2.76, 3.6, 0.7), lens=34, fstop=3.5),
+    shots = {"kasse": dict(loc=(3.4, 2.12, 1.32), target=(2.76, 3.56, 0.66), lens=34, fstop=3.5),
              "offen": dict(loc=(1.6, 2.38, 2.0), target=(0.64, 4.18, 1.37), lens=26, fstop=6.0, name="schrankwand_offen")}
     return dict(W=W, D=D, time="vormittag", pts=pts, shots=shots, target=(W / 2, D / 2, 1))
 
@@ -2060,7 +2060,7 @@ def kasse(x, y, z, hid="kasse", on_scan=None):
     rbox(x - 0.2, y - 0.14, z, x + 0.2, y + 0.14, z + 0.12, multiplex("Z", 100.0), hid, r=0.015, name="Kasse")
     top = rbox(-0.17, -0.11, -0.03, 0.17, 0.11, 0.03, multiplex("Z", 100.0), hid, r=0.012, name="Kassenkopf")
     top.location = (x + 0.02, y + 0.03, z + 0.16)
-    top.rotation_euler = (R(-22), 0, 0)
+    top.rotation_euler = (R(22), 0, 0)  # the scan top slopes towards the customer
     # speaker grille (front)
     for k in range(19):
         a = k * 2.39
@@ -2073,20 +2073,21 @@ def kasse(x, y, z, hid="kasse", on_scan=None):
     mw = top.matrix_world
     nrm = (mw.to_3x3() @ Vector((0, 0, 1))).normalized()
     pc = mw @ Vector((0.0, -0.005, 0.03))
-    fr = box(-0.115, -0.08, -0.004, 0.115, 0.08, 0.004, WOOD_D, hid, name="Scanrahmen")
+    fr = box(-0.14, -0.09, -0.004, 0.14, 0.09, 0.004, WOOD_D, hid, name="Scanrahmen")
     fr.location = pc + nrm * 0.003
-    fr.rotation_euler = (R(-22), 0, 0)
-    sc = box(-0.1, -0.066, -0.003, 0.1, 0.066, 0.003, mat((0.85, 0.10, 0.08), 0.2, emission=(1.0, 0.10, 0.06), strength=3.5),
+    fr.rotation_euler = (R(22), 0, 0)
+    sc = box(-0.125, -0.076, -0.003, 0.125, 0.076, 0.003, mat((0.80, 0.06, 0.05), 0.2, emission=(1.0, 0.05, 0.03), strength=2.6),
              hid, name="Scanfenster")
     sc.location = pc + nrm * 0.008
-    sc.rotation_euler = (R(-22), 0, 0)
+    sc.rotation_euler = (R(22), 0, 0)
     A("scan", *(pc + nrm * 0.02))
     if on_scan == "aubergine":
-        ab = pc + nrm * 0.04 + Vector((0.012, 0.0, 0.0))
-        ball(*ab, 0.031, mat((0.30, 0.11, 0.36), 0.25, coat=0.6), hid, scale=(2.0, 1.0, 0.9), rot=(R(-22), 0, R(28)),
+        back = (mw.to_3x3() @ Vector((0, 1, 0))).normalized()  # lies on the back half, the front of the window glows
+        ab = pc + nrm * 0.04 + back * 0.04 + Vector((0.02, 0.0, 0.0))
+        ball(*ab, 0.03, mat((0.30, 0.11, 0.36), 0.25, coat=0.6), hid, scale=(2.0, 1.0, 0.9), rot=(R(22), 0, R(8)),
              name="Aubergine")
-        st = ab + Vector((math.cos(R(28)), math.sin(R(28)), 0)) * 0.066
-        cone(*st, 0.022, 0.008, 0.035, LEAF, hid, rot=(0, R(90), R(28)), verts=8, name="Stiel")
+        st = ab + Vector((math.cos(R(8)), math.sin(R(8)), 0)) * 0.064
+        cone(*st, 0.021, 0.008, 0.035, LEAF, hid, rot=(0, R(90), R(8)), verts=8, name="Stiel")
     # coin tray with wooden coins
     panel(x + 0.08, y - 0.2, z, x + 0.32, y - 0.06, z + 0.03, hid, name="Münzschale")
     for k in range(7):
