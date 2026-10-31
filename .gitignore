@@ -35,3 +35,6 @@ tmp/
 .env
 .env.*
 !.env.example
+
+# build output of the demo (published copy lives in public/)
+tools/tag-im-bildungshaus/site/
