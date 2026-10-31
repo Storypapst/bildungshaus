@@ -2627,7 +2627,7 @@ def green_entrance(ex0, ey0, ex1, ey1, eh):
     # grid mat outside the door, roof with a fascia, the sign and a green roof
     box(dx0 - 0.1, ey0 - 0.75, 0.0, dx1 + 0.1, ey0 - 0.08, 0.025, mat((0.35, 0.35, 0.37), 0.5, metal=0.4), hid, name="Gitterrost")
     panel(ex0, ey0 - 0.25, eh, ex1 + 0.2, ey1, eh + 0.2, hid, freq=40.0, name="Dachrand")
-    box(ex0 + 0.1, ey0 - 0.15, eh + 0.2, ex1 + 0.1, ey1 - 0.1, eh + 0.26, mat((0.55, 0.62, 0.36), 0.9, noise=0.25, nscale=4.0),
+    box(ex0 + 0.1, ey0 - 0.15, eh + 0.2, ex1 + 0.1, ey1 - 0.1, eh + 0.26, winter_roof(),
         hid, name="Gründach")
     text3d("Bildungshaus", (ex0 + ex1) / 2 + 0.1, ey0 - 0.255, eh + 0.1, 0.13, mat(PETROL, 0.5), hid, extrude=0.006)
     A("eingang", (ex0 + ex1) / 2 + 0.1, ey0 - 0.02, 1.5)
@@ -2655,7 +2655,7 @@ def school_next_door():
         box(sx1, sy0 - 0.04, z - 0.12, sx1 + 0.04, sy1, z + 0.12, band, hid, name="Geschossband")
         box(sx0, sy0 - 0.04, z - 0.12, sx1 + 0.04, sy0, z + 0.12, band, hid, name="Geschossband")
     panel(sx0 - 0.1, sy0 - 0.1, sh, sx1 + 0.1, sy1 + 0.1, sh + 0.3, hid, freq=40.0, name="Dachrand")
-    box(sx0 + 0.1, sy0 + 0.1, sh + 0.3, sx1 - 0.1, sy1 - 0.1, sh + 0.34, mat((0.55, 0.62, 0.36), 0.9, noise=0.25, nscale=4.0),
+    box(sx0 + 0.1, sy0 + 0.1, sh + 0.3, sx1 - 0.1, sy1 - 0.1, sh + 0.34, winter_roof(),
         hid, name="Gründach")
     for j in range(4):
         p = box(-0.8, -0.5, -0.02, 0.8, 0.5, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), hid, name="Solar")
@@ -2700,6 +2700,22 @@ def winter_lawn():
     nb.color(col)
     nb.bsdf.inputs["Roughness"].default_value = 0.9
     _WL["m"] = m
+    return m
+
+
+def winter_roof():
+    """Green roof in February: sedum in green and rust with a light dusting of snow in places."""
+    if "r" in _WL:
+        return _WL["r"]
+    m = bpy.data.materials.new("Gründach Winter")
+    nb = NB(m)
+    pos = nb.node("ShaderNodeNewGeometry").outputs["Position"]
+    f = nb.math("ADD", nb.noise(pos, 1.3, 3.0, 0.6), nb.math("MULTIPLY", nb.math("SUBTRACT", nb.noise(pos, 11.0, 2.0, 0.5), 0.5), 0.3))
+    col = nb.ramp(f, [(0.0, (0.46, 0.52, 0.30)), (0.4, (0.56, 0.62, 0.36)), (0.52, (0.62, 0.56, 0.36)), (0.6, (0.86, 0.88, 0.86)),
+                      (0.7, (0.95, 0.96, 0.98)), (1.0, (0.97, 0.98, 1.0))])
+    nb.color(col)
+    nb.bsdf.inputs["Roughness"].default_value = 0.9
+    _WL["r"] = m
     return m
 
 
@@ -2859,7 +2875,7 @@ def build_aussen(v):
             panel(lx1 + 0.02, a0, c0, lx1 + 0.09, a1, c1, "lab", name="Rahmen")
     text3d("Lab", 12.75, ly0 - 0.1, 2.97, 0.4, mat(PETROL, 0.5), "lab", extrude=0.014, name="Schrift Lab")
     panel(lx0 - 0.1, ly0 - 0.1, lh, lx1 + 0.1, ly1 + 0.1, lh + 0.2, "lab", freq=40.0, name="Dachrand")
-    box(lx0 + 0.1, ly0 + 0.1, lh + 0.2, lx1 - 0.1, ly1 - 0.1, lh + 0.26, mat((0.55, 0.62, 0.36), 0.9, noise=0.25, nscale=4.0),
+    box(lx0 + 0.1, ly0 + 0.1, lh + 0.2, lx1 - 0.1, ly1 - 0.1, lh + 0.26, winter_roof(),
         "lab", name="Gründach")
     for j in range(2):
         p = box(-0.75, -0.48, -0.02, 0.75, 0.48, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), "lab", name="Solar")
@@ -2869,7 +2885,7 @@ def build_aussen(v):
     panel(12.4, 8.2, 0.0, 13.3, 8.55, 0.42, "lab", name="Bank")
     # green roof with a parapet and solar panels
     panel(bx0 - 0.1, by0 - 0.1, bh, bx1 + 0.1, by1 + 0.1, bh + 0.25, "dach", freq=40.0, name="Dachrand")
-    box(bx0 + 0.1, by0 + 0.1, bh + 0.25, bx1 - 0.1, by1 - 0.1, bh + 0.32, mat((0.55, 0.62, 0.36), 0.9, noise=0.25, nscale=4.0),
+    box(bx0 + 0.1, by0 + 0.1, bh + 0.25, bx1 - 0.1, by1 - 0.1, bh + 0.32, winter_roof(),
         "dach", name="Gründach")
     for k in range(3):
         for j in range(4):
@@ -3306,7 +3322,7 @@ def herb(x, y, soil, kind, s=1.0, hid="regal"):
 def cactus(x, y, z, hid="kaktus", s=1.0):
     """The columnar cactus from the Piazza windowsill (two arms, soft spines, a small flower). Returns soil and top."""
     soil = vr_pot(x, y, z, r=0.06 * s, h=0.09 * s, kind="cream", hid=hid)
-    cm = mat((0.22, 0.44, 0.33), 0.55, noise=0.12, name="Kaktus")
+    cm = mat((0.15, 0.36, 0.26), 0.55, noise=0.12, name="Kaktus")
     spine = mat((0.97, 0.94, 0.84), 0.5, name="Dorn")
     top = soil + 0.2 * s
     vb("tube", hid, cm, (x, y, soil), (x, y, top), 0.034 * s, seg=16)
@@ -3326,8 +3342,8 @@ def cactus(x, y, z, hid="kaktus", s=1.0):
                0.0035 * s, seg=6)
     for k in range(5):
         a = k * 2 * math.pi / 5
-        vb("ball", hid, mat((0.95, 0.52, 0.66), 0.5), (x + math.cos(a) * 0.011 * s, y + math.sin(a) * 0.011 * s,
-           top + 0.03 * s), 0.01 * s, scale=(1, 1, 0.5), seg=10)
+        vb("ball", hid, mat((0.95, 0.45, 0.62), 0.5), (x + math.cos(a) * 0.016 * s, y + math.sin(a) * 0.016 * s,
+           top + 0.03 * s), 0.015 * s, scale=(1, 1, 0.5), seg=10)
     vb("ball", hid, mat((0.98, 0.84, 0.30), 0.5), (x, y, top + 0.033 * s), 0.006 * s, seg=8)
     return soil, (x, y, top + 0.04 * s)
 
@@ -3790,7 +3806,7 @@ def build_vorraum(v):
                 continue  # dead corner behind the west shelf
             for z in boards[i][1:]:
                 lights[(tag_, i, z)] = grow_bar(F, u0 + 0.02, u1 - 0.02, dep - 0.05, z, power=3.0)
-    thirsty = {"800": {("n", 4, 0.94, 0), ("w", 1, 0.10, 1)},
+    thirsty = {"800": {("n", 4, 0.94, 1), ("w", 1, 0.10, 1)},
                "1400": {("w", 0, 0.10, 1), ("n", 1, 1.36, 0), ("n", 4, 0.10, 1)},
                "nacht": {("n", 4, 0.10, 1), ("w", 1, 0.94, 0)}}.get(v, set())
     # (the pots next to a bay's left side are partly hidden by it, so the thirsty basil and the cactus stand right)
@@ -3803,7 +3819,7 @@ def build_vorraum(v):
                        ("basil", "parsley", "mint")],
             ("n", 2): [None, ("basil", "parsley", "mint")],
             ("n", 3): [None, ("parsley", "mint", "basil")],
-            ("n", 4): [("mint", "parsley", "basil"), ("parsley", "mint", "basil"), ("parsley", "cactus", "mint"),
+            ("n", 4): [("mint", "parsley", "basil"), ("parsley", "mint", "basil"), ("cactus", "mint", "parsley"),
                        ("parsley", "basil", "mint")]}
     SPREAD = {"basil": 0.077, "mint": 0.077, "parsley": 0.119}   # leaf spread from the pot centre per unit of scale
     pots = ["cream", "terra", "sage", "cream", "terra", "rose", "cream", "sage", "terra"]
@@ -3914,6 +3930,7 @@ def build_vorraum(v):
         mx, my = xs[mila_k] - 0.07, by0 + 0.125     # a little left of her compartment so that it stays in view
         jx, jy = mx - 0.62, by0 + 0.17
         jp = who("jonas", jx, jy, -90, "sitc", seat=seat, hid="jonas", acc=("scarf",), top=(0.60, 0.49, 0.40),
+                 bottom=(0.32, 0.35, 0.44),
                  look=(mx, my - 0.1, 0.55), arms={"l": (jx + 0.33, by0 - 0.12, 0.45)})
         winter_coat(jp, -90, (0.60, 0.49, 0.40), (0.33, 0.40, 0.56), hid="jonas")
         cover_feet(jx, jy, -90, "adult", seat, hid="jonas")
