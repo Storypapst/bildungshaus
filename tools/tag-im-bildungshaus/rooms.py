@@ -295,14 +295,21 @@ def bild_icon(kind, c, r, u, n, k, hid=None, col=None):
         capsule(P(0.08, 0.08, 0.05), P(0.28, 0.28, 0.05), 0.07 * k, mat((0.62, 0.22, 0.32), 0.4), hid, taper=0.35,
                 name="Icon")
         ball(*P(-0.14, 0.2, 0.02), 0.13 * k, wm, hid, scale=(1.2, 0.9, 0.3), rot=rot, seg=14, name="Icon")
-    elif kind == "sosse":
-        steel = mat((0.58, 0.60, 0.63), 0.35, metal=0.4)
-        slab(0, -0.1, 0.6, 0.38, steel)
-        slab(0, 0.12, 0.56, 0.09, mat((0.84, 0.20, 0.12), 0.45, coat=0.3), d=0.07)
+    elif kind == "sosse":  # a cooking pot full of red sauce, three steam lines rising
+        steel = mat((0.42, 0.45, 0.50), 0.3, metal=0.5)
+        red = mat((0.88, 0.16, 0.08), 0.35, coat=0.5)
+        slab(0, -0.17, 0.66, 0.40, steel)
+        slab(0, 0.045, 0.76, 0.07, mat((0.62, 0.65, 0.70), 0.3, metal=0.5))
         for sd in (-1, 1):
-            slab(sd * 0.37, 0.0, 0.14, 0.06, steel)
-        for a in (-0.12, 0.1):
-            ball(*P(a, 0.3, 0.03), 0.05 * k, mat((0.97, 0.97, 0.97), 0.5), hid, seg=10, name="Icon")
+            slab(sd * 0.44, -0.05, 0.13, 0.07, steel)
+        ball(*P(0, 0.085, 0.05), 0.33 * k, red, hid, scale=(1.0, 0.24, 0.5), rot=rot, seg=20, name="Icon")
+        for a in (-0.06, 0.13):
+            ball(*P(a, 0.1, 0.075), 0.04 * k, mat((0.35, 0.62, 0.28), 0.4), hid, scale=(1.3, 0.8, 0.6), rot=rot, seg=10,
+                 name="Icon")  # basil leaves in the sauce
+        sm = mat((0.58, 0.62, 0.72), 0.5)
+        for a in (-0.18, 0.0, 0.18):
+            pts_ = [tuple(P(a + 0.045 * math.sin(j * 1.3 + a * 9), 0.17 + j * 0.055, 0.03)) for j in range(6)]
+            curve_tube(pts_, 0.022 * k, sm, hid, name="Icon")
     elif kind == "shirt":
         slab(0, -0.06, 0.4, 0.5)
         for sd in (-1, 1):
@@ -985,18 +992,20 @@ def magnettafel(F, u0, u1, z0, z1, hid="tafel", now=0, week=None, sosse=False, l
         u = x0_ + sp * (i + 0.5)
         c = L.p(u, fz + 0.006, zt)
         if sosse and kind == "essen":
-            # in the afternoon the lunch tile is the 'Soße gekocht' tile: a pot of red sauce, a red rim, a red magnet
-            o = cyl(0, 0, -0.007, 0.007, 0.07, mat((0.97, 0.90, 0.80), 0.5, coat=0.2), hid, verts=40, name="Plättchen")
+            # in the afternoon the lunch tile is the 'Soße gekocht' tile: bigger, cream, a pot of red sauce with steam,
+            # a red magnet; it sits a little lower so that it stands out from the row
+            c = L.p(u, fz + 0.006, zt - 0.012)
+            o = cyl(0, 0, -0.007, 0.007, 0.08, mat((0.98, 0.94, 0.86), 0.5, coat=0.2), hid, verts=48, name="Plättchen")
             o.location = c
             o.rotation_euler = (R(90), 0, 0)
-            torus(*(c + L.n * 0.007), 0.07, 0.007, mat((0.86, 0.22, 0.20), 0.4, coat=0.3), hid, rot=(R(90), 0, 0),
-                  seg=40, name="Plättchenrand")
-            bild_icon("sosse", c + L.n * 0.007, L.t, UP, L.n, 0.1, hid)
-            ball(*L.p(u + 0.05, fz + 0.016, zt + 0.05), 0.012, mat((0.86, 0.22, 0.20), 0.3, coat=0.5), hid, seg=12,
+            torus(*(c + L.n * 0.006), 0.08, 0.005, multiplex("Z", 100.0), hid, rot=(R(90), 0, 0), seg=48,
+                  name="Plättchenrand")
+            bild_icon("sosse", c + L.n * 0.007 + UP * -0.012, L.t, UP, L.n, 0.13, hid)
+            ball(*L.p(u + 0.058, fz + 0.016, zt + 0.045), 0.013, mat((0.86, 0.22, 0.20), 0.3, coat=0.5), hid, seg=12,
                  name="Magnet")
             pts["sosse"] = c
             continue
-        o = cyl(0, 0, -0.006, 0.006, 0.062, multiplex("Z", 100.0), hid, verts=40, name="Plättchen")
+        o = cyl(0, 0, -0.006, 0.006, 0.055 if sosse else 0.062, multiplex("Z", 100.0), hid, verts=40, name="Plättchen")
         o.location = c
         o.rotation_euler = (R(90), 0, 0)
         picto(kind, c, L.n, hid)
@@ -2467,9 +2476,7 @@ def build_abholung(v):
     # Papa Jonas reads the day in the parent app; bulgy bright-blue covers over his shoes
     jp = Vector((1.5, 3.2, 0.0))
     fj = fvec(300)
-    pj = who("jonas", jp.x, jp.y, 300, "hold", hid="jonas", acc=("phone",), shoes=COVERS,
-             look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
-    ueberschuhe(jp.x, jp.y, 300, "jonas")
+    pj = jonas_standing(jp.x, jp.y, 300, "hold", acc=("phone",), look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
     # Lotte (14) comes over from the school next door through the entrance room: school backpack, headphones round her
     # neck, her jacket over the arm; she looks at Mila ("Zeig mal!")
     lf = 28
@@ -2478,11 +2485,25 @@ def build_abholung(v):
     dl = DIMS["teen14"]
     hr = lp + f * 0.2 + rs * 0.1 + Vector((0, 0, 0.88))
     hl = lp + f * 0.12 - rs * 0.17 + Vector((0, 0, 0.78))
-    pl = who("lotte", lp.x, lp.y, lf, "stand", hid="lotte", kind="teen14", shoes=SOCKS[3], look=tuple(Vector(pm["head"])),
-             arms={"r": tuple(hr), "l": tuple(hl)})
+    cl = dict(CAST["lotte"])
+    cl.pop("acc", None)  # the lib's backpack is an axis-aligned cube; she gets a shaped school backpack below
+    cl.update(kind="teen14", shoes=SOCKS[3])
+    pl = person(lp.x, lp.y, lf, pose="stand", hid="lotte", key="lotte", look=tuple(Vector(pm["head"])),
+                arms={"r": tuple(hr), "l": tuple(hl)}, **cl)
     hip = dl["leg"] + 0.05
     sh_z = hip + dl["torso"] - dl["r"] * 0.55
-    strap = mat((0.62, 0.24, 0.28), 0.6)
+    # school backpack on her back: rounded body, a flap with a buckle, a reflector strip, a side pocket
+    bpm, bpd = mat(PETROL, 0.6), mat(tuple(v * 0.75 for v in PETROL), 0.6)
+    rot_ = (0, 0, R(lf - 90))
+    bc = lp - f * (dl["r"] + 0.06) + UP * (hip + dl["torso"] * 0.5)
+    rbox(-0.13, -0.06, -0.17, 0.13, 0.06, 0.15, bpm, "lotte", r=0.045, rot=rot_, name="Ranzen").location = bc
+    rbox(-0.125, -0.012, -0.11, 0.125, 0.012, 0.03, bpd, "lotte", r=0.01, rot=rot_, name="Ranzenklappe").location = \
+        bc - f * 0.062 + UP * 0.12
+    rbox(-0.1, -0.004, -0.012, 0.1, 0.004, 0.012, mat((0.92, 0.92, 0.88), 0.3, coat=0.6), "lotte", r=0.003, rot=rot_,
+         name="Reflektor").location = bc - f * 0.064 + UP * -0.06
+    ball(*(bc - f * 0.075 + UP * 0.02), 0.016, mat(OCHRE, 0.4, coat=0.4), "lotte", scale=(1.2, 0.5, 0.8), seg=12,
+         name="Schnalle")
+    strap = mat(tuple(v * 0.75 for v in PETROL), 0.6)
     for sd in (-1, 1):
         capsule(lp + rs * sd * 0.07 + f * 0.11 + UP * (sh_z + 0.03), lp + rs * sd * 0.09 + f * 0.12 + UP * (hip + 0.08),
                 0.012, strap, "lotte", name="Ranzengurt")
@@ -2492,15 +2513,27 @@ def build_abholung(v):
     for sd in (-1, 1):
         ball(*(lp + rs * sd * 0.075 + f * 0.06 + UP * (nz - 0.01)), 0.03, hp, "lotte", scale=(1, 1, 0.6), seg=14,
              name="Kopfhörer")
-    # her jacket, folded over the right forearm
+    # her winter jacket, folded over the right forearm: the body hangs down on both sides of the arm, one sleeve and
+    # the hood dangle, a zip shows along the front edge
     sh = lp + rs * dl["r"] * 0.88 + UP * sh_z
-    arm = Vector(pl["hand_r"]) - sh
-    mid = sh + arm * 0.72
-    jm = fabric(CLAY)
+    hand = Vector(pl["hand_r"])
+    arm = hand - sh
+    mid = sh + arm * 0.7
+    ah = Vector((arm.x, arm.y, 0.0)).normalized()
+    side = ah.cross(UP).normalized()
+    yaw = math.atan2(ah.y, ah.x)
+    jc = (0.26, 0.42, 0.58)
+    jm, zm = fabric(jc), mat((0.80, 0.80, 0.82), 0.3, metal=0.6)
     for sd in (-1, 1):
-        rbox(-0.1, -0.022, -0.17, 0.1, 0.022, 0.0, jm, "lotte", r=0.02, rot=(R(sd * 8), 0, R(math.degrees(math.atan2(
-            arm.y, arm.x)))), name="Jacke").location = mid + (arm.cross(UP)).normalized() * sd * 0.03
-    ball(*mid, 0.04, jm, "lotte", scale=(2.4, 1.2, 0.8), rot=(0, 0, math.atan2(arm.y, arm.x)), seg=14, name="Jacke")
+        o = rbox(-0.11, -0.016, -0.24, 0.11, 0.016, 0.0, jm, "lotte", r=0.014, name="Jacke")
+        o.location = mid + side * sd * 0.03 + UP * 0.03
+        o.rotation_euler = (R(-sd * 6), 0, yaw)
+    o = torus(*(mid + UP * 0.03), 0.03, 0.016, jm, "lotte", rot=(R(90), 0, yaw), seg=20, half=True, name="Jacke")
+    capsule(mid + ah * 0.09 + side * 0.04 + UP * -0.04, mid + ah * 0.12 + side * 0.05 + UP * -0.3, 0.03, jm, "lotte",
+            name="Ärmel")
+    ball(*(mid - ah * 0.1 - side * 0.045 + UP * -0.05), 0.06, jm, "lotte", scale=(1, 0.7, 1.1), seg=16, name="Kapuze")
+    rbox(-0.003, -0.003, -0.22, 0.003, 0.003, 0.0, zm, "lotte", rot=(0, 0, yaw), name="Reißverschluss").location = \
+        mid + side * 0.047 + ah * 0.1 + UP * 0.02
     # Ayla, Defne's mother, posts a card into the wooden wish box, seen half from the side; Defne in her birthday crown
     # and berry dress stands beside her and looks up at the box
     wb = Vector(P_["wb"]["slot"])
@@ -2519,7 +2552,7 @@ def build_abholung(v):
     maren(4.85, 0.95, 140, "kneel", look=(4.65, 0.75, 0.3))
     kid(5, 4.95, 0.52, 100, "sit", hid="kinder", look=(4.65, 0.72, 0.4), shoes=SOCKS[4])
     shots = {"faecher": dict(loc=(2.6, 2.0, 1.44), target=(0.3, 2.5, 1.03), lens=44, fstop=6.3),
-             "wunsch": dict(loc=(0.82, 3.02, 2.0), target=(0.22, 3.98, 1.25), lens=26, fstop=4.0)}  # over the cabinets
+             "wunsch": dict(loc=(0.82, 2.95, 2.0), target=(0.22, 3.92, 1.25), lens=26, fstop=4.0)}  # over the cabinets
     return dict(W=W, D=D, time="nachmittag", pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1))
 
 
@@ -4234,6 +4267,65 @@ def maren(x, y, face, pose="stand", hid="maren", acc=(), **kw):
     return pts
 
 
+JONAS_COAT, JONAS_SWEATER = (0.60, 0.49, 0.40), (0.33, 0.40, 0.56)  # as in the Vorraum at 8:00
+
+
+def thin_glasses(head, look, face, hid, kind="adult", col=(0.42, 0.30, 0.22)):
+    """Thin round wire glasses (the lib's glasses read as big eye whites at small size). Same eye points as person()."""
+    hr = DIMS[kind]["head"]
+    hc = Vector(head)
+    fh = fvec(face)
+    if look is not None:
+        lv = Vector(look) - hc
+        lh = Vector((lv.x, lv.y, 0))
+        if lh.length > 1e-3:
+            fh = lh.normalized()
+        pitch = max(-0.45, min(0.45, math.atan2(lv.z, max(lh.length, 1e-3))))
+        fh = (fh * math.cos(pitch) + UP * math.sin(pitch)).normalized()
+    sh_ = fh.cross(UP).normalized()
+    uh = sh_.cross(fh).normalized()
+    gm = mat(col, 0.35, metal=0.4)
+    q = fh.to_track_quat("Z", "Y").to_euler()
+    for sd in (-1, 1):
+        e = (fh + sh_ * sd * 0.36 + uh * 0.02).normalized()
+        torus(*(hc + e * hr * 1.04), hr * 0.2, hr * 0.009, gm, hid, rot=q, seg=24, name="Brille")
+    capsule(hc + (fh + uh * 0.06).normalized() * hr * 1.05 + sh_ * hr * -0.12,
+            hc + (fh + uh * 0.06).normalized() * hr * 1.05 + sh_ * hr * 0.12, hr * 0.008, gm, hid, name="Brille")
+
+
+def jonas_standing(x, y, face, pose="hold", look=None, arms=None, acc=(), hid="jonas"):
+    """Papa Jonas at the pickup, dressed as in the morning: open taupe coat over the blue sweater, collar folded down,
+    thin glasses, bulgy blue covers over his shoes. Returns the points of person()."""
+    c = dict(CAST["jonas"])
+    c.pop("acc", None)
+    c.update(top=JONAS_COAT, bottom=(0.32, 0.35, 0.44), shoes=COVERS)
+    pts = person(x, y, face, pose=pose, hid=hid, key="jonas", acc=tuple(acc), look=look, arms=arms, **c)
+    d = DIMS["adult"]
+    f = fvec(face)
+    sd_ = f.cross(UP).normalized()
+    hip_z = 0.05 + d["leg"]
+    neck_z = hip_z + d["torso"] - d["r"] * 0.35
+    base = Vector((x, y, 0.0))
+    rot = (0, 0, R(face - 90))
+    sw, cm = fabric(JONAS_SWEATER), fabric(JONAS_COAT)
+    edge = fabric(tuple(v * 0.8 for v in JONAS_COAT))
+    # the sweater shows between the open fronts, from the belt up to the neck
+    rbox(-0.045, -0.01, 0.0, 0.045, 0.01, neck_z - hip_z - 0.02, sw, hid, r=0.008, rot=rot,
+         name="Pullover").location = base + f * d["r"] * 0.79 + UP * (hip_z - 0.04)
+    # coat skirt down to the knees, open at the front, with darker front edges
+    cone(x, y, hip_z - 0.14, d["r"] * 1.22, d["r"] * 0.98, 0.38, cm, hid, verts=32, name="Mantel")
+    for sd in (-1, 1):
+        z0_ = hip_z - 0.33
+        rbox(-0.012, -0.012, 0.0, 0.012, 0.012, neck_z - z0_ - 0.03, edge, hid, r=0.006, rot=rot,
+             name="Mantelkante").location = base + f * (d["r"] * 0.9) + sd_ * sd * 0.06 + UP * z0_
+    # collar folded down flat on the shoulders
+    o = torus(x, y, neck_z - 0.025, d["r"] * 0.7, 0.016, cm, hid, seg=28, name="Kragen")
+    o.scale = (1, 1, 0.6)
+    thin_glasses(pts["head"], look, face, hid)
+    ueberschuhe(x, y, face, hid)
+    return pts
+
+
 def ueberschuhe(x, y, face, hid, kind="adult"):
     """Bulgy bright-blue plastic shoe covers over the shoes of a standing grown-up (parents keep their shoes on in the
     Piazza; the dirt stays in the entrance room). Same foot points as person() uses for standing poses."""
@@ -4484,9 +4576,9 @@ def piazza_room(v):
     kids_cfg = [dict(k, plan=plan[i], cube=cubes[i]) for i, k in enumerate(PIAZZA_KIDS)]
     cab = garderobe(F, 2.0, kids_cfg, w=0.304, open_k=1 if SHOT == "offen" else None)
     # the wish box hangs at adult height (it is for the parents), high enough to show above the end of the cabinets
-    # (the board ends 15 cm before the corner, so that Maren can lean beside it at 16:15)
+    # (the board ends 25 cm before the corner, so that Maren can lean against its edge at 16:15)
     wb = wunschkasten(F, 3.675, 1.30)
-    taf = magnettafel(F, 3.835, 4.655, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
+    taf = magnettafel(F, 3.835, 4.545, 0.86, 1.62, now={"745": 0, "800": 0, "1615": 4, "abholung": 4}[key],
                       week=PIAZZA_WEEK[key], sosse=late, lamp=4.0 if key == "1615" else 0.0)
     A("schrank_mila", *cab[1]["door"])
     A("mila_fach", *cab[1]["door"])
@@ -4505,12 +4597,15 @@ def piazza_room(v):
     bunting((0.04, 1.0, 2.47), (0.04, 3.6, 2.47), sag=0.2)
     # play corner at the front right
     rug_rect(4.35, 0.3, 5.6, 1.25, (0.86, 0.78, 0.64), (0.78, 0.70, 0.56), "spielecke", "Y", 6.0)
-    for k in range(5):
-        box(4.62 - 0.06, 0.72 - 0.06, 0.02 + k * 0.12, 4.62 + 0.06, 0.72 + 0.06, 0.14 + k * 0.12,
-            mat(BLOCKC[k % 4], 0.45, coat=0.3), "spielecke", bev=0.01, rot=(0, 0, R(k * 19)), name="Turm")
-    for k in range(4):
-        rbox(5.0 + k * 0.15, 0.5, 0.02, 5.13 + k * 0.15, 0.6, 0.1, mat([BERRY, SKY, OCHRE, SAGE][k], 0.45, coat=0.3),
-             "spielecke", r=0.02, name="Zug")
+    if key == "1615":  # after the last child: blocks and train tidied into a basket at the edge of the mat
+        basket(4.62, 1.05, 0.02, 0.17, 0.2, "spielecke", fill="blocks")
+    else:
+        for k in range(5):
+            box(4.62 - 0.06, 0.72 - 0.06, 0.02 + k * 0.12, 4.62 + 0.06, 0.72 + 0.06, 0.14 + k * 0.12,
+                mat(BLOCKC[k % 4], 0.45, coat=0.3), "spielecke", bev=0.01, rot=(0, 0, R(k * 19)), name="Turm")
+        for k in range(4):
+            rbox(5.0 + k * 0.15, 0.5, 0.02, 5.13 + k * 0.15, 0.6, 0.1, mat([BERRY, SKY, OCHRE, SAGE][k], 0.45, coat=0.3),
+                 "spielecke", r=0.02, name="Zug")
     rainbow(5.25, 1.0, 0.02, 0.9, 30, "spielecke")
     # Hubel on a braided rug
     cx, cy = 3.1, 2.3
@@ -4597,10 +4692,11 @@ def build_piazza(v):
         stool(sp.x, sp.y, 0.32, OCHRE, "maren")
         maren(sp.x, sp.y, 165 + 180, "sitc", seat=0.32, look=pm["head"])
     else:
-        # 16:15: the last children are gone. Maren leans with her right shoulder against the north end of the magnet
-        # board and speaks her note into the phone in her left hand. Low, warm evening light; the board lamp is on.
+        # 16:15: the last children are gone and the play corner is tidied up. Maren leans with her right shoulder
+        # against the north edge of the magnet board (beside it, not in front of the tiles) and speaks her note into
+        # the phone in her left hand. Low, warm evening light; the board lamp is on.
         time, lcfg = "nachmittag", dict(sun_el=7.0, strength=3.0, fill=0.32, world=0.2)
-        mp = Vector((0.32, 4.64, 0.0))
+        mp = Vector((0.29, 4.635, 0.0))
         fc = 300
         f = fvec(fc)
         left = -f.cross(UP).normalized()
