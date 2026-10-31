@@ -2228,12 +2228,19 @@ def build_waschraum(v):
     # mirror strip, speaker
     panel(cx0 + 0.05, D - 0.04, 0.82, cx1 - 0.05, D - 0.01, 1.4, "spiegel", name="Spiegelrahmen")
     box(cx0 + 0.1, D - 0.045, 0.87, cx1 - 0.1, D - 0.04, 1.35, mirror(), "spiegel", name="Spiegel")
+    # small round birch speaker on the tiles right of the mirror (left of the cubicles, so it stays in view)
+    spx, spz = 3.1, 1.17
+    cyl(0, 0, 0.0, 0.025, 0.11, multiplex("Y", 100.0), "lautsprecher", verts=40, rot=(R(90), 0, 0), bev=0.006,
+        name="Lautsprecher").location = (spx, D - 0.004, spz)
+    cyl(0, 0, 0.0, 0.003, 0.08, fabric((0.50, 0.48, 0.46), 0.5, 0.9), "lautsprecher", verts=40, rot=(R(90), 0, 0),
+        name="Bespannung").location = (spx, D - 0.029, spz)
+    torus(spx, D - 0.031, spz, 0.082, 0.007, WOOD_D, "lautsprecher", rot=(R(90), 0, 0), seg=32, name="Lautsprecherring")
     for k in range(13):
         a = k * 2.39
-        rr = 0.05 * math.sqrt(k / 13)
-        ball(3.2 + math.cos(a) * rr, D - 0.012, 1.05 + math.sin(a) * rr, 0.007, DARK, "lautsprecher", seg=8)
-    torus(3.2, D - 0.01, 1.05, 0.065, 0.01, WOOD_D, "lautsprecher", rot=(R(90), 0, 0), seg=28)
-    A("lautsprecher", 3.2, D - 0.01, 1.05)
+        rr = 0.06 * math.sqrt(k / 13)
+        ball(spx + math.cos(a) * rr, D - 0.032, spz + math.sin(a) * rr, 0.006, mat((0.30, 0.28, 0.27), 0.8), "lautsprecher",
+             seg=8, name="Loch")
+    A("lautsprecher", spx, D - 0.03, spz)
     # towel hooks with picture symbols
     for k in range(6):
         yy = 1.65 + k * 0.36
@@ -2257,13 +2264,12 @@ def build_waschraum(v):
         torus(tx, D - 0.34, 0.27, 0.12, 0.025, mat(SAGE, 0.4, coat=0.3), "toilette", seg=28, name="Brille")
         rbox(tx - 0.16, D - 0.12, 0.25, tx + 0.16, D - 0.02, 0.55, WHITE, "toilette", r=0.02, name="Spülkasten")
     smiley(3.6, D - 1.07, 1.02, -90, "froh", 0.05, hid="toilette")
-    # a long low step along the children's basins (birch, non-slip strips), a loose step stool by the low basin
+    # a long low step along the children's basins (birch, non-slip strips)
     st_h = 0.16
     panel(cx0, D - 0.8, 0.0, cxs, D - 0.53, st_h, "becken", name="Stufe")
     for k in range(7):
         xx = cx0 + 0.1 + k * (cxs - cx0 - 0.2) / 6
         box(xx - 0.09, D - 0.78, st_h, xx + 0.09, D - 0.55, st_h + 0.003, mat(SAGE, 0.8), "becken", name="Rutschschutz")
-    panel(2.9, 2.45, 0, 3.25, 2.75, 0.18, "becken", name="Tritt")
     # people: kids on the step washing hands (water runs and they lather while the light beetle runs), Maren singing
     wm = mat((0.72, 0.86, 1.0), 0.05, coat=1.0, alpha=0.45, name="Wasser")
     foam = mat((0.98, 0.98, 0.97), 0.6, name="Schaum")
@@ -2789,11 +2795,17 @@ def green_entrance(ex0, ey0, ex1, ey1, eh):
         g.visible_shadow = False
     g = box(dx0, ey0 - 0.025, 2.3, dx1, ey0 - 0.015, eh - 0.05, gl, hid, name="Glas")
     g.visible_shadow = False
-    door = box(dx0 + 0.05, ey0 - 0.025, 0.0, dx1 - 0.05, ey0 - 0.015, 2.25, gl, hid, name="Glastür")
-    door.visible_shadow = False
     for (a0, a1, c0, c1) in ((dx0, dx0 + 0.05, 0.0, 2.3), (dx1 - 0.05, dx1, 0.0, 2.3), (dx0, dx1, 2.25, 2.3), (dx0, dx1, 0.0, 0.08)):
         panel(a0, ey0 - 0.05, c0, a1, ey0, c1, hid, name="Türrahmen")
-    capsule((dx1 - 0.12, ey0 - 0.07, 0.8), (dx1 - 0.12, ey0 - 0.07, 1.4), 0.015, STEEL, hid, name="Türgriff")
+    # the glass door stands open (hinged on the left, swung out), Maren waits in the doorway
+    mark = len(objects)
+    w = dx1 - dx0 - 0.1
+    door = box(0.0, -0.005, 0.0, w, 0.005, 2.24, gl, hid, name="Glastür")
+    door.visible_shadow = False
+    for (a0, a1, c0, c1) in ((0.0, 0.05, 0.0, 2.24), (w - 0.05, w, 0.0, 2.24), (0.0, w, 2.18, 2.24), (0.0, w, 0.0, 0.1)):
+        panel(a0, -0.012, c0, a1, 0.012, c1, hid, name="Türflügel")
+    capsule((w - 0.08, 0.03, 0.8), (w - 0.08, 0.03, 1.4), 0.015, STEEL, hid, name="Türgriff")
+    place_group(objects[mark:], (dx0 + 0.05, ey0 - 0.03, 0.0), Matrix.Rotation(R(-100), 4, "Z"))
     box(ex1 - 0.04, ey0, 0.0, ex1, ey1, 0.35, larch("Y"), hid, name="Sockel")
     g = box(ex1 - 0.025, ey0, 0.35, ex1 - 0.015, ey1, eh - 0.05, gl, hid, name="Glas")
     g.visible_shadow = False
@@ -2810,7 +2822,7 @@ def green_entrance(ex0, ey0, ex1, ey1, eh):
     box(ex0 + 0.1, ey0 - 0.15, eh + 0.2, ex1 + 0.1, ey1 - 0.1, eh + 0.26, winter_roof(),
         hid, name="Gründach")
     text3d("Bildungshaus", (ex0 + ex1) / 2 + 0.1, ey0 - 0.255, eh + 0.1, 0.13, mat(PETROL, 0.5), hid, extrude=0.006)
-    A("eingang", (ex0 + ex1) / 2 + 0.1, ey0 - 0.02, 1.5)
+    A("eingang", ex1 + 0.02, (ey0 + ey1) / 2, 1.4)     # on the glazed east side of the room, clear of Maren
     A("kita_entrance", (dx0 + dx1) / 2, ey0 - 0.02, 1.2)
     A("vorraum", (ex0 + ex1) / 2, ey1 - 0.2, 1.2)
 
@@ -2859,8 +2871,6 @@ def school_next_door():
     # entrance on the south side with a canopy
     box(sx1 - 1.75, sy0 - 0.04, 0.0, sx1 - 0.45, sy0 - 0.01, 2.4, win, hid, name="Eingang Schule")
     panel(sx1 - 2.0, sy0 - 1.4, 2.6, sx1 - 0.2, sy0, 2.75, hid, name="Vordach")
-    text3d("Schule", sx1 + 0.06, sy0 + 2.6, sh - 1.2, 0.6, mat(PETROL, 0.5), hid, rot=(R(90), 0, R(90)), extrude=0.02,
-           name="Schrift Schule")
     A("schule", sx1 + 0.05, sy0 + 2.6, 5.4)
 
 
@@ -3000,15 +3010,13 @@ def build_aussen(v):
         for j in range(7):
             cone(xw + 0.15 + j * 0.3, by0 - 0.075, 5.42, 0.07, 0.0, 0.13, mat(CLOTH[(j + 2) % len(CLOTH)], 0.8), "og",
                  rot=(R(180), 0, 0), verts=3, name="Wimpel")
-    # the team room upstairs on the right: a long table, a pendant lamp, a big plant
+    # the team room upstairs on the right: a long table, a pendant lamp
     box(6.35, by0 - 0.075, 4.35, 7.95, by0 - 0.07, 4.42, mat((0.70, 0.52, 0.34), 0.6), "og", name="Teamtisch")
     for xx in (6.6, 7.1, 7.6):
         ball(xx, by0 - 0.08, 4.55, 0.1, mat(random.choice([SAGE, ROSE, PETROL]), 0.8), "og", scale=(1, 0.25, 1.2),
              name="Kopf im Teamraum")
     ball(7.1, by0 - 0.08, 5.3, 0.09, mat((1.0, 0.95, 0.8), 0.4, emission=(1.0, 0.85, 0.6), strength=6.0), "og",
          scale=(1.3, 0.3, 0.7), name="Pendelleuchte")
-    for k in range(5):
-        ball(7.85 + random.uniform(-0.1, 0.1), by0 - 0.08, 4.3 + k * 0.2, 0.14, LEAF, "og", scale=(1, 0.25, 1), name="Pflanze")
     A("og", 4.65, by0 - 0.05, 4.75)
     A("teamraum", 7.1, by0 - 0.05, 4.75)
     # the hall behind a glass front: floor, rug and the obelisk, the heart of the house
@@ -3072,9 +3080,6 @@ def build_aussen(v):
             p = box(-0.8, -0.5, -0.02, 0.8, 0.5, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), "dach", name="Solar")
             p.location = (2.0 + j * 2.0, 8.6 + k * 1.15, bh + 0.65)
             p.rotation_euler = (R(-25), 0, 0)
-    for k in range(10):
-        ball(random.uniform(1, 9.5), random.uniform(7, 11.4), bh + 0.32, random.uniform(0.15, 0.3),
-             mat(random.choice([(0.85, 0.75, 0.4), (0.75, 0.5, 0.55), (0.6, 0.7, 0.4)]), 0.9), "dach", scale=(1, 1, 0.4), seg=12)
     A("dach", 5.3, 9.2, bh + 0.6)
     A("kita", 4.65, by0 - 0.05, 1.6)
     # garden: sandbox, apple tree, raised beds, play tower, fence
@@ -3130,7 +3135,11 @@ def build_aussen(v):
         acc=("scarf",))
     who("mila", 10.85, 3.45, 85, "walk", hid="mila", arms={"r": meet}, look=(10.9, 6.3, 1.2), acc=("beanie",),
         top=PIAZZA_KIDS[1]["jacket"], stripe=None)
-    mr = who("sanne", 11.75, 5.45, -115, "wave", hid="maren", shoes=SLIPPERS, look=(11, 3.4, 1.0))
+    mf = -100
+    f_, s_ = fvec(mf), fvec(mf).cross(UP).normalized()
+    msh = Vector((10.92, 6.5, 1.135)) + s_ * 0.136
+    mr = who("sanne", 10.92, 6.5, mf, "stand", hid="maren", shoes=SLIPPERS, look=(11, 3.4, 1.2),
+             arms={"r": tuple(msh + s_ * 0.27 + UP * 0.36 + f_ * 0.14)})
     A("maren_head", *mr["head"])
     plant(9.4, 6.2, 0, 1.0, pot="terra", kind="bush")
     bare_tree(14.45, 10.9, 3.5, 0.95, hid="baum2", seed=7)
@@ -3598,7 +3607,7 @@ def tomato_plant(F, u, d, z, trusses, hid="tomaten", h=0.95, pot="terra"):
     return soil, tips, sk
 
 
-def ripe_tag(c, n, hid="tomaten", turn=22.0):
+def ripe_tag(c, n, hid="tomaten", turn=22.0, red=True):
     """Small flat wooden plate (7 x 5 cm) hanging on a string from a branch; the side facing the room is painted red:
     ripe. turn: degrees the plate is turned on its string towards the camera."""
     c, n = Vector(c), Vector(n).normalized()
@@ -3607,8 +3616,9 @@ def ripe_tag(c, n, hid="tomaten", turn=22.0):
     rot = (0, 0, yaw - R(90))
     rbox(-0.036, -0.0045, -0.026, 0.036, 0.0045, 0.026, mat((0.86, 0.72, 0.52), 0.5, noise=0.06), hid, r=0.006, rot=rot,
          name="Plättchen").location = c
-    rbox(-0.031, -0.001, -0.021, 0.031, 0.001, 0.021, mat((0.88, 0.14, 0.10), 0.4, coat=0.3), hid, r=0.004, rot=rot,
-         name="Plättchen rot").location = c + nn * 0.0052
+    if red:
+        rbox(-0.031, -0.001, -0.021, 0.031, 0.001, 0.021, mat((0.88, 0.14, 0.10), 0.4, coat=0.3), hid, r=0.004, rot=rot,
+             name="Plättchen rot").location = c + nn * 0.0052
     capsule(c + UP * 0.026, c + UP * 0.1 - n * 0.06, 0.0016, mat(LINEN, 0.8), hid, name="Schnur")
     ball(*(c + UP * 0.02), 0.004, WOOD_D, hid, seg=8, name="Öse")
 
@@ -3692,24 +3702,26 @@ def mud_trousers(y, z_hook, color, hid="haken"):
         capsule((0.055, yc - 0.03, top - 0.665), (0.055, yc + 0.03, top - 0.665), 0.005, DARK, hid, name="Steg")
 
 
-def rain_jacket(y, z_hook, color, hid="haken", x0=0.088):
-    """Child's rain jacket hanging by its hood loop from the front of a double hook: hood, shoulders, two sleeves hanging
-    at the sides, a zip and two pocket flaps. Reads as a jacket, not as a bag."""
+def rain_jacket(y, z_hook, color, hid="haken"):
+    """Child's rain jacket on its own wall hook, hanging flat by the loop in its collar: stand-up collar with the hood
+    folded flat behind it (no round hood, so it never reads as a head), two sleeves at the sides, zip, pocket flaps."""
     m = mat(color, 0.4, coat=0.5, name="Regenjacke")
     dk = mat(tuple(c * 0.8 for c in color), 0.45, coat=0.3, name="Regenjacke dunkel")
-    xb, xf = x0, x0 + 0.085
-    zt = z_hook - 0.07                       # shoulder line
-    ball((xb + xf) / 2, y, z_hook - 0.005, 0.058, m, hid, scale=(0.75, 1.0, 1.0), seg=20, name="Kapuze")
-    rbox(xb, y - 0.11, zt - 0.36, xf, y + 0.11, zt, m, hid, r=0.03, name="Jacke")
+    xb, xf = 0.03, 0.105
+    zt = z_hook - 0.045                      # shoulder line just below the hook
+    rbox(0.024, y - 0.07, zt - 0.13, 0.034, y + 0.07, zt + 0.015, dk, hid, r=0.004, name="Kapuze gefaltet")
+    rbox(xb, y - 0.1, zt - 0.34, xf, y + 0.1, zt, m, hid, r=0.026, name="Jacke")
+    rbox(xb + 0.004, y - 0.058, zt - 0.015, xf + 0.004, y + 0.058, zt + 0.03, dk, hid, r=0.01, name="Kragen")
+    torus(0.06, y, z_hook - 0.004, 0.012, 0.0035, dk, hid, rot=(R(90), 0, 0), seg=12, name="Aufhänger")
     for sd in (-1, 1):
-        capsule(((xb + xf) / 2 + 0.006, y + sd * 0.11, zt - 0.03), ((xb + xf) / 2 + 0.012, y + sd * 0.128, zt - 0.32),
-                0.029, m, hid, taper=0.9, name="Ärmel")
-        capsule(((xb + xf) / 2 + 0.012, y + sd * 0.128, zt - 0.32), ((xb + xf) / 2 + 0.012, y + sd * 0.129, zt - 0.345),
-                0.026, dk, hid, name="Bündchen")
-        box(xf - 0.002, y + sd * 0.06 - 0.032, zt - 0.25, xf + 0.006, y + sd * 0.06 + 0.032, zt - 0.22, dk, hid,
+        capsule(((xb + xf) / 2 + 0.004, y + sd * 0.1, zt - 0.025), ((xb + xf) / 2 + 0.008, y + sd * 0.112, zt - 0.3),
+                0.026, m, hid, taper=0.9, name="Ärmel")
+        capsule(((xb + xf) / 2 + 0.008, y + sd * 0.112, zt - 0.3), ((xb + xf) / 2 + 0.008, y + sd * 0.113, zt - 0.325),
+                0.023, dk, hid, name="Bündchen")
+        box(xf - 0.002, y + sd * 0.055 - 0.03, zt - 0.24, xf + 0.006, y + sd * 0.055 + 0.03, zt - 0.21, dk, hid,
             name="Taschenklappe")
-    box(xf - 0.002, y - 0.005, zt - 0.355, xf + 0.005, y + 0.005, zt - 0.01, dk, hid, name="Reißverschluss")
-    box(xb, y - 0.112, zt - 0.36, xf + 0.002, y + 0.112, zt - 0.335, dk, hid, name="Saum")
+    box(xf - 0.002, y - 0.005, zt - 0.335, xf + 0.005, y + 0.005, zt - 0.02, dk, hid, name="Reißverschluss")
+    box(xb, y - 0.102, zt - 0.34, xf + 0.002, y + 0.102, zt - 0.315, dk, hid, name="Saum")
 
 
 def side_vine(F, u_side, out, pot_u, z_top, hid="regal", lengths=(0.42, 0.6, 0.34)):
@@ -3783,7 +3795,10 @@ def winter_coat(pts, face, coat, sweater, kind="adult", seat=0.32, hid=None):
     for sd in (-1, 1):
         o = rbox(-0.06, -0.12, -0.012, 0.06, 0.1, 0.012, cm, hid, r=0.01, rot=rot, name="Mantelschoß")
         o.location = base + s * sd * d["lr"] * 1.05 + f * 0.12 + UP * (hip_z + d["lr"] + 0.004)
-    torus(hc.x, hc.y, neck_z - 0.005, d["r"] * 0.66, 0.026, cm, hid, seg=24, name="Kragen")
+    sm = fabric(OCHRE)
+    torus(hc.x, hc.y, neck_z - 0.055, d["r"] * 0.7, 0.03, sm, hid, seg=24, name="Schal")
+    capsule(base + f * d["r"] * 0.8 + s * 0.04 + UP * (neck_z - 0.07), base + f * d["r"] * 0.86 + s * 0.05 + UP * (neck_z - 0.24),
+            0.022, sm, hid, flat=0.5, name="Schalende")
 
 
 def kid_jacket(pts, face, color, kind="kid", seat=0.32, hid=None):
@@ -3955,9 +3970,8 @@ def build_vorraum(v):
         box(gx0, yy - 0.004, 0.0, gx1, yy + 0.004, 0.009, bar, "rost", name="Rostquerstab")
     A("rost", 0.48, 0.7, 0.02)
 
-    # ---- hooks for wet mud trousers and rain jackets over the grid (these stay here): one long double hook per child,
-    # the mud trousers hang by their straps at the back, the rain jacket by its hood in front of them
-    hy = [1.22, 1.46, 1.70, 1.94]
+    # ---- hooks for wet mud trousers and rain jackets over the grid (these stay here): one hook each, side by side
+    hy = [1.185, 1.43, 1.675, 1.92]
     panel(0.0, 1.08, 0.98, 0.022, 2.06, 1.44, "haken", name="Hakenleiste")
     for k, (yy, kind) in enumerate(zip(hy, ["igel", "fuchs", "bär", "hase"])):
         capsule((0.02, yy, 1.12), (0.155, yy, 1.17), 0.011, WOOD_D, "haken", name="Haken")
@@ -3965,10 +3979,10 @@ def build_vorraum(v):
         badge = cyl(0, 0, -0.005, 0.005, 0.034, multiplex("X", 100.0), "haken", verts=28, rot=(0, R(90), 0), name="Bildschild")
         badge.location = (0.027, yy, 1.33)
         relief((0.032, yy, 1.33), (1, 0, 0), UP, kind, None, 0.9, "haken")
-    for yy, col in zip(hy, [(0.96, 0.78, 0.24), (0.32, 0.44, 0.64), BERRY, (0.46, 0.62, 0.42)]):
-        mud_trousers(yy, 1.15, col)
-    rain_jacket(hy[0], 1.17, SKY)
-    rain_jacket(hy[2], 1.17, (0.95, 0.80, 0.36))
+    mud_trousers(hy[0], 1.15, (0.96, 0.78, 0.24))
+    rain_jacket(hy[1], 1.15, SKY)
+    mud_trousers(hy[2], 1.15, BERRY)
+    rain_jacket(hy[3], 1.15, (0.46, 0.62, 0.42))
     A("haken", 0.12, 1.58, 1.12)
 
     # ---- plant shelves on both walls around the back corner, warm LED grow lights under every board
@@ -4046,7 +4060,7 @@ def build_vorraum(v):
     ts2, tips2, sk2 = tomato_plant(Fn, 1.49, dep * 0.5, VR_TIERS[0] + 0.022, ["rrrr", "rro", "ogg"])
     moisture_stick(*(Fn.p(1.49, dep * 0.5 + 0.08, 0) - Fn.t * 0.05).xy, ts2, v == "nacht", "tomaten")
     tag_c = Fn.p(1.49 + 0.1, dep * 0.5 + 0.18, ts2 + 0.6)
-    ripe_tag(tag_c, Fn.n)
+    ripe_tag(tag_c, Fn.n, red=v != "800")      # Maren turns it to red at 14:00
     A("reif", *tag_c)
     A("tomaten", *tips2[0])
     # a trailing plant on top of each shelf, its stems hanging down the outer side panel; a drawing above
@@ -4059,8 +4073,7 @@ def build_vorraum(v):
     A("speicher", *sp)
     A("ueberzieher", *cover_box(Fn, 2.39, 0.72))
     A("regal", 1.0, D - 0.17, 1.62)
-    A("licht", *lights[("n", 4, 1.36)])
-    A("licht_w", *lights[("w", 0, 0.94)])
+    A("licht", *lights[("w", 0, 0.94)])
 
     # ---- the door to the Piazza: closed, round windows at adult and child height, warm light behind
     glow = mat((0.98, 0.90, 0.76), 0.3, emission=(1.0, 0.85, 0.62), strength=1.4 if not night else 0.6, name="Piazza Licht")
@@ -4101,17 +4114,23 @@ def build_vorraum(v):
 
     # ---- people
     if v == "800":
-        for k in range(8):
-            ball(random.uniform(0.28, 0.78), random.uniform(0.4, 1.0), 0.014, random.uniform(0.012, 0.022), SNOW, "rost",
-                 scale=(1, 1, 0.45), seg=10, name="Schnee")
+        slush = mat((0.80, 0.83, 0.86), 0.2, coat=0.6, name="Matsch")
+        for k in range(5):   # a few irregular crumbs of slush that fell off the boots
+            cx, cy = random.uniform(0.3, 0.75), random.uniform(0.35, 0.95)
+            for j in range(random.randint(3, 5)):
+                ball(cx + random.uniform(-0.025, 0.025), cy + random.uniform(-0.02, 0.02), 0.013, random.uniform(0.006, 0.014),
+                     slush, "rost", scale=(random.uniform(0.8, 1.6), random.uniform(0.6, 1.2), 0.4),
+                     rot=(0, 0, random.uniform(0, 3.1)), seg=8, name="Matsch")
         # Mila, still in her peach jacket and hat, has pulled off her boots: one already stands in her fox compartment,
         # the other one is in her hands. Papa, in his open coat, sits beside her with blue covers over his shoes.
         mila_jacket = PIAZZA_KIDS[1]["jacket"]
         mx, my = xs[mila_k] - 0.07, by0 + 0.125     # a little left of her compartment so that it stays in view
         jx, jy = mx - 0.62, by0 + 0.17
-        jp = who("jonas", jx, jy, -90, "sitc", seat=seat, hid="jonas", acc=("scarf",), top=(0.60, 0.49, 0.40),
-                 bottom=(0.32, 0.35, 0.44),
-                 look=(mx, my - 0.1, 0.55), arms={"l": (jx + 0.33, by0 - 0.12, 0.45)})
+        jc = dict(CAST["jonas"])
+        jc.pop("acc", None)                          # no glasses here: plain dot eyes like every other figure
+        jc.update(top=(0.60, 0.49, 0.40), bottom=(0.32, 0.35, 0.44))
+        jp = person(jx, jy, -90, pose="sitc", seat=seat, hid="jonas", key="jonas", look=(mx, my - 0.1, 0.55),
+                    arms={"l": (jx + 0.33, by0 - 0.12, 0.45)}, **jc)
         winter_coat(jp, -90, (0.60, 0.49, 0.40), (0.33, 0.40, 0.56), hid="jonas")
         cover_feet(jx, jy, -90, "adult", seat, hid="jonas")
         sock = (0.97, 0.93, 0.86)
@@ -4139,16 +4158,24 @@ def build_vorraum(v):
         # Maren kneels at the ripe tomato and cuts two with small scissors, a child holds the bowl
         kb_pos = Vector((1.9, 2.44, 0.0))
         mr = who("sanne", 1.17, 2.5, 22, "kneel", hid="maren", shoes=SLIPPERS, look=(kb_pos.x, kb_pos.y, 0.62),
-                 arms={"l": tips2[0], "r": tuple(Vector(tips2[0]) + Vector((0.03, -0.15, 0.02)))})
+                 arms={"l": tips2[0], "r": tuple(Vector(tips2[0]) + Vector((0.07, -0.19, 0.07)))})
         A("maren_head", *mr["head"])
-        # children's scissors with rounded tips, blades towards the truss, berry handles in her right hand
+        # scissors in her right hand, open blades pointing up at the truss, berry handles in her fist
         sc = Vector(mr["hand_r"])
-        tv = (Vector(tips2[0]) - sc).normalized()
-        sv = tv.cross(UP).normalized()
+        tv = (Vector(tips2[0]) - sc)
+        tv.z = 0.0
+        tv = tv.normalized()
+        bv = (tv * 0.45 + UP * 0.9).normalized()
+        sv = bv.cross(tv).normalized()
+        steel = mat((0.88, 0.89, 0.90), 0.2, metal=0.8, name="Scherenstahl")
         for sd in (-1, 1):
-            capsule(sc + tv * 0.03, sc + tv * 0.11 + sv * sd * 0.012, 0.0055, STEEL, "maren", taper=0.6, name="Schere")
-            torus(*(sc - tv * 0.005 + sv * sd * 0.022), 0.018, 0.0055, mat(BERRY, 0.4, coat=0.3), "maren",
-                  rot=tuple(basis_rot(tv, sv.cross(tv), sv)), seg=16, name="Scherengriff")
+            blade = (bv + sv * sd * 0.22).normalized()
+            capsule(sc - bv * 0.04 + sv * sd * 0.012, sc + bv * 0.02 + blade * 0.14, 0.0075, steel, "maren", taper=0.45,
+                    name="Schere")
+            nn = bv.cross(sv).normalized()
+            torus(*(sc - bv * 0.07 + sv * sd * 0.028), 0.022, 0.0075, mat(BERRY, 0.4, coat=0.3), "maren",
+                  rot=tuple(basis_rot(sv, nn.cross(sv), nn)), seg=16, name="Scherengriff")
+        A("schere", *(sc + bv * 0.09))
         kb = kid(2, kb_pos.x, kb_pos.y, 172, "hold", hid="kinder", shoes=FELT[1], look=(1.5, 2.72, 0.66))
         bm = (Vector(kb["hand_r"]) + Vector(kb["hand_l"])) / 2
         bowl(bm.x, bm.y, bm.z - 0.045, 0.09, None, "kinder", color=SKY)
