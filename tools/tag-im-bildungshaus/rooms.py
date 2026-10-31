@@ -2743,11 +2743,17 @@ def green_entrance(ex0, ey0, ex1, ey1, eh):
         g.visible_shadow = False
     g = box(dx0, ey0 - 0.025, 2.3, dx1, ey0 - 0.015, eh - 0.05, gl, hid, name="Glas")
     g.visible_shadow = False
-    door = box(dx0 + 0.05, ey0 - 0.025, 0.0, dx1 - 0.05, ey0 - 0.015, 2.25, gl, hid, name="Glastür")
-    door.visible_shadow = False
     for (a0, a1, c0, c1) in ((dx0, dx0 + 0.05, 0.0, 2.3), (dx1 - 0.05, dx1, 0.0, 2.3), (dx0, dx1, 2.25, 2.3), (dx0, dx1, 0.0, 0.08)):
         panel(a0, ey0 - 0.05, c0, a1, ey0, c1, hid, name="Türrahmen")
-    capsule((dx1 - 0.12, ey0 - 0.07, 0.8), (dx1 - 0.12, ey0 - 0.07, 1.4), 0.015, STEEL, hid, name="Türgriff")
+    # the glass door stands open (hinged on the left, swung out), Maren waits in the doorway
+    mark = len(objects)
+    w = dx1 - dx0 - 0.1
+    door = box(0.0, -0.005, 0.0, w, 0.005, 2.24, gl, hid, name="Glastür")
+    door.visible_shadow = False
+    for (a0, a1, c0, c1) in ((0.0, 0.05, 0.0, 2.24), (w - 0.05, w, 0.0, 2.24), (0.0, w, 2.18, 2.24), (0.0, w, 0.0, 0.1)):
+        panel(a0, -0.012, c0, a1, 0.012, c1, hid, name="Türflügel")
+    capsule((w - 0.08, 0.03, 0.8), (w - 0.08, 0.03, 1.4), 0.015, STEEL, hid, name="Türgriff")
+    place_group(objects[mark:], (dx0 + 0.05, ey0 - 0.03, 0.0), Matrix.Rotation(R(-100), 4, "Z"))
     box(ex1 - 0.04, ey0, 0.0, ex1, ey1, 0.35, larch("Y"), hid, name="Sockel")
     g = box(ex1 - 0.025, ey0, 0.35, ex1 - 0.015, ey1, eh - 0.05, gl, hid, name="Glas")
     g.visible_shadow = False
@@ -2764,7 +2770,7 @@ def green_entrance(ex0, ey0, ex1, ey1, eh):
     box(ex0 + 0.1, ey0 - 0.15, eh + 0.2, ex1 + 0.1, ey1 - 0.1, eh + 0.26, winter_roof(),
         hid, name="Gründach")
     text3d("Bildungshaus", (ex0 + ex1) / 2 + 0.1, ey0 - 0.255, eh + 0.1, 0.13, mat(PETROL, 0.5), hid, extrude=0.006)
-    A("eingang", (ex0 + ex1) / 2 + 0.1, ey0 - 0.02, 1.5)
+    A("eingang", ex1 + 0.02, (ey0 + ey1) / 2, 1.4)     # on the glazed east side of the room, clear of Maren
     A("kita_entrance", (dx0 + dx1) / 2, ey0 - 0.02, 1.2)
     A("vorraum", (ex0 + ex1) / 2, ey1 - 0.2, 1.2)
 
@@ -2813,8 +2819,6 @@ def school_next_door():
     # entrance on the south side with a canopy
     box(sx1 - 1.75, sy0 - 0.04, 0.0, sx1 - 0.45, sy0 - 0.01, 2.4, win, hid, name="Eingang Schule")
     panel(sx1 - 2.0, sy0 - 1.4, 2.6, sx1 - 0.2, sy0, 2.75, hid, name="Vordach")
-    text3d("Schule", sx1 + 0.06, sy0 + 2.6, sh - 1.2, 0.6, mat(PETROL, 0.5), hid, rot=(R(90), 0, R(90)), extrude=0.02,
-           name="Schrift Schule")
     A("schule", sx1 + 0.05, sy0 + 2.6, 5.4)
 
 
@@ -2954,15 +2958,13 @@ def build_aussen(v):
         for j in range(7):
             cone(xw + 0.15 + j * 0.3, by0 - 0.075, 5.42, 0.07, 0.0, 0.13, mat(CLOTH[(j + 2) % len(CLOTH)], 0.8), "og",
                  rot=(R(180), 0, 0), verts=3, name="Wimpel")
-    # the team room upstairs on the right: a long table, a pendant lamp, a big plant
+    # the team room upstairs on the right: a long table, a pendant lamp
     box(6.35, by0 - 0.075, 4.35, 7.95, by0 - 0.07, 4.42, mat((0.70, 0.52, 0.34), 0.6), "og", name="Teamtisch")
     for xx in (6.6, 7.1, 7.6):
         ball(xx, by0 - 0.08, 4.55, 0.1, mat(random.choice([SAGE, ROSE, PETROL]), 0.8), "og", scale=(1, 0.25, 1.2),
              name="Kopf im Teamraum")
     ball(7.1, by0 - 0.08, 5.3, 0.09, mat((1.0, 0.95, 0.8), 0.4, emission=(1.0, 0.85, 0.6), strength=6.0), "og",
          scale=(1.3, 0.3, 0.7), name="Pendelleuchte")
-    for k in range(5):
-        ball(7.85 + random.uniform(-0.1, 0.1), by0 - 0.08, 4.3 + k * 0.2, 0.14, LEAF, "og", scale=(1, 0.25, 1), name="Pflanze")
     A("og", 4.65, by0 - 0.05, 4.75)
     A("teamraum", 7.1, by0 - 0.05, 4.75)
     # the hall behind a glass front: floor, rug and the obelisk, the heart of the house
@@ -3026,9 +3028,6 @@ def build_aussen(v):
             p = box(-0.8, -0.5, -0.02, 0.8, 0.5, 0.02, mat((0.18, 0.25, 0.38), 0.25, coat=0.6), "dach", name="Solar")
             p.location = (2.0 + j * 2.0, 8.6 + k * 1.15, bh + 0.65)
             p.rotation_euler = (R(-25), 0, 0)
-    for k in range(10):
-        ball(random.uniform(1, 9.5), random.uniform(7, 11.4), bh + 0.32, random.uniform(0.15, 0.3),
-             mat(random.choice([(0.85, 0.75, 0.4), (0.75, 0.5, 0.55), (0.6, 0.7, 0.4)]), 0.9), "dach", scale=(1, 1, 0.4), seg=12)
     A("dach", 5.3, 9.2, bh + 0.6)
     A("kita", 4.65, by0 - 0.05, 1.6)
     # garden: sandbox, apple tree, raised beds, play tower, fence
@@ -3084,7 +3083,11 @@ def build_aussen(v):
         acc=("scarf",))
     who("mila", 10.85, 3.45, 85, "walk", hid="mila", arms={"r": meet}, look=(10.9, 6.3, 1.2), acc=("beanie",),
         top=PIAZZA_KIDS[1]["jacket"], stripe=None)
-    mr = who("sanne", 11.75, 5.45, -115, "wave", hid="maren", shoes=SLIPPERS, look=(11, 3.4, 1.0))
+    mf = -100
+    f_, s_ = fvec(mf), fvec(mf).cross(UP).normalized()
+    msh = Vector((10.92, 6.5, 1.135)) + s_ * 0.136
+    mr = who("sanne", 10.92, 6.5, mf, "stand", hid="maren", shoes=SLIPPERS, look=(11, 3.4, 1.2),
+             arms={"r": tuple(msh + s_ * 0.27 + UP * 0.36 + f_ * 0.14)})
     A("maren_head", *mr["head"])
     plant(9.4, 6.2, 0, 1.0, pot="terra", kind="bush")
     bare_tree(14.45, 10.9, 3.5, 0.95, hid="baum2", seed=7)
