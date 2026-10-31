@@ -901,18 +901,18 @@ def garderobe(F, a0, kids, w=0.304, depth=0.48, h=1.55, hid="schrank", open_k=No
                 zz = 0.33 + j * 0.04
                 box(*F.bx(ui0 + 0.05, 0.0121, zz, ui1 - 0.05, 0.0138, zz + 0.012), mat((0.30, 0.24, 0.20), 0.6), hid,
                     name="Lüftung")
-            # a pair of knitted mittens drying on the slats: hand, thumb, striped cuff
-            mm, cuff = fabric(BERRY, 0.7, 0.95, 0.1), fabric(CREAM, 0.7, 0.95, 0.1)
+            # a pair of knitted mittens drying on the slats at the front (in view below the cube niche): the hand
+            # part with the fingers to the back, the thumb on the inner side, a cream ribbed cuff towards the front
+            mm, cuff = fabric((0.64, 0.20, 0.27), 0.7, 0.95, 0.1), fabric(CREAM, 0.7, 0.95, 0.1)
             for sd in (-1, 1):
-                ang = R(F.face + 90 + sd * 14)
-                ax = Vector((math.cos(ang), math.sin(ang), 0.0))      # along the mitten, fingers to the back
-                side = ax.cross(UP)
-                c0 = F.p(uc + sd * 0.062, depth * 0.48, 0.31)
-                ball(*c0, 0.042, mm, hid, scale=(1.0, 0.8, 0.36), rot=(0, 0, ang), seg=18, name="Fäustling")
-                ball(*(c0 - ax * 0.012 + side * sd * 0.038), 0.017, mm, hid, scale=(1.5, 0.9, 0.7),
-                     rot=(0, 0, ang - sd * 0.6), seg=12, name="Daumen")
-                cf = cyl(0, 0, -0.016, 0.016, 0.03, cuff, hid, verts=18, name="Bündchen")
-                cf.location = c0 - ax * 0.05
+                ax = (Matrix.Rotation(R(-sd * 22), 3, "Z") @ -F.n).normalized()
+                ang = math.atan2(ax.y, ax.x)
+                c0 = F.p(uc + sd * 0.088, depth - 0.1, 0.31)
+                ball(*c0, 0.04, mm, hid, scale=(1.2, 0.85, 0.36), rot=(0, 0, ang), seg=18, name="Fäustling")
+                ball(*(c0 - F.t * sd * 0.04 - ax * 0.006), 0.016, mm, hid, scale=(1.5, 0.9, 0.7),
+                     rot=(0, 0, ang + sd * 0.7), seg=12, name="Daumen")
+                cf = cyl(0, 0, -0.014, 0.014, 0.03, cuff, hid, verts=18, name="Bündchen")
+                cf.location = c0 - ax * 0.055
                 cf.rotation_euler = (0, R(90), ang)
                 cf.scale = (0.5, 1, 1)
             out["trockenfach"] = tuple(F.p(uc, depth - 0.06, 0.38))
