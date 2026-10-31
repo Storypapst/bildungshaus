@@ -1363,6 +1363,7 @@ KL_PL = (1.2, 0.7, 0.025)  # table top: length, width, thickness (2 x 3 of them 
 KL_PLCOL = [SAGE, ROSE, OCHRE, SKY, CLAY, PLUM]
 KL_TH = 0.40  # island height (children's table, the figures are toy scale)
 KL_SLIPPERS = (0.62, 0.64, 0.70)  # Maren's grey felt house slippers (same colour as SLIPPERS in the Piazza)
+KL_COVERS = (0.58, 0.76, 0.90)  # parents' blue shoe covers (same colour as COVERS in the Piazza)
 KL_SLOT = [0.045 + i * 0.085 for i in range(6)]  # x of each stored top's face (legs fold towards +x)
 KL_GAP = mat((0.28, 0.20, 0.14), 0.85, name="Fuge")
 
@@ -1698,6 +1699,7 @@ def kl_hoehle(x0, x1, hid="hoehle", kid_inside=False):
     lo = bpy.data.objects.new("Höhlenlicht", ld)
     scene.collection.objects.link(lo)
     lo.location = (cx, 4.4, z1 - 0.12)
+    lo.visible_glossy = False  # no highlight speck of the cave lamp on the coated floor
     if kid_inside:
         # sits sideways so the legs stay inside and the face shows through the hole
         kid(5, cx - 0.26, 4.4, 0, "sit", hid=hid, z=z0 + 0.06, look=(cx + 0.8, 3.2, 0.75))
@@ -1803,8 +1805,8 @@ def kl_schrankwand(v, offen=False):
                   name="Einschubtür")
     else:
         mid = (sb0 + c[6]) / 2
-        kl_front(sb0, mid, 0.0, KL_LOW, hid, grip="right", name="Ladentür", icon=(mid - 0.2, 0.95, "apfel"))
-        kl_front(mid, c[6], 0.0, KL_LOW, hid, grip="left", name="Ladentür")
+        kl_front(sb0, mid, 0.0, KL_LOW, hid, grip="right", name="Ladentür")
+        kl_front(mid, c[6], 0.0, KL_LOW, hid, grip="left", name="Ladentür", icon=(mid + 0.22, 0.95, "apfel"))
 
 
 def kl_wagen_at(cx, cy, rot=-90, hid="wagen"):
@@ -1823,13 +1825,13 @@ def kl_hocker_kopfueber(x, y, z, color, hid="maltisch"):
 
 
 def kl_kranz(x, y, z, hid="kranz"):
-    """Birthday ring with five wooden candles (painted wooden flames, no fire) and a 5."""
+    """Birthday ring with five wooden candles (birch tips, no fire) and a 5."""
     torus(x, y, z + 0.03, 0.14, 0.03, WOOD, hid, seg=36, name="Kranz")
     for k in range(5):
         a = k * 2 * math.pi / 5
         px, py = x + math.cos(a) * 0.14, y + math.sin(a) * 0.14
         cyl(px, py, z + 0.05, z + 0.16, 0.013, mat(CREAM, 0.6), hid, verts=12, name="Holzkerze")
-        ball(px, py, z + 0.18, 0.014, mat((0.93, 0.66, 0.30), 0.5, coat=0.3), hid, scale=(1, 1, 1.6), seg=10, name="Holzflamme")
+        ball(px, py, z + 0.175, 0.013, mat(BIRCH, 0.5, coat=0.2), hid, scale=(1, 1, 1.4), seg=10, name="Holzkuppe")
     text3d("5", x, y, z + 0.12, 0.12, mat(OCHRE, 0.4, coat=0.4), hid, rot=(R(90), 0, R(-40)), extrude=0.012)
     A("kranz", x, y, z + 0.2)
 
@@ -1854,6 +1856,20 @@ def kl_maren(x, y, face, pose="stand", hid="maren", acc=(), **kw):
     p = who("sanne", x, y, face, pose, hid=hid, acc=acc, shoes=KL_SLIPPERS, **kw)
     A("maren_head", *p["head"])
     return p
+
+
+def kl_ueberzieher_kniend(x, y, face, hid="ayla"):
+    """Bright blue shoe covers on the feet of a kneeling adult (parents keep their shoes on, covered)."""
+    d = DIMS["adult"]
+    f = fvec(face)
+    sv = f.cross(UP).normalized()
+    m = mat(KL_COVERS, 0.6, sheen=0.4, name="Überzieher")
+    for sd in (-1, 1):
+        knee = Vector((x, y, 0)) + sv * sd * d["lr"] * 1.1 + f * 0.08 + UP * d["lr"]
+        foot = knee - f * (d["leg"] * 0.6)
+        c = foot - f * 0.04
+        c.z = d["foot"] * 1.2 * 0.8
+        ball(*c, d["foot"] * 1.2, m, hid, scale=(1.0, 1.6, 0.8), rot=(0, 0, R(face - 90)), name="Überzieher")
 
 
 def kl_maltisch_verstaut(tx, ty):
@@ -1907,8 +1923,8 @@ def build_kaufladen(v):
         # people
         who("defne", 3.2, 3.83, -118, "reach", hid="defne", acc=("crown",), look=(2.4, 3.0, 0.62),
             arms={"l": (3.04, 3.62, 0.6), "r": (3.32, 3.66, 0.5)})
-        who("mila", 2.36, 3.02, 72, "reach", hid="mila", look=(2.8, 3.32, 0.62),
-            arms={"r": (2.47, 3.19, 0.535), "l": (2.22, 3.08, 0.38)})
+        who("mila", 2.36, 3.02, 32, "reach", hid="mila", look=(2.95, 3.1, 0.66),
+            arms={"r": (2.9, 3.44, 0.74), "l": (2.3, 2.9, 0.36)})
         kid(2, 3.45, 2.62, 128, "stand", hid="kinder", acc=("basket",), look=(2.8, 3.3, 0.7))
         # drawing table with the birthday ring (wooden candles)
         tx, ty = 4.0, 1.55
@@ -1929,7 +1945,9 @@ def build_kaufladen(v):
         kid(4, tx - 0.62, ty - 0.35, 30, "sitc", hid="maltisch", seat=0.3, look=(tx - 0.15, ty - 0.1, 0.5), acc=("brush",))
         stool(tx + 0.55, ty + 0.5, 0.3, SKY, "maltisch")
         kid(7, tx + 0.55, ty + 0.5, 220, "sitc", hid="maltisch", seat=0.3, look=(tx + 0.18, ty + 0.12, 0.5))
-        who("ayla", tx + 0.7, ty - 0.45, 150, "kneel", hid="ayla", look=(tx - 0.4, ty - 0.3, 0.6))
+        ax_, ay_, af_ = tx + 0.7, ty - 0.45, 150
+        who("ayla", ax_, ay_, af_, "kneel", hid="ayla", look=(tx - 0.4, ty - 0.3, 0.6))
+        kl_ueberzieher_kniend(ax_, ay_, af_)
     elif v == "umbau":
         # ---------------------------------------------------------------- 11:15 the shop folds in, tops come out
         kl_hoehle(KL_COLS[1], KL_COLS[3])
@@ -2098,7 +2116,7 @@ def kasse(x, y, z, hid="kasse", on_scan=None):
     rbox(x - 0.2, y - 0.14, z, x + 0.2, y + 0.14, z + 0.12, multiplex("Z", 100.0), hid, r=0.015, name="Kasse")
     top = rbox(-0.17, -0.11, -0.03, 0.17, 0.11, 0.03, multiplex("Z", 100.0), hid, r=0.012, name="Kassenkopf")
     top.location = (x + 0.02, y + 0.03, z + 0.16)
-    top.rotation_euler = (R(22), 0, 0)  # the scan top slopes towards the customer
+    top.rotation_euler = (R(5), 0, 0)  # nearly flat scan top, a slight slope towards the customer
     # speaker grille (front)
     for k in range(19):
         a = k * 2.39
@@ -2113,16 +2131,16 @@ def kasse(x, y, z, hid="kasse", on_scan=None):
     pc = mw @ Vector((0.0, -0.005, 0.03))
     fr = box(-0.14, -0.09, -0.004, 0.14, 0.09, 0.004, WOOD_D, hid, name="Scanrahmen")
     fr.location = pc + nrm * 0.003
-    fr.rotation_euler = (R(22), 0, 0)
+    fr.rotation_euler = (R(5), 0, 0)
     sc = box(-0.125, -0.076, -0.003, 0.125, 0.076, 0.003, mat((0.80, 0.06, 0.05), 0.2, emission=(1.0, 0.05, 0.03), strength=2.6),
              hid, name="Scanfenster")
     sc.location = pc + nrm * 0.008
-    sc.rotation_euler = (R(22), 0, 0)
+    sc.rotation_euler = (R(5), 0, 0)
     A("scan", *(pc + nrm * 0.02))
     if on_scan == "aubergine":
         back = (mw.to_3x3() @ Vector((0, 1, 0))).normalized()  # lies on the back half, the front of the window glows
-        ab = pc + nrm * 0.04 + back * 0.04 + Vector((0.02, 0.0, 0.0))
-        ball(*ab, 0.03, mat((0.30, 0.11, 0.36), 0.25, coat=0.6), hid, scale=(2.0, 1.0, 0.9), rot=(R(22), 0, R(8)),
+        ab = pc + nrm * 0.036 + back * 0.035 + Vector((0.02, 0.0, 0.0))
+        ball(*ab, 0.03, mat((0.30, 0.11, 0.36), 0.25, coat=0.6), hid, scale=(2.0, 1.0, 0.9), rot=(R(5), 0, R(8)),
              name="Aubergine")
         st = ab + Vector((math.cos(R(8)), math.sin(R(8)), 0)) * 0.064
         cone(*st, 0.021, 0.008, 0.035, LEAF, hid, rot=(0, R(90), R(8)), verts=8, name="Stiel")
