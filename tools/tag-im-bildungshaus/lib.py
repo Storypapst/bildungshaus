@@ -1089,9 +1089,11 @@ def relief(c, n, u, kind="fuchs", color=None, s=1.0, hid=None):
         for sd in (-1, 1):
             ear(sd * 0.014, 0.014, 0.006, 0.55, 0.85, 0.026, 0.009, m)
             ear(sd * 0.014, 0.016, 0.009, 0.55, 0.85, 0.012, 0.004, DARK)
-        B(0, -0.013, 0.008, 0.012, white, (1.15, 0.95, 0.6))
-        B(0, -0.024, 0.011, 0.0042, DARK, seg=10)
-        eyes(0.002)
+        # white cheeks on both sides of the chin, the small black nose between them at the tip, two clear eyes above
+        for sd in (-1, 1):
+            B(sd * 0.0085, -0.0125, 0.0065, 0.0078, white, (1.1, 0.9, 0.5))
+        B(0, -0.0205, 0.0098, 0.0032, DARK, seg=10)
+        eyes(0.004, 0.0135, 0.0098, 0.0047)
     elif kind == "hase":
         B(0, -0.002, 0.004, 0.022, m, (0.95, 0.95, 0.45), 20)
         for sd in (-1, 1):
@@ -1437,8 +1439,9 @@ def finish(args, name, opaque=False, exposure=-0.3):
             "anchors": {k: proj(v) for k, v in ANCH.items()},
             "paths": {k: [proj(p) for p in pts] for k, pts in PATHS.items()},
             "colors": id_colors}
-    with open(os.path.join(args.out, f"{name}.json"), "w") as f:
-        json.dump(meta, f, indent=1)
+    if not getattr(args, "blend_only", False):  # a .blend-only run renders no PNG, so it must not replace the anchors
+        with open(os.path.join(args.out, f"{name}.json"), "w") as f:
+            json.dump(meta, f, indent=1)
     if os.environ.get("BH_ANCHORS_ONLY"):
         print("ANCHORS", name)
         return
@@ -1508,10 +1511,19 @@ def finish(args, name, opaque=False, exposure=-0.3):
             scene.view_settings.look = os.environ.get("BH_LOOK", "AgX - Punchy")
         scene.view_settings.exposure = exposure + float(os.environ.get("BH_EXP", "0"))
         scene.render.filepath = os.path.join(args.out, f"{name}.png")
-    if getattr(args, "save_blend", False):
+    if getattr(args, "save_blend", False) or getattr(args, "blend_only", False):
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(args.out, f"{name}.blend"))
+        if getattr(args, "blend_only", False):
+            print("SAVED", os.path.join(args.out, f"{name}.blend"))
+            return
+    # Write to a partial file first: render_v5.sh skips existing PNGs, so a PNG cut off by an
+    # interrupted run must never appear under its final name.
+    final_path = scene.render.filepath
+    tmp_path = final_path[:-len(".png")] + ".partial.png"
+    scene.render.filepath = tmp_path
     bpy.ops.render.render(write_still=True)
-    print("RENDERED", scene.render.filepath)
+    os.replace(tmp_path, final_path)
+    print("RENDERED", final_path)
 
 
 def fit_iso(points, margin=0.035):
