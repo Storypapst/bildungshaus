@@ -247,9 +247,12 @@ def place_group(objs, loc, rot4=None):
 # ---------------------------------------------------------------- v5: Hubel (replaces the obelisk)
 # offers on the Hubel: name, places (= hollows), colour (yellow Kaufladen, blue Bauen, rose Malen)
 HUBEL_OFFERS = [("laden", 5, (0.97, 0.76, 0.22)), ("bauen", 6, (0.38, 0.60, 0.88)), ("malen", 6, (0.91, 0.56, 0.64))]
-# lathe profile (radius, height): stacked birch ply, flat dome on top, rounded edges
-HUBEL_PROF = [(0.0, 0.062), (0.44, 0.062), (0.50, 0.075), (0.535, 0.10), (0.552, 0.14), (0.556, 0.20), (0.556, 0.33),
-              (0.548, 0.375), (0.53, 0.405), (0.50, 0.428), (0.45, 0.442), (0.30, 0.449), (0.0, 0.452)]
+# lathe profile (radius, height) of the body: a narrow upright skirt (the small buttons sit on it) flaring out like a
+# bowl up to the padded rim; a flat top board lies inside the rim. Stacked birch ply.
+HUBEL_PROF = [(0.0, 0.05), (0.40, 0.05), (0.425, 0.058), (0.435, 0.075), (0.435, 0.19), (0.45, 0.215), (0.48, 0.245),
+              (0.51, 0.275), (0.515, 0.30), (0.0, 0.30)]
+HUBEL_TOP = 0.395      # top face of the board
+HUBEL_RIM = (0.515, 0.34, 0.085, 0.85)  # padded rim: ring radius, height, tube radius, vertical squash
 ICON_WHITE = (0.99, 0.97, 0.93)
 
 
@@ -349,65 +352,66 @@ def lathe(cx, cy, z, prof, m, hid=None, verts=72, name="Drehteil"):
 
 
 def hubel_z(r):
-    """Height of the Hubel's top surface at radius r (from the profile)."""
-    top = sorted(p for p in HUBEL_PROF if p[1] > 0.4)
-    for (r0, z0), (r1, z1) in zip(top, top[1:]):
-        if r0 <= r <= r1:
-            return z0 + (z1 - z0) * (r - r0) / (r1 - r0)
-    return top[-1][1]
+    """Height of the Hubel's top surface (flat board inside the padded rim)."""
+    return HUBEL_TOP
 
 
 def hubel(cx, cy, z=0.0, rot=90.0, filled=None, hid="hubel", pad=SAGE, cam=CAM):
-    """Low round wooden hump (about 0.45 m high, 1.2 m across) for the morning circle; replaces the obelisk.
+    """Low round wooden Hubel for the morning circle (about 0.44 m high, 1.2 m across); replaces the obelisk.
 
-    Stacked birch ply with a soft padded bumper (Velcro look, washable), six small lockable castors, three turning
-    picture cubes on top (Kaufladen yellow, Bauen blue, Malen rose) and one round hollow (Mulde) per place (5, 6, 6).
-    Small round buttons with little lights at crawling height for the toddlers. Low enough to see across the circle.
-    rot: direction (deg) the Kaufladen sector points to. filled: {offer: [animal or None, ...]} cubes in the hollows.
+    A flared birch-ply body on a narrow skirt, a fat padded rim around the flat top (washable cover on Velcro, a row
+    of tufting buttons), six small lockable castors under the skirt, three turning picture cubes on the board
+    (Kaufladen yellow, Bauen blue, Malen rose) and one round hollow (Mulde) per place (5, 6, 6). Small round buttons
+    with little lights on the skirt at crawling height. Low and flat, so everybody sees across the circle.
+    rot: direction (deg) the Kaufladen sector points to. filled: {offer: [animal | (animal, colour) | None, ...]}.
     cam: direction towards the camera; one button and one castor sit there.
     Returns points: top, cubes {offer}, mulden {offer: [...]}, free {offer: first free hollow}, knopf [...], rolle [...]."""
     filled = filled or {}
     C = Vector((cx, cy, z))
-    out = {"knopf": [], "rolle": [], "mulden": {}, "free": {}, "cubes": {}, "top": (cx, cy, z + 0.62)}
+    out = {"knopf": [], "rolle": [], "mulden": {}, "free": {}, "cubes": {}, "top": (cx, cy, z + 0.6)}
     lathe(cx, cy, z, HUBEL_PROF, multiplex("Z", 100.0), hid, verts=96, name="Hubel")
-    # soft bumper around the widest part, held by Velcro (darker seam above and below)
-    pd = torus(cx, cy, z + 0.262, 0.566, 0.058, fabric(pad, 0.6, 0.9, 0.06), hid, seg=96, name="Polster")
-    pd.scale = (1, 1, 0.9)
-    for dz in (-0.052, 0.052):
-        torus(cx, cy, z + 0.262 + dz, 0.556, 0.007, fabric(tuple(c * 0.7 for c in pad)), hid, seg=96, name="Klett")
-    # six small castors with a brake lever each
+    cyl(cx, cy, z + 0.30, z + HUBEL_TOP, 0.47, multiplex("Z", 100.0), hid, verts=96, name="Hubel Platte")
+    # the padded rim, held by Velcro (a darker seam below), with tufting buttons all round
+    rr, rz, rt, sq = HUBEL_RIM
+    pd = torus(cx, cy, z + rz, rr, rt, fabric(pad, 0.6, 0.9, 0.06), hid, seg=96, name="Polster")
+    pd.scale = (1, 1, sq)
+    dark = fabric(tuple(c * 0.72 for c in pad))
+    torus(cx, cy, z + rz - rt * sq * 0.82, rr + rt * 0.5, 0.006, dark, hid, seg=96, name="Klett")
+    for k in range(24):
+        d = fvec(cam + 7.5 + 15 * k)
+        ball(*(C + d * (rr + rt * 0.97) + UP * rz), 0.01, dark, hid, scale=(1, 1, 0.8), seg=10, name="Polsterknopf")
+    # six small castors under the skirt, each with a brake lever
     rub = mat((0.25, 0.25, 0.27), 0.6, name="Gummi")
     grey = mat((0.62, 0.63, 0.65), 0.35, metal=0.5, name="Rollengehäuse")
     for k in range(6):
         a = cam + 30 + 60 * k
         d = fvec(a)
-        p = C + d * 0.455
-        cyl(p.x, p.y, z + 0.05, z + 0.062, 0.032, grey, hid, verts=20, name="Rolle")
-        rbox(p.x - 0.02, p.y - 0.017, z + 0.03, p.x + 0.02, p.y + 0.017, z + 0.052, grey, hid, r=0.006, rot=(0, 0, R(a)),
-             name="Rolle")
-        wl = cyl(0, 0, -0.011, 0.011, 0.024, rub, hid, verts=24, name="Rolle")
-        wl.location = (p.x, p.y, z + 0.024)
+        p = C + d * 0.37
+        cyl(p.x, p.y, z + 0.038, z + 0.05, 0.03, grey, hid, verts=20, name="Rolle")
+        wl = cyl(0, 0, -0.011, 0.011, 0.022, rub, hid, verts=24, name="Rolle")
+        wl.location = (p.x, p.y, z + 0.022)
         wl.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
         rbox(-0.017, -0.009, -0.005, 0.017, 0.009, 0.005, mat(BERRY, 0.4, coat=0.3), hid, r=0.004, rot=(0, 0, R(a)),
-             name="Feststeller").location = (p.x + d.x * 0.036, p.y + d.y * 0.036, z + 0.042)
-        out["rolle"].append((p.x + d.x * 0.02, p.y + d.y * 0.02, z + 0.03))
-    # buttons with little lights at crawling height (they only make a light glow, they change nothing)
+             name="Feststeller").location = (p.x + d.x * 0.04, p.y + d.y * 0.04, z + 0.034)
+        out["rolle"].append((p.x + d.x * 0.03, p.y + d.y * 0.03, z + 0.025))
+    # buttons with little lights on the skirt at crawling height (they only make a light glow, they change nothing)
     btn = [(0.92, 0.38, 0.32), (0.97, 0.76, 0.25), (0.40, 0.64, 0.90), (0.50, 0.74, 0.42), (0.88, 0.52, 0.72),
            (0.98, 0.62, 0.30)]
     for k in range(6):
         a = cam + 60 * k
         d = fvec(a)
-        c = C + d * 0.547 + Vector((0, 0, 0.128))
+        c = C + d * 0.437 + Vector((0, 0, 0.115))
         q = d.to_track_quat("Z", "Y").to_euler()
-        torus(*c, 0.027, 0.006, WOOD_D, hid, rot=q, seg=24, name="Knopfring")
-        ball(*(c + d * 0.004), 0.022, mat(btn[k], 0.3, coat=0.6, emission=btn[k], strength=0.7), hid, scale=(1, 1, 0.5),
+        torus(*c, 0.026, 0.006, WOOD_D, hid, rot=q, seg=24, name="Knopfring")
+        ball(*(c + d * 0.004), 0.021, mat(btn[k], 0.3, coat=0.6, emission=btn[k], strength=0.7), hid, scale=(1, 1, 0.5),
              rot=q, seg=16, name="Knopf")
-        lp = C + d * 0.556 + Vector((0, 0, 0.176))
+        lp = C + d * 0.437 + Vector((0, 0, 0.165))
         ball(*lp, 0.0075, mat((1.0, 0.86, 0.55), 0.3, emission=(1.0, 0.80, 0.45), strength=6.0 if k % 2 == 0 else 0.6),
              hid, seg=10, name="Knopflicht")
         out["knopf"].append(tuple(c + d * 0.02))
-    # sectors on the top: 20 slots of 18 deg = 5 + gap + 6 + gap + 6 + gap; slot 2 is the Kaufladen centre
-    slot, i, rm = 18.0, 0, 0.43
+    # sectors on the board: 20 slots of 18 deg = 5 + gap + 6 + gap + 6 + gap; slot 2 is the Kaufladen centre
+    slot, i, rm = 18.0, 0, 0.385
+    zz = z + HUBEL_TOP
     for name_, nplaces, col in HUBEL_OFFERS:
         start = i
         lst = list(filled.get(name_, []))
@@ -415,15 +419,14 @@ def hubel(cx, cy, z=0.0, rot=90.0, filled=None, hid="hubel", pad=SAGE, cam=CAM):
         for j in range(nplaces):
             a = rot + (i - 2) * slot
             p = C + fvec(a) * rm
-            zz = z + hubel_z(rm)
-            cyl(p.x, p.y, zz - 0.004, zz + 0.0012, 0.046, mat((0.60, 0.45, 0.30), 0.65, name="Mulde"), hid, verts=32,
+            cyl(p.x, p.y, zz - 0.004, zz + 0.0012, 0.041, mat((0.60, 0.45, 0.30), 0.65, name="Mulde"), hid, verts=32,
                 name="Mulde")
             on = j < len(lst) and bool(lst[j])
-            torus(p.x, p.y, zz + 0.0015, 0.05, 0.0045, mat(col, 0.35, coat=0.3, emission=col, strength=2.5 if on else 0.2),
+            torus(p.x, p.y, zz + 0.0015, 0.045, 0.004, mat(col, 0.35, coat=0.3, emission=col, strength=0.9 if on else 0.15),
                   hid, seg=32, name="Muldenring")
             if on:
                 an, ac = lst[j] if isinstance(lst[j], tuple) else (lst[j], None)
-                kiddo_cube(p.x, p.y, zz - 0.004, an, ac, hid, face=a, s=0.07)
+                kiddo_cube(p.x, p.y, zz - 0.004, an, ac, hid, face=a, s=0.068)
             pts.append((p.x, p.y, zz))
             i += 1
         out["mulden"][name_] = pts
@@ -432,13 +435,12 @@ def hubel(cx, cy, z=0.0, rot=90.0, filled=None, hid="hubel", pad=SAGE, cam=CAM):
         # the offer's picture cube on a small turntable in the middle of its sector
         am = rot + ((start + i - 1) / 2 - 2) * slot
         f = fvec(am)
-        pc = C + f * 0.2
-        zc = z + hubel_z(0.2)
-        cyl(pc.x, pc.y, zc - 0.002, zc + 0.012, 0.072, WOOD_D, hid, verts=40, name="Drehteller")
+        pc = C + f * 0.17
+        cyl(pc.x, pc.y, zz - 0.002, zz + 0.012, 0.07, WOOD_D, hid, verts=40, name="Drehteller")
         s = 0.12
         o = rbox(-s / 2, -s / 2, -s / 2, s / 2, s / 2, s / 2, mat(col, 0.45, coat=0.3), hid, r=s * 0.12, seg=3,
                  name="Bildwürfel")
-        o.location = (pc.x, pc.y, zc + 0.012 + s / 2)
+        o.location = (pc.x, pc.y, zz + 0.012 + s / 2)
         o.rotation_euler = (0, 0, R(am))
         cc = Vector(o.location)
         for q in range(4):
@@ -624,13 +626,14 @@ def co2box(x, y, z, face=-90, led="green", hid="co2", s=1.0, key="co2", lit=12.0
     side = f.cross(UP)
     body = rbox(-0.09 * s, -0.055 * s, 0, 0.09 * s, 0.055 * s, 0.12 * s, mat((0.36, 0.60, 0.70), 0.55, coat=0.2), hid,
                 r=0.012 * s, rot=(0, 0, R(face - 90)), name="Kästchen")
-    body.location = (x, y, z)
+    body.location = (x, y, z + 0.06 * s)  # the mesh is centred: its bottom sits at z, the LEDs on the front face
     front = Vector((x, y, z)) + f * 0.057 * s
     colors = {"green": (0.3, 1.0, 0.45), "yellow": (1.0, 0.8, 0.2), "red": (1.0, 0.25, 0.2)}
     for k, (nm, c) in enumerate(colors.items()):
         on = nm == led
-        ball(*(front + side * (k - 1) * 0.045 * s + UP * 0.08 * s), 0.014 * s,
-             mat(c, 0.3, emission=c, strength=lit if on else 0.15), hid, seg=12, name="LED")
+        # only the lit LED glows; the other two are dark, tinted glass
+        m = mat(c, 0.3, emission=c, strength=lit) if on else mat(tuple(0.12 + v * 0.16 for v in c), 0.25, coat=0.6)
+        ball(*(front + side * (k - 1) * 0.045 * s + UP * 0.08 * s), 0.014 * s, m, hid, seg=12, name="LED")
     for k in range(5):
         ball(*(front + side * (-0.06 + k * 0.03) * s + UP * 0.03 * s), 0.008 * s,
              mat([(0.98, 0.88, 0.45), (0.95, 0.6, 0.6), CREAM][k % 3], 0.5), hid, seg=8, name="Punkt")
@@ -840,16 +843,22 @@ def garderobe(F, a0, kids, w=0.304, depth=0.48, h=1.55, hid="schrank", open_k=No
                 hid, name="Fuge")
         for (p0, q0, p1, q1) in ((du0, dz0, du1, hz0), (du0, hz1, du1, dz1), (du0, hz0, hu0, hz1), (hu1, hz0, du1, hz1)):
             panel(*F.bx(p0, depth, q0, p1, fr, q1), hid, name="Tür")
-        ball(*F.p(du0 + 0.028, fr + 0.01, 0.86), 0.015, mat(kd.get("knob", OCHRE), 0.4, coat=0.4), hid, name="Knauf")
-        relief(F.p(uc, fr, 1.12), F.n, UP, an, None, 0.9, hid)
+        # one clear sign per door: the child's animal on a round plate in the child's colour, the name small below it;
+        # a plain birch knob, and low down the small engraved shirt symbol whose light only glows when clothes are missing
+        ball(*F.p(du0 + 0.028, fr + 0.01, 0.86), 0.015, mat((0.80, 0.66, 0.48), 0.45, coat=0.3), hid, name="Knauf")
+        pc = F.p(uc, fr, 1.12)
+        o = cyl(0, 0, 0.0, 0.006, 0.062, mat(kd.get("knob", OCHRE), 0.5, coat=0.3), hid, verts=40, name="Türschild")
+        o.location = pc
+        o.rotation_euler = F.n.to_track_quat("Z", "Y").to_euler()
+        relief(pc + F.n * 0.006, F.n, UP, an, None, 1.75, hid)
         if kd.get("name"):
-            text3d(kd["name"], *F.p(uc, fr + 0.0012, 1.02), 0.03, mat(BERRY, 0.5), hid, rot=F.text_rot(), extrude=0.0012,
-                   name="Name")
+            text3d(kd["name"], *F.p(uc, fr + 0.0012, 1.025), 0.028, mat((0.36, 0.27, 0.22), 0.5), hid, rot=F.text_rot(),
+                   extrude=0.0012, name="Name")
         panel(*F.bx(uc - 0.032, fr, 0.15, uc + 0.032, fr + 0.006, 0.214), hid, name="Symbol")
-        bild_icon("shirt", F.p(uc - 0.004, fr + 0.006, 0.182), F.t, UP, F.n, 0.045, hid, col=(0.62, 0.50, 0.40))
-        ball(*F.p(uc + 0.021, fr + 0.007, 0.203), 0.0055,
-             mat((1.0, 0.62, 0.2), 0.3, emission=(1.0, 0.55, 0.15), strength=9.0 if kd.get("refill") else 0.1), hid, seg=10,
-             name="Symbollicht")
+        bild_icon("shirt", F.p(uc - 0.004, fr + 0.006, 0.182), F.t, UP, F.n, 0.045, hid, col=(0.80, 0.68, 0.52))
+        lm = (mat((1.0, 0.62, 0.2), 0.3, emission=(1.0, 0.55, 0.15), strength=9.0) if kd.get("refill") else
+              mat((0.78, 0.70, 0.60), 0.4))
+        ball(*F.p(uc + 0.021, fr + 0.007, 0.203), 0.0055, lm, hid, seg=10, name="Symbollicht")
         out["symbol"] = tuple(F.p(uc, fr + 0.01, 0.182))
         if k == open_k:
             turn_about(objects[mark:], F.p(du1, depth + dd / 2, 0.0), open_deg)
@@ -904,12 +913,26 @@ def garderobe(F, a0, kids, w=0.304, depth=0.48, h=1.55, hid="schrank", open_k=No
             out["fach_hoch"] = tuple(F.p(uc, depth * 0.45, 0.98))
             # treasure compartment at the top: a folded note and a small toy from home
             panel(*F.bx(ui0, 0.012, 1.30, ui1, depth - 0.01, 1.315), hid, name="Schatzfach")
-            panel(*F.bx(ui0, depth - 0.03, 1.315, ui1, depth - 0.01, 1.345), hid, name="Schatzfach")
-            nt = box(-0.05, -0.035, -0.0015, 0.05, 0.035, 0.0015, PAPER, hid, name="Zettel")
-            nt.location = F.p(uc - 0.055, depth - 0.16, 1.33)
-            nt.rotation_euler = (R(10), 0, R(F.face + 70))
-            ball(*F.p(uc - 0.055, depth - 0.16, 1.336), 0.009, mat(BERRY, 0.5), hid, scale=(1, 1, 0.3), seg=10, name="Herz")
-            animal(*F.p(uc + 0.06, depth - 0.2, 1.315), F.face, "hase", (0.93, 0.85, 0.80), s=0.95, hid=hid, soft=True)
+            panel(*F.bx(ui0, depth - 0.03, 1.315, ui1, depth - 0.01, 1.327), hid, name="Schatzfach")
+            # a folded note standing like a little tent, a heart drawn on it, and a small wooden toy car from home
+            for sd in (-1, 1):
+                nt = box(-0.045, -0.0012, -0.032, 0.045, 0.0012, 0.032, PAPER, hid, name="Zettel")
+                nt.location = F.p(uc - 0.06, depth - 0.15 + sd * 0.0125, 1.315 + 0.03)
+                nt.rotation_euler = (R(-sd * 23), 0, R(F.face + 90))
+            hp = F.p(uc - 0.06, depth - 0.15 + 0.03, 1.352)
+            hm = mat(BERRY, 0.5)
+            for sd in (-1, 1):
+                ball(*(hp + F.t * sd * 0.006), 0.007, hm, hid, scale=(1, 1, 1), seg=10, name="Herz")
+            cone(*(hp + UP * -0.008), 0.012, 0.0, 0.014, hm, hid, rot=(R(180), 0, 0), verts=12, name="Herz")
+            cm = mat((0.86, 0.70, 0.50), 0.5, noise=0.06, name="Spielholz")
+            rbox(*F.bx(uc + 0.025, depth - 0.2, 1.33, uc + 0.105, depth - 0.14, 1.36), cm, hid, r=0.01, name="Auto")
+            rbox(*F.bx(uc + 0.04, depth - 0.195, 1.358, uc + 0.085, depth - 0.145, 1.385), mat(SKY, 0.5, coat=0.3), hid,
+                 r=0.008, name="Auto")
+            for uu in (uc + 0.04, uc + 0.09):
+                for dd in (depth - 0.203, depth - 0.137):
+                    w_ = cyl(0, 0, -0.005, 0.005, 0.012, mat(BERRY, 0.45, coat=0.3), hid, verts=16, name="Rad")
+                    w_.location = F.p(uu, dd, 1.33)
+                    w_.rotation_euler = F.n.to_track_quat("Z", "Y").to_euler()
             out["schatzfach"] = tuple(F.p(uc, depth - 0.12, 1.42))
             # warm light inside: LED strips under the shelves, a point light for the glow
             box(*F.bx(ui0 + 0.02, depth - 0.07, 1.284, ui1 - 0.02, depth - 0.045, 1.298), led, hid, name="Innenlicht")
@@ -959,6 +982,18 @@ def magnettafel(F, u0, u1, z0, z1, hid="tafel", now=0, week=None, sosse=False, l
     for i, kind in enumerate(today):
         u = x0_ + sp * (i + 0.5)
         c = L.p(u, fz + 0.006, zt)
+        if sosse and kind == "essen":
+            # in the afternoon the lunch tile is the 'Soße gekocht' tile: a pot of red sauce, a red rim, a red magnet
+            o = cyl(0, 0, -0.007, 0.007, 0.07, mat((0.97, 0.90, 0.80), 0.5, coat=0.2), hid, verts=40, name="Plättchen")
+            o.location = c
+            o.rotation_euler = (R(90), 0, 0)
+            torus(*(c + L.n * 0.007), 0.07, 0.007, mat((0.86, 0.22, 0.20), 0.4, coat=0.3), hid, rot=(R(90), 0, 0),
+                  seg=40, name="Plättchenrand")
+            bild_icon("sosse", c + L.n * 0.007, L.t, UP, L.n, 0.1, hid)
+            ball(*L.p(u + 0.05, fz + 0.016, zt + 0.05), 0.012, mat((0.86, 0.22, 0.20), 0.3, coat=0.5), hid, seg=12,
+                 name="Magnet")
+            pts["sosse"] = c
+            continue
         o = cyl(0, 0, -0.006, 0.006, 0.062, multiplex("Z", 100.0), hid, verts=40, name="Plättchen")
         o.location = c
         o.rotation_euler = (R(90), 0, 0)
@@ -996,24 +1031,16 @@ def magnettafel(F, u0, u1, z0, z1, hid="tafel", now=0, week=None, sosse=False, l
             line.append(tuple(L.p(u, fz + 0.002, v)))
         curve_tube(line, 0.0021, ink, hid, name="Gekritzel")
 
-    scribble(t + 0.05, t + 0.42, z0 + t + 0.13, 0.0)
-    pts["line"] = L.p(t + 0.23, fz, z0 + t + 0.13)
+    zl = z0 + t + (0.07 if sosse else 0.13)  # the group's line; in the afternoon a second line sits above it
+    scribble(t + 0.05, t + 0.42, zl, 0.0)
+    pts["line"] = L.p(t + 0.23, fz, zl)
     # two drawings of the children held by magnets
     for (uu, zz, mo, rot_) in ((W_ - t - 0.33, z0 + t + 0.25, "sun", -4), (W_ - t - 0.13, z0 + t + 0.27, "flower", 5)):
         drawing(*L.p(uu, fz + 0.004, zz), -90 + rot_ * 0.0, 0.15, 0.12, hid, motif=mo, name="Bild")
         ball(*L.p(uu, fz + 0.012, zz + 0.05), 0.009, mat([BERRY, SKY][rot_ > 0], 0.3, coat=0.5), hid, seg=10,
              name="Magnet")
-    if sosse:
-        u = W_ - t - 0.1
-        c = L.p(u, fz + 0.006, z0 + t + 0.085)
-        o = cyl(0, 0, -0.006, 0.006, 0.062, multiplex("Z", 100.0), hid, verts=40, name="Plättchen")
-        o.location = c
-        o.rotation_euler = (R(90), 0, 0)
-        bild_icon("sosse", c + L.n * 0.006, L.t, UP, L.n, 0.085, hid)
-        ball(*L.p(u, fz + 0.012, z0 + t + 0.085 + 0.075), 0.011, mat((0.86, 0.22, 0.20), 0.3, coat=0.5), hid, seg=12,
-             name="Magnet")
-        scribble(u - 0.36, u - 0.09, z0 + t + 0.055, 2.0)  # its own short line, below the first one
-        pts["sosse"] = c
+    if sosse:  # the handwritten line about the sauce, bottom left
+        scribble(t + 0.05, t + 0.36, z0 + t + 0.2, 2.0)
     # small picture light above the board
     panel(*L.bx(0.18, 0.0, z1 + 0.07, W_ - 0.18, 0.02, z1 + 0.1), hid, name="Tafellampe")
     for uu in (0.24, W_ - 0.24):
@@ -2331,39 +2358,72 @@ def build_abholung(v):
     P_ = piazza_room("abholung")
     W, D = P_["W"], P_["D"]
     m = P_["cab"][1]
-    # Mila pushes her fox cube back into the niche (she stands at its right, so the niche stays in view); her head
-    # turns to Lotte at the door
+    # Mila has just put her fox cube back into the niche; her hand rests on the door just above it (the cube stays in
+    # view) and she turns to Lotte at the door
     spot = Vector(m["cube_spot"])
     cp = spot + Vector((0.035, 0.0, 0.0))
     kiddo_cube(cp.x, cp.y, cp.z, "fuchs", None, "mila", face=0, s=0.075)
     A("mila_cube", cp.x, cp.y, cp.z + 0.04)
-    mp = Vector((0.66, spot.y + 0.17, 0.0))
-    lp = Vector((0.36, 1.42, 0.0))
-    pm = who("mila", mp.x, mp.y, 250, "reach", hid="mila", look=(lp.x, lp.y, 1.0),
-             arms={"r": cp + Vector((0.07, 0.01, 0.045))}, shoes=SOCKS[1])
-    # Papa Jonas reads the day in the parent app
+    mp = Vector((0.68, spot.y + 0.21, 0.0))
+    lp = Vector((0.4, 1.38, 0.0))
+    pm = who("mila", mp.x, mp.y, 235, "reach", hid="mila", look=(lp.x, lp.y, 1.15),
+             arms={"r": (cp.x + 0.06, spot.y + 0.14, 0.7)}, shoes=SOCKS[1])
+    # Papa Jonas reads the day in the parent app; bulgy bright-blue covers over his shoes
     jp = Vector((1.5, 3.2, 0.0))
     fj = fvec(300)
     pj = who("jonas", jp.x, jp.y, 300, "hold", hid="jonas", acc=("phone",), shoes=COVERS,
              look=(jp.x + fj.x * 0.3, jp.y + fj.y * 0.3, 0.95))
-    # Lotte comes over from the school next door, through the entrance room
-    who("lotte", lp.x, lp.y, -10, "wave", hid="lotte", kind="teen14", shoes=SOCKS[3], look=(2.0, 2.4, 1.0))
-    # Ayla posts a card into the wish box with her left hand and turns to her son; the box stays in view to her left
+    ueberschuhe(jp.x, jp.y, 300, "jonas")
+    # Lotte (14) comes over from the school next door through the entrance room: school backpack, headphones round her
+    # neck, her jacket over the arm; she looks at Mila ("Zeig mal!")
+    lf = 28
+    f = fvec(lf)
+    rs = f.cross(UP).normalized()
+    dl = DIMS["teen14"]
+    hr = lp + f * 0.2 + rs * 0.1 + Vector((0, 0, 0.88))
+    hl = lp + f * 0.12 - rs * 0.17 + Vector((0, 0, 0.78))
+    pl = who("lotte", lp.x, lp.y, lf, "stand", hid="lotte", kind="teen14", shoes=SOCKS[3], look=tuple(Vector(pm["head"])),
+             arms={"r": tuple(hr), "l": tuple(hl)})
+    hip = dl["leg"] + 0.05
+    sh_z = hip + dl["torso"] - dl["r"] * 0.55
+    strap = mat((0.62, 0.24, 0.28), 0.6)
+    for sd in (-1, 1):
+        capsule(lp + rs * sd * 0.07 + f * 0.11 + UP * (sh_z + 0.03), lp + rs * sd * 0.09 + f * 0.12 + UP * (hip + 0.08),
+                0.012, strap, "lotte", name="Ranzengurt")
+    nz = hip + dl["torso"] - dl["r"] * 0.35
+    hp = mat((0.22, 0.24, 0.30), 0.4, coat=0.3)
+    torus(lp.x, lp.y, nz + 0.01, dl["r"] * 0.72, 0.011, hp, "lotte", seg=24, name="Kopfhörer")
+    for sd in (-1, 1):
+        ball(*(lp + rs * sd * 0.075 + f * 0.06 + UP * (nz - 0.01)), 0.03, hp, "lotte", scale=(1, 1, 0.6), seg=14,
+             name="Kopfhörer")
+    # her jacket, folded over the right forearm
+    sh = lp + rs * dl["r"] * 0.88 + UP * sh_z
+    arm = Vector(pl["hand_r"]) - sh
+    mid = sh + arm * 0.72
+    jm = fabric(CLAY)
+    for sd in (-1, 1):
+        rbox(-0.1, -0.022, -0.17, 0.1, 0.022, 0.0, jm, "lotte", r=0.02, rot=(R(sd * 8), 0, R(math.degrees(math.atan2(
+            arm.y, arm.x)))), name="Jacke").location = mid + (arm.cross(UP)).normalized() * sd * 0.03
+    ball(*mid, 0.04, jm, "lotte", scale=(2.4, 1.2, 0.8), rot=(0, 0, math.atan2(arm.y, arm.x)), seg=14, name="Jacke")
+    # Ayla, Defne's mother, posts a card into the wooden wish box, seen half from the side; Defne in her birthday crown
+    # and berry dress stands beside her and looks up at the box
     wb = Vector(P_["wb"]["slot"])
-    ap = Vector((0.62, 3.72, 0.0))
-    sp_ = Vector((1.1, 4.1, 0.0))
-    pa = who("ayla", ap.x, ap.y, 70, "stand", hid="ayla", shoes=COVERS, look=(sp_.x, sp_.y, 0.75),
-             arms={"l": (wb.x + 0.02, wb.y - 0.07, wb.z + 0.04)})
-    hl = Vector(pa["hand_l"])
-    o = box(-0.0015, -0.05, -0.036, 0.0015, 0.05, 0.036, mat((0.97, 0.86, 0.45), 0.8), "ayla", name="Wunschkarte")
-    o.location = hl + Vector((-0.015, 0.02, 0.05))
+    ap = Vector((0.3, 4.05, 0.0))
+    af = 240
+    pa = who("ayla", ap.x, ap.y, af, "stand", hid="ayla", shoes=COVERS, look=(wb.x, wb.y, wb.z + 0.02),
+             arms={"r": (wb.x + 0.03, wb.y + 0.0, wb.z + 0.03)})
+    ueberschuhe(ap.x, ap.y, af, "ayla")
+    hl_ = Vector(pa["hand_r"])
+    o = box(-0.05, -0.0015, -0.036, 0.05, 0.0015, 0.036, mat((0.97, 0.86, 0.45), 0.8), "ayla", name="Wunschkarte")
+    o.location = hl_ + Vector((-0.035, -0.01, 0.045))
+    o.rotation_euler = (R(8), 0, R(90))  # upright in the plane of the slot
     A("wunsch_karte", *o.location)
-    kid(3, sp_.x, sp_.y, 215, "stand", hid="kinder", look=pa["head"], shoes=SOCKS[2], acc=("drawing",))
+    who("defne", 0.64, 4.32, 218, "stand", hid="defne", shoes=SOCKS[6], acc=("crown",), look=(wb.x, wb.y, wb.z))
     # Maren plays with one of the last children in the play corner
     maren(4.85, 0.95, 140, "kneel", look=(4.65, 0.75, 0.3))
     kid(5, 4.95, 0.52, 100, "sit", hid="kinder", look=(4.65, 0.72, 0.4), shoes=SOCKS[4])
-    shots = {"faecher": dict(loc=(2.25, 2.1, 1.42), target=(0.3, 2.62, 1.06), lens=34, fstop=5.6),
-             "wunsch": dict(loc=(1.45, 4.45, 1.6), target=(0.2, 3.78, 1.33), lens=28, fstop=4.0)}
+    shots = {"faecher": dict(loc=(2.6, 2.0, 1.44), target=(0.3, 2.5, 1.03), lens=44, fstop=6.3),
+             "wunsch": dict(loc=(0.82, 3.02, 2.0), target=(0.22, 3.98, 1.25), lens=26, fstop=4.0)}  # over the cabinets
     return dict(W=W, D=D, time="nachmittag", pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1))
 
 
@@ -3710,20 +3770,21 @@ def build_vorraum(v):
 
 # ================================================================ v5: Piazza (replaces the Halle)
 # Lotte (14): between a child and an adult. Used as who("lotte", kind="teen14"), so CAST and other scenes stay as they are.
-DIMS.setdefault("teen14", dict(leg=0.56, torso=0.42, r=0.136, head=0.138, arm=0.46, ar=0.042, lr=0.058, foot=0.064))
+DIMS["teen14"] = dict(leg=0.66, torso=0.45, r=0.128, head=0.128, arm=0.48, ar=0.040, lr=0.055, foot=0.064)
 SOCKS = [CREAM, ROSE, SKY, (0.93, 0.86, 0.66), SAGE, LINEN, (0.86, 0.78, 0.90)]  # children wear socks or slippers here
-COVERS = (0.58, 0.76, 0.90)  # blue shoe covers: parents keep their shoes on, the dirt stays in the entrance room
+COVERS = (0.16, 0.48, 0.96)  # bright-blue shoe covers: parents keep their shoes on, the dirt stays in the entrance room
 SLIPPERS = (0.62, 0.64, 0.70)  # Maren's grey felt house slippers
 WG_CACHE = {}
 
 
-def winter_glass(day="morgen"):
+def winter_glass(day="morgen", axis="X"):
     """Window picture for February, like garden_glass in lib: snow on the ground, a bare hedge, a pale far tree line
-    and two bare trees (trunk, two limbs, a twiggy crown) against a pale sky. Every pane gets its own tree positions."""
-    if day in WG_CACHE:
-        return WG_CACHE[day]
+    and two bare trees (trunk, two limbs, a twiggy crown) against a pale sky. Every pane gets its own tree positions.
+    axis: the generated coordinate that runs across the pane (X for panes along x, Y for panes in a west wall)."""
+    if (day, axis) in WG_CACHE:
+        return WG_CACHE[(day, axis)]
     sky_lo, sky_hi, far, hedge, bark = {
-        "morgen": ((0.93, 0.90, 0.86), (0.76, 0.83, 0.92), (0.74, 0.74, 0.78), (0.50, 0.45, 0.42), (0.34, 0.30, 0.28)),
+        "morgen": ((0.90, 0.88, 0.86), (0.62, 0.74, 0.90), (0.70, 0.71, 0.76), (0.50, 0.45, 0.42), (0.34, 0.30, 0.28)),
         "nachmittag": ((0.99, 0.87, 0.74), (0.84, 0.84, 0.90), (0.76, 0.72, 0.72), (0.50, 0.44, 0.40), (0.34, 0.29, 0.26)),
         "abend": ((0.97, 0.72, 0.58), (0.64, 0.64, 0.78), (0.62, 0.56, 0.60), (0.40, 0.34, 0.34), (0.27, 0.22, 0.22))}[day]
     m = bpy.data.materials.new("Winterfenster")
@@ -3731,7 +3792,7 @@ def winter_glass(day="morgen"):
     M = nb.math
     gen = nb.coord("Generated")
     co = nb.sep(gen)
-    X, Z = co["X"], co["Z"]
+    X, Z = co[axis], co["Z"]
     rnd = nb.node("ShaderNodeObjectInfo").outputs["Random"]
 
     def wave(scale, amp, base):
@@ -3777,7 +3838,7 @@ def winter_glass(day="morgen"):
     nb.bsdf.inputs["Emission Strength"].default_value = 0.5 if day == "abend" else 0.7
     nb.bsdf.inputs["Roughness"].default_value = 0.06
     nb.bsdf.inputs["Coat Weight"].default_value = 0.6
-    WG_CACHE[day] = m
+    WG_CACHE[(day, axis)] = m
     return m
 
 
@@ -3795,7 +3856,35 @@ def maren(x, y, face, pose="stand", hid="maren", acc=(), **kw):
     a = tuple(c.pop("acc", ())) + tuple(acc)
     c["shoes"] = SLIPPERS
     c.update(kw)
-    return person(x, y, face, pose=pose, hid=hid, key="maren", acc=a, **c)
+    pts = person(x, y, face, pose=pose, hid=hid, key="maren", acc=a, **c)
+    if pose == "kneel":  # person() draws no feet when kneeling: the slippers lie behind her knees, soles up
+        d = DIMS["adult"]
+        f = fvec(face)
+        sd_ = f.cross(UP).normalized()
+        for sd in (-1, 1):
+            knee = Vector((x, y, 0.0)) + sd_ * sd * d["lr"] * 1.1 + f * 0.08 + UP * d["lr"]
+            foot = knee - f * (d["leg"] * 0.6)
+            ball(*(foot - f * 0.02 + UP * -0.02), d["foot"], mat(SLIPPERS, 0.85, sheen=0.5), hid, scale=(1.0, 1.7, 0.7),
+                 rot=(0, 0, R(face - 90)), name="Hausschuh")
+    return pts
+
+
+def ueberschuhe(x, y, face, hid, kind="adult"):
+    """Bulgy bright-blue plastic shoe covers over the shoes of a standing grown-up (parents keep their shoes on in the
+    Piazza; the dirt stays in the entrance room). Same foot points as person() uses for standing poses."""
+    d = DIMS[kind]
+    f = fvec(face)
+    sd_ = f.cross(UP).normalized()
+    cm = mat(COVERS, 0.3, coat=0.5, name="Überschuh")
+    rim = mat((0.62, 0.80, 1.0), 0.35, coat=0.4, name="Überschuh Gummi")
+    for sd in (-1, 1):
+        c = Vector((x, y, 0.0)) + sd_ * sd * d["lr"] * 1.15 + f * 0.035
+        ball(*(c + UP * 0.055), d["foot"] * 1.12, cm, hid, scale=(1.3, 2.05, 1.05), rot=(0, 0, R(face - 90)), seg=20,
+             name="Überschuh")
+        for k in (-1, 0, 1):  # a few crinkles on top
+            ball(*(c + f * (0.045 * k) + UP * 0.105 + sd_ * sd * 0.01 * k), 0.022, cm, hid, scale=(1.3, 0.8, 0.45),
+                 rot=(0, 0, R(face + 20 * k)), seg=10, name="Überschuh")
+        torus(*(c - f * 0.03 + UP * 0.12), d["lr"] * 1.05, 0.009, rim, hid, seg=20, name="Überschuh Gummi")
 
 
 def schluessel(p, face, hid="maren", k=1.6):
@@ -3818,22 +3907,131 @@ def schluessel(p, face, hid="maren", k=1.6):
     return tuple(k1)
 
 
-def vorraum_blick(y0, y1, xb=-1.0, h=1.7, hid="tuer"):
-    """What shows of the green entrance room through the open door in the west wall: sage wall, floor tiles,
-    a plywood plant shelf with herbs under warm grow lights. Low enough to stay hidden behind the wall cap."""
-    box(xb, y0, -0.02, -0.17, y1, 0.0, tiles("X", (0.64, 0.72, 0.60), (0.82, 0.84, 0.78), 0.3, axis_v="Y"), hid,
+def vorraum_blick(y0, y1, xb=-1.0, h=1.82, hid="tuer"):
+    """What shows of the green entrance room through the open door in the west wall, matched to the Vorraum render:
+    beige floor tiles, a sage wall, a full-height plywood plant shelf with herbs and warm LED grow lights under every
+    board. Low enough to stay hidden behind the wall cap."""
+    state = random.getstate()
+    random.seed(77)
+    box(xb, y0, -0.02, -0.17, y1, 0.0, tiles("X", (0.82, 0.72, 0.60), (0.90, 0.86, 0.79), 0.3, axis_v="Y"), hid,
         name="Vorraum Boden")
     box(xb - 0.02, y0, -0.02, xb, y1, h, WALL_SAGE, hid, name="Vorraum Wand")
-    for yy in (y0 + 0.5, y1 - 0.07):
-        panel(xb, yy, 0.0, xb + 0.32, yy + 0.022, 1.322, hid, name="Pflanzregal")
-    grow = mat((1.0, 0.70, 0.55), 0.3, emission=(1.0, 0.62, 0.48), strength=6.0, name="Pflanzenlicht")
-    for zz in (0.4, 0.85, 1.3):
-        panel(xb, y0 + 0.52, zz, xb + 0.32, y1 - 0.07, zz + 0.022, hid, name="Pflanzregal")
-        if zz > 0.5:
-            box(xb + 0.04, y0 + 0.6, zz - 0.012, xb + 0.07, y1 - 0.15, zz, grow, hid, name="Pflanzenlicht")
-        if zz < 1.0:  # only the part one sees through the door gets plants
-            for k, yy in enumerate((2.2, 2.55, 2.9)):
-                plant(xb + 0.16, yy, zz + 0.022, 0.4 if zz < 0.5 else 0.36, hid=hid, kind="bush" if k == 1 else "herb")
+    Fv = Wall("y", xb)
+    dep = 0.34
+    bays = [(1.4, 1.85), (1.85, 2.3), (2.3, 2.75), (2.75, 3.2)]
+    boards = plant_shelf(Fv, bays, dep, hid=hid)
+    led = mat((1.0, 0.88, 0.74), 0.4, emission=GROW, strength=12.0, name="Pflanzenlicht")
+    for z in VR_TIERS[1:]:
+        for (u0, u1) in bays:
+            panel(*Fv.bx(u0 + 0.02, dep - 0.044, z - 0.03, u1 - 0.02, dep, z), hid, name="Lichtleiste")
+            box(*Fv.bx(u0 + 0.028, dep - 0.038, z - 0.035, u1 - 0.028, dep + 0.002, z - 0.03), led, hid, name="LED")
+        ld = bpy.data.lights.new("Pflanzenlicht", "AREA")
+        ld.shape = "RECTANGLE"
+        ld.size, ld.size_y, ld.energy, ld.color = bays[-1][1] - bays[0][0], 0.05, 6.0, GROW
+        lo = bpy.data.objects.new("Pflanzenlicht", ld)
+        scene.collection.objects.link(lo)
+        lo.location = Fv.p((bays[0][0] + bays[-1][1]) / 2, dep - 0.02, z - 0.04)
+        lo.rotation_euler = (0, 0, R(90))
+        lo.visible_camera = False
+    kinds = ["basil", "mint", "parsley"]
+    pots = ["terra", "cream", "sage", "rose"]
+    k = 0
+    for i, (u0, u1) in enumerate(bays):
+        for z in boards[i][:-1]:
+            for j, fu in enumerate((0.28, 0.72)):
+                pp = Fv.p(u0 + (u1 - u0) * fu, dep * 0.5, z + 0.022)
+                soil = vr_pot(pp.x, pp.y, pp.z, r=0.06, kind=pots[k % 4], hid=hid)
+                herb(pp.x, pp.y, soil, kinds[(k + i) % 3], 1.4, hid=hid)
+                k += 1
+    random.setstate(state)
+
+
+def piazza_tuer(open_deg=0.0, hid="tuer", key_in_lock=False):
+    """The door between the Piazza and the green entrance room, like the Vorraum side shows it: a birch leaf with two
+    round windows (adult and child height), a steel lever handle and a lock. Hinged at the back jamb, it opens into
+    the Piazza (open_deg 0 = closed). key_in_lock: Maren's key sticks in the lock on the Piazza side, a ring with two
+    more keys and a wooden tag hangs from it. Returns points: lock (where the hand goes), edge."""
+    w, hx, hy = 0.79, -0.03, 1.895
+    mark = len(objects)
+    panel(0.0, -0.02, 0.0, w, 0.02, 2.05, hid, name="Tür")
+    glow = mat((0.86, 0.92, 0.80), 0.25, emission=(0.95, 0.90, 0.72), strength=0.9, coat=0.6, name="Bullauge Glas")
+    for (zc, rr) in ((1.45, 0.13), (0.72, 0.09)):
+        c = Vector((w / 2, 0.0, zc))
+        for sd in (-1, 1):
+            torus(*(c + Vector((0, sd * 0.021, 0))), rr, 0.015, WOOD_D, hid, rot=(R(90), 0, 0), seg=32, name="Bullauge")
+        cyl(0, 0, -0.023, 0.023, rr, glow, hid, verts=32, rot=(R(90), 0, 0), name="Bullauge Glas").location = c
+    ke = Vector((w - 0.12, 0.0, 0.0))
+    for sd in (-1, 1):
+        capsule(ke + Vector((0, sd * 0.02, 1.0)), ke + Vector((0, sd * 0.065, 1.0)), 0.011, STEEL, hid, name="Klinke")
+        capsule(ke + Vector((0, sd * 0.065, 1.0)), ke + Vector((-0.12, sd * 0.065, 1.0)), 0.011, STEEL, hid, name="Klinke")
+        rbox(ke.x - 0.022, sd * 0.02 - 0.003, 0.88, ke.x + 0.022, sd * 0.02 + 0.003, 1.05, STEEL, hid, r=0.006,
+             name="Beschlag")
+        box(ke.x - 0.004, sd * 0.024 - 0.001, 0.905, ke.x + 0.004, sd * 0.024 + 0.001, 0.93, DARK, hid, name="Schlüsselloch")
+    lock = ke + Vector((0, -0.024, 0.918))
+    if key_in_lock:
+        brass = mat((0.86, 0.68, 0.30), 0.3, metal=0.8, name="Messing")
+        steel_k = mat((0.72, 0.73, 0.75), 0.25, metal=0.85, name="Schlüssel Stahl")
+        capsule(lock, lock + Vector((0, -0.035, 0)), 0.004, brass, hid, name="Schlüssel")
+        bow = torus(*(lock + Vector((0, -0.05, 0))), 0.016, 0.005, brass, hid, rot=(0, R(90), 0), seg=20, name="Schlüssel")
+        ring_c = lock + Vector((0, -0.058, -0.035))
+        torus(*ring_c, 0.022, 0.003, steel_k, hid, rot=(0, R(90), R(20)), seg=24, name="Schlüsselring")
+        for k, (dx, col) in enumerate(((-0.012, steel_k), (0.012, brass))):
+            capsule(ring_c + Vector((dx, -0.004, -0.02)), ring_c + Vector((dx * 1.6, -0.006, -0.07)), 0.004, col, hid,
+                    name="Schlüssel")
+            ball(*(ring_c + Vector((dx, -0.004, -0.024))), 0.011, col, hid, scale=(1, 0.35, 1), seg=12, name="Schlüssel")
+        rbox(-0.02, -0.006, -0.05, 0.02, 0.006, 0.0, mat(BERRY, 0.45, coat=0.3), hid, r=0.006,
+             name="Anhänger").location = ring_c + Vector((0, -0.01, -0.022))
+    a = R(open_deg - 90)
+    rz = Matrix.Rotation(a, 4, "Z")
+    place_group(objects[mark:], (hx, hy, 0.0), rz)
+    M = Matrix.Translation(Vector((hx, hy, 0.0))) @ rz
+    return {"lock": tuple(M @ (lock + Vector((0, -0.05, 0)))), "edge": tuple(M @ Vector((w, 0, 1.0)))}
+
+
+def west_fenster(o0, o1, z0, z1, angle, wg, hid="fenster"):
+    """Tall casement in the west wall (y from o0 to o1), one sash hinged at the front, opening into the room, a small
+    chain drive above it. Built with casement() on a north-wall frame at the origin and turned by 90 degrees.
+    Returns the point on the open sash."""
+    mark = len(objects)
+    res = casement(0.0, o0, o1, z0, z1, angle, double=False, hid=hid)
+    wintry(objects[mark:], wg)
+    turn_about(objects[mark:], (0.0, 0.0, 0.0), 90)
+    p = Vector(res["sash0"])
+    return (-p.y, p.x, p.z), (-res["drive0"][1], res["drive0"][0], res["drive0"][2])
+
+
+def piazza_hoehle(x0, x1, y_back, depth=1.0, h=1.25, hid="hoehle"):
+    """Hideout cave of birch multiplex in the north-east corner, round opening towards the room (-y). Inside a soft
+    cushion, a teddy and a warm LED strip under the roof (one soft continuous light, no bare bulbs)."""
+    yf = y_back - depth
+    t = 0.035
+    panel(x0, yf, h, x1, y_back, h + t, hid, name="Höhle Dach")
+    panel(x0, yf + t, 0.0, x0 + t, y_back, h, hid, name="Höhle Seite")
+    panel(x1 - t, yf + t, 0.0, x1, y_back, h, hid, name="Höhle Seite")
+    front = panel(x0, yf, 0.0, x1, yf + t, h, hid, name="Höhle Front")
+    xc, zc, rr = (x0 + x1) / 2, 0.6, 0.38
+    cut = cyl(0, 0, -0.2, 0.2, rr, WOOD, None, verts=64, rot=(R(90), 0, 0))
+    cut.location = (xc, yf + t / 2, zc)
+    boolean_cut(front, cut)
+    # rounded reveal: a thin birch ring lines the cut
+    torus(xc, yf + t / 2, zc, rr + 0.004, 0.02, multiplex("Y", 100.0), hid, rot=(R(90), 0, 0), seg=64, name="Höhle Rand")
+    cushion(xc, (yf + y_back) / 2, 0.0, x1 - x0 - 0.12, depth - 0.12, 0.12, SAGE, hid=hid)
+    cushion(xc + 0.22, y_back - 0.28, 0.12, 0.34, 0.3, 0.12, ROSE, 12, hid=hid)
+    animal(xc - 0.18, y_back - 0.32, 0.12, -90, "bär", (0.72, 0.52, 0.36), s=2.4, hid=hid, soft=True)
+    strip = mat(LED_WARM, 0.3, emission=LED_WARM, strength=6.0, name="Höhlenlicht")
+    box(x0 + 0.08, yf + 0.06, h - 0.012, x1 - 0.08, yf + 0.09, h, strip, hid, name="Höhlenlicht")
+    point_light((xc, (yf + y_back) / 2, h - 0.25), 9.0, radius=0.3, name="Höhlenlicht")
+    # small flag on the roof
+    capsule((x1 - 0.2, y_back - 0.2, h + t), (x1 - 0.2, y_back - 0.2, h + 0.55), 0.01, WOOD_D, hid, name="Fahnenstab")
+    me = bpy.data.meshes.new("Fahne")
+    me.from_pydata([(x1 - 0.2, y_back - 0.2, h + 0.55), (x1 - 0.2, y_back - 0.2, h + 0.38), (x1 - 0.48, y_back - 0.2,
+                   h + 0.465)], [], [(0, 1, 2)])
+    fo = bpy.data.objects.new("Fahne", me)
+    scene.collection.objects.link(fo)
+    fo.modifiers.new("s", "SOLIDIFY").thickness = 0.005
+    fo.data.materials.append(fabric(OCHRE))
+    tag(fo, hid)
+    A("hoehle", xc, yf, zc)
 
 
 PIAZZA_KIDS = [dict(name="Ben", animal="hase", knob=SKY, jacket=SKY),
@@ -3843,7 +4041,7 @@ PIAZZA_KIDS = [dict(name="Ben", animal="hase", knob=SKY, jacket=SKY),
                dict(name="Lina", animal="igel", knob=PLUM, jacket=PLUM)]
 # Planwürfel per child (one row = the big times of the day; Emil is a Vorschulkind and sees his week)
 PIAZZA_PLAN = {"frei": [["???"], ["???"], ["???"], ["?????", "?????", "?????", "?????"], ["???"]],
-               "800": [["???"], ["y??"], ["???"], ["yb???", "g????", "r????", "b????"], ["???"]],
+               "800": [["???"], ["y??"], ["r??"], ["yb???", "g????", "r????", "b????"], ["???"]],
                "morgen": [["y??"], ["b??"], ["r??"], ["ybb??", "grg??", "rby??", "byg??"], ["g??"]]}
 # where the cubes are: True = in the niche; at 8:00 most children carry theirs to the Hubel (Ben and Lina come later)
 PIAZZA_CUBES = {"745": [True, True, True, True, "gebaerden"], "800": [True, False, False, False, "gebaerden"],
@@ -3860,20 +4058,27 @@ HUBEL_FILL = {"800": dict(laden=["bär", "ente", ("hase", (0.80, 0.84, 0.90)), (
 def piazza_room(v):
     """The shared Piazza (28 m², 5.8 x 4.8 m) for build_piazza and build_abholung.
 
-    North wall: two tall casements with chain drives, the CO2 box on the wall between them (never on a sill); south
-    side: a corner piece with one more casement, so the room airs across. Windowsills stay empty. West wall: door to
-    the green entrance room, Garderobenschrank (one cabinet per child, Planwürfel on top), wish box, magnet board. Hubel on a round rug in the middle, reading cave in the north-east corner, play corner front
-    right. v: 745 | 745z | 800 | 1615 | abholung. Returns points and parts for the people and the cameras."""
+    North wall: two tall casements with chain drives, the CO2 box on the wall between them (never on a sill). West wall,
+    front: one more tall casement, so the room airs across from both sides; then the door to the green entrance room
+    (it opens into the Piazza), the Garderobenschrank (one cabinet per child, Planwürfel on top), wish box, magnet
+    board. Windowsills stay empty. Hubel on a round rug in the middle, hideout in the north-east corner (clear of the
+    window sashes), play corner front right. v: 745 | 745z | 800 | 1615 | abholung. Returns points and parts for the
+    people and the cameras."""
     W, D, H = 5.8, 4.8, 2.6
     key = "745" if v == "745z" else v
     late = key in ("1615", "abholung")
     open_ = v == "745"
     room_base(W, D)
     wg = winter_glass("abend" if key == "1615" else ("nachmittag" if late else "morgen"))
-    wins = [(0.75, 2.25), (3.05, 4.5)]
+    wins = [(0.6, 2.1), (2.8, 4.3)]
     z0w, z1w = 0.5, 2.36
     wall("x", D, 0.0, W, h=H, openings=[(a, b, z0w, z1w, "open") for a, b in wins], glass=wg)
-    wall("y", 0.0, 0.0, D + 0.18, h=H, openings=[(1.05, 1.95, 0.0, 2.1, "door")], m=WALL_SAGE, backdrop=False)
+    wo0, wo1 = 0.12, 0.9                       # the west window, in front of the door
+    wall("y", 0.0, 0.0, D + 0.18, h=H, openings=[(wo0, wo1, z0w, z1w, "open"), (1.05, 1.95, 0.0, 2.1, "door")],
+         m=WALL_SAGE, backdrop=False)
+    g = box(-0.18, wo0 + 0.055, z0w + 0.055, -0.16, wo1 - 0.055, z1w - 0.055,
+            winter_glass("abend" if key == "1615" else ("nachmittag" if late else "morgen"), "Y"), None, name="Glas")
+    g.visible_shadow = False
     for i, (a, b) in enumerate(wins):
         mark = len(objects)
         casement(D, a, b, z0w, z1w, 80 if open_ else 0, key="fenster_r" if i == 1 else None,
@@ -3881,24 +4086,17 @@ def piazza_room(v):
         wintry(objects[mark:], wg)
         panel(a - 0.06, D - 0.07, z0w - 0.035, b + 0.06, D + 0.02, z0w, "fenster", name="Fensterbank")
     A("fenster_l", sum(wins[0]) / 2, D - 0.035, z0w + 0.01)
-    # south side: a narrow corner piece of the outside wall with its own casement (opens outwards)
-    sx1, so0, so1 = 0.9, 0.16, 0.74
-    wall("x", 0.02, 0.0, sx1, h=H, openings=[(so0, so1, z0w, z1w, "open")], backdrop=False)
-    lm = larch("X")
-    for (x0, x1, za, zb) in ((0.0, so0, 0, H), (so1, sx1, 0, H), (so0, so1, 0, z0w), (so0, so1, z1w, H)):
-        box(x0, 0.0, za, x1, 0.02, zb, lm, None, name="Fassade")
-    mark = len(objects)
-    casement(0.02, so0, so1, z0w, z1w, 62 if open_ else 0, double=False, key="fenster_s", drive_side="+y")
-    wintry(objects[mark:], wg)
+    sash_w, _ = west_fenster(wo0, wo1, z0w, z1w, 80 if open_ else 0, wg)
+    panel(-0.02, wo0 - 0.06, z0w - 0.035, 0.07, wo1 + 0.06, z0w, "fenster", name="Fensterbank")
+    A("fenster_w", *sash_w)
+    A("fenster_s", *sash_w)
     wainscot("x", D, 0.0, W, h=1.0, skip=wins)
     for a, b in wins:
         wainscot("x", D, a, b, h=z0w - 0.04, ledge=False)
-    wainscot("y", 0.0, 0.0, 1.0, h=1.0)
-    # door to the green entrance room; it opens outwards (escape direction), so it never stands in the Piazza
-    if key in ("745", "abholung"):
-        door_leaf(-0.16, 1.105, 0.79, 90, "tuer")
-    else:
-        door_leaf(-0.03, 1.105, 0.79, 0, "tuer")
+    wainscot("y", 0.0, 0.0, 1.0, h=1.0, skip=[(wo0, wo1)])
+    wainscot("y", 0.0, wo0, wo1, h=z0w - 0.04, ledge=False)
+    # door to the green entrance room: open at 7:45 (Maren has just unlocked it) and when Lotte comes in at 15:30
+    door = piazza_tuer(70.0 if key in ("745", "abholung") else 0.0, key_in_lock=key == "745")
     vorraum_blick(1.0, 3.4)
     A("tuer", 0.02, 1.5, 1.2)
     # Garderobenschrank, magnet board, wish box
@@ -3924,10 +4122,11 @@ def piazza_room(v):
     # CO2 box on the wall between the windows, 1.4 m up
     co2box(sum(wins[0][1:] + wins[1][:1]) / 2, D - 0.058, 1.33, face=-90, led="yellow" if key == "745" else "green",
            lit=3.5)
-    # reading cave in the north-east corner, one plant on the floor (the other plants live in the entrance room)
-    hoehle_ecke(4.62, 5.77, D, depth=1.0)
+    # hideout in the north-east corner, half a metre clear of the right window's sash; one plant on the floor (the
+    # other plants live in the entrance room); bunting along the west wall between the window and the board
+    piazza_hoehle(4.82, 5.77, D, depth=1.0)
     plant(5.52, 1.62, 0, 1.1, pot="basket", kind="monstera", hid="pflanze")
-    bunting((0.04, 0.95, 2.45), (0.04, 3.6, 2.45), sag=0.22)  # along the west wall, clear of windows and board
+    bunting((0.04, 1.0, 2.47), (0.04, 3.6, 2.47), sag=0.2)
     # play corner at the front right
     rug_rect(4.35, 0.3, 5.6, 1.25, (0.86, 0.78, 0.64), (0.78, 0.70, 0.56), "spielecke", "Y", 6.0)
     for k in range(5):
@@ -3949,7 +4148,8 @@ def piazza_room(v):
     A("rolle", *hub["rolle"][0])
     A("in", 0.3, 1.45, 0.0)
     A("out", W - 0.1, 0.25, 0.0)
-    return dict(W=W, D=D, H=H, F=F, cab=cab, taf=taf, wb=wb, hub=hub, C=(cx, cy),
+    vb_flush()
+    return dict(W=W, D=D, H=H, F=F, cab=cab, taf=taf, wb=wb, hub=hub, C=(cx, cy), door=door,
                 pts=box_corners(-0.2, 0, -SLAB, W, D + 0.2, H + 0.05))
 
 
@@ -3964,22 +4164,28 @@ def build_piazza(v):
     hub = P_["hub"]
     time, lcfg = "morgen", {}
     if v in ("745", "745z"):
-        # 7:45: Maren has just unlocked the door from the entrance room, the windows on both sides open wide
-        # she has just stepped in from the entrance room, the key still raised in her hand, and looks into the room
-        mp = Vector((0.5, 1.45, 0.0))
-        fm = 350
-        hand = mp + fvec(fm) * 0.3 + fvec(fm).cross(UP) * 0.14 + Vector((0, 0, 1.12))
-        pm = maren(mp.x, mp.y, fm, "stand", look=(3.6, 1.3, 1.05), arms={"r": hand})
-        A("schluessel", *schluessel(pm["hand_r"], fm - 40))
+        # 7:45: Maren has just unlocked the door from the entrance room and stepped in; her left hand is still on the
+        # key in the lock, she looks into the room while the windows on both sides open wide
+        lock = Vector(P_["door"]["lock"])
+        fm = 325
+        f = fvec(fm)
+        left = -f.cross(UP).normalized()
+        mp = lock - left * 0.33 - f * 0.1
+        mp.z = 0.0
+        maren(mp.x, mp.y, fm, "stand", look=(3.4, 1.4, 1.15), arms={"l": tuple(lock + Vector((0, 0, 0.01)))})
+        A("schluessel", *lock)
     elif v == "800":
         # 8:00: morning circle. Mila stands at the back right of the Hubel and puts her fox cube into the last free
         # hollow at the Kaufladen; Defne beside her still holds hers and looks over to Malen. Maren sits on a stool at
         # the back left. The circle leaves a gap towards the viewer, so the small buttons and the castors stay in view.
         hol = Vector(hub["free"]["laden"])
         am = math.degrees(math.atan2(hol.y - cy, hol.x - cx))
-        mp = C + fvec(am) * 0.76
+        mp = C + fvec(am) * 0.75
         tgt = hol + Vector((0, 0, 0.1)) + (mp - C).normalized() * 0.02
-        pm = who("mila", mp.x, mp.y, am + 180, "reach", look=hol, arms={"r": tgt}, shoes=SOCKS[1])
+        # her body turns towards the room and she looks up: "Kaufladen!" (her face shows in the room view)
+        mf = am + 180 + 38
+        hd = Vector((mp.x, mp.y, 0.75)) + fvec(312) * 1.2 + Vector((0, 0, 0.45))
+        pm = who("mila", mp.x, mp.y, mf, "reach", look=tuple(hd), arms={"r": tgt}, shoes=SOCKS[1])
         hr = Vector(pm["hand_r"])
         dh = Vector((hol.x - hr.x, hol.y - hr.y, 0.0)).normalized()
         cb = hr + dh * 0.03 + Vector((0, 0, -0.025))
@@ -3992,7 +4198,7 @@ def build_piazza(v):
         A("mulde", *hol)
         ad = am + 42
         dp = C + fvec(ad) * 0.84
-        pd_ = who("defne", dp.x, dp.y, ad + 180, "hold", look=hub["cubes"]["malen"], shoes=SOCKS[6])
+        pd_ = who("defne", dp.x, dp.y, ad + 180, "hold", look=hub["cubes"]["malen"], shoes=SOCKS[6], acc=("crown",))
         mid = (Vector(pd_["hand_r"]) + Vector(pd_["hand_l"])) / 2
         kiddo_cube(mid.x, mid.y, mid.z - 0.03, "katze", None, "defne", face=ad + 180, s=0.07)
         for a, col in ((am, ROSE), (ad, SKY)):  # the poufs Mila and Defne just got up from
@@ -4000,7 +4206,7 @@ def build_piazza(v):
             pouf(p.x, p.y, 0.19, col, "kinder")
         ring = [(345, 8), (15, 1), (42, 2), (136, 4), (194, 0), (231, 5), (268, 7)]
         for k, (a, i) in enumerate(ring):
-            if SHOT == "hubel" and a == 345:  # would sit right in front of the close-up camera
+            if SHOT == "hubel" and a in (345, 15, 42, 231, 268):  # in front of or cut by the close-up frame
                 continue
             p = C + fvec(a) * 1.05
             pouf(p.x, p.y, 0.19, [SAGE, OCHRE, ROSE, SKY][k % 4], "kinder")
@@ -4010,23 +4216,37 @@ def build_piazza(v):
         stool(sp.x, sp.y, 0.32, OCHRE, "maren")
         maren(sp.x, sp.y, 165 + 180, "sitc", seat=0.32, look=pm["head"])
     else:
-        # 16:15: the last children are gone. Maren leans against the wall right beside the magnet board and speaks
-        # her note into the phone. Low, warm evening light; the board's picture light is on.
+        # 16:15: the last children are gone. Maren leans with her right shoulder against the north end of the magnet
+        # board and speaks her note into the phone in her left hand. Low, warm evening light; the board lamp is on.
         time, lcfg = "nachmittag", dict(sun_el=7.0, strength=3.0, fill=0.32, world=0.2)
-        mp = Vector((0.5, 4.6, 0.0))
-        fc = -78
+        mp = Vector((0.32, 4.64, 0.0))
+        fc = 300
         f = fvec(fc)
-        hand = mp + f * 0.16 + f.cross(UP) * 0.06 + Vector((0, 0, 1.22))
-        maren(mp.x, mp.y, fc, "stand", acc=("phone",), arms={"r": hand}, look=(1.6, 3.4, 1.25))
+        left = -f.cross(UP).normalized()
+        hl = mp + f * 0.2 + left * 0.1 + Vector((0, 0, 1.2))  # the phone in front of her chin, towards the room
+        hr = mp + f * 0.14 + left * 0.02 + Vector((0, 0, 0.9))
+        mark = len(objects)
+        pm = maren(mp.x, mp.y, fc, "stand", arms={"l": tuple(hl), "r": tuple(hr)}, look=(1.5, 3.7, 1.3))
+        ph = Vector(pm["hand_l"]) + f * 0.02 + UP * 0.045
+        o = rbox(-0.04, -0.006, -0.075, 0.04, 0.006, 0.075, mat((0.15, 0.17, 0.2), 0.3, emission=(0.6, 0.78, 0.95),
+                 strength=0.8), "maren", r=0.008, name="Handy")
+        o.location = ph
+        o.rotation_euler = (R(-25), 0, R(fc - 90))
+        # the lean: the whole figure tilts a few degrees about her feet towards the board
+        tilt = Matrix.Translation(mp) @ Matrix.Rotation(R(7), 4, f) @ Matrix.Translation(-mp)
+        place_group(objects[mark:], (0, 0, 0), tilt)
+        for k_ in [k for k in ANCH if k.startswith("maren_")]:
+            ANCH[k_] = tuple(tilt @ Vector(ANCH[k_]))
+        A("maren_phone", *(tilt @ ph))
     # 745z: the CO2 box and the closed window before unlocking; 745: the open window with its chain drives
-    fen = (dict(loc=(4.05, 2.75, 1.3), target=(3.35, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
-           dict(loc=(3.2, 2.45, 1.42), target=(3.62, D, 1.64), lens=22, fstop=8.0))
+    fen = (dict(loc=(3.8, 2.75, 1.3), target=(3.1, D, 1.42), lens=24, fstop=6.0) if v == "745z" else
+           dict(loc=(2.95, 2.45, 1.42), target=(3.37, D, 1.64), lens=22, fstop=8.0))
     shots = {
         "fenster": fen,
-        "hubel": dict(loc=tuple(C + fvec(330) * 1.8 + Vector((0, 0, 1.0))), target=tuple(C + fvec(70) * 0.18 + Vector((0, 0, 0.37))),
-                      lens=34, fstop=4.5),
+        "hubel": dict(loc=tuple(C + fvec(325) * 2.0 + Vector((0, 0, 1.05))),
+                      target=tuple(C + fvec(70) * 0.16 + Vector((0, 0, 0.34))), lens=36, fstop=5.0),
         "schrank": dict(loc=(2.15, 3.3, 1.15), target=(0.0, 3.12, 0.92), lens=20, fstop=6.0),  # behind Maren's stool
-        "offen": dict(loc=(1.9, 2.05, 1.0), target=(0.22, 2.56, 0.74), lens=21, fstop=5.6, name="schrank_offen"),
+        "offen": dict(loc=(1.75, 2.0, 1.32), target=(0.22, 2.53, 0.76), lens=19, fstop=5.6, name="schrank_offen"),
     }
     return dict(W=W, D=D, time=time, pts=P_["pts"], shots=shots, target=(W / 2, D / 2, 1), light=lcfg)
 
