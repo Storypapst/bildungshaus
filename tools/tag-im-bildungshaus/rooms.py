@@ -626,7 +626,7 @@ def co2box(x, y, z, face=-90, led="green", hid="co2", s=1.0, key="co2", lit=12.0
     side = f.cross(UP)
     body = rbox(-0.09 * s, -0.055 * s, 0, 0.09 * s, 0.055 * s, 0.12 * s, mat((0.36, 0.60, 0.70), 0.55, coat=0.2), hid,
                 r=0.012 * s, rot=(0, 0, R(face - 90)), name="Kästchen")
-    body.location = (x, y, z)
+    body.location = (x, y, z + 0.06 * s)  # the mesh is centred: its bottom sits at z, the LEDs on the front face
     front = Vector((x, y, z)) + f * 0.057 * s
     colors = {"green": (0.3, 1.0, 0.45), "yellow": (1.0, 0.8, 0.2), "red": (1.0, 0.25, 0.2)}
     for k, (nm, c) in enumerate(colors.items()):
@@ -3784,7 +3784,7 @@ def winter_glass(day="morgen", axis="X"):
     if (day, axis) in WG_CACHE:
         return WG_CACHE[(day, axis)]
     sky_lo, sky_hi, far, hedge, bark = {
-        "morgen": ((0.93, 0.90, 0.86), (0.76, 0.83, 0.92), (0.74, 0.74, 0.78), (0.50, 0.45, 0.42), (0.34, 0.30, 0.28)),
+        "morgen": ((0.90, 0.88, 0.86), (0.62, 0.74, 0.90), (0.70, 0.71, 0.76), (0.50, 0.45, 0.42), (0.34, 0.30, 0.28)),
         "nachmittag": ((0.99, 0.87, 0.74), (0.84, 0.84, 0.90), (0.76, 0.72, 0.72), (0.50, 0.44, 0.40), (0.34, 0.29, 0.26)),
         "abend": ((0.97, 0.72, 0.58), (0.64, 0.64, 0.78), (0.62, 0.56, 0.60), (0.40, 0.34, 0.34), (0.27, 0.22, 0.22))}[day]
     m = bpy.data.materials.new("Winterfenster")
@@ -4219,11 +4219,11 @@ def build_piazza(v):
         # 16:15: the last children are gone. Maren leans with her right shoulder against the north end of the magnet
         # board and speaks her note into the phone in her left hand. Low, warm evening light; the board lamp is on.
         time, lcfg = "nachmittag", dict(sun_el=7.0, strength=3.0, fill=0.32, world=0.2)
-        mp = Vector((0.32, 4.6, 0.0))
+        mp = Vector((0.32, 4.64, 0.0))
         fc = 300
         f = fvec(fc)
         left = -f.cross(UP).normalized()
-        hl = mp + f * 0.17 + left * 0.05 + Vector((0, 0, 1.27))
+        hl = mp + f * 0.2 + left * 0.1 + Vector((0, 0, 1.2))  # the phone in front of her chin, towards the room
         hr = mp + f * 0.14 + left * 0.02 + Vector((0, 0, 0.9))
         mark = len(objects)
         pm = maren(mp.x, mp.y, fc, "stand", arms={"l": tuple(hl), "r": tuple(hr)}, look=(1.5, 3.7, 1.3))
